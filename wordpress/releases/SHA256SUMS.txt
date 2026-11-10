@@ -1,2 +1,4 @@
 c1b94d4ba176978bdc73533bd18c73807294bbe4c5c1833cba62910f6173eed8  daneshgaran-school-0.1.0.zip
 afb1257f5c7e2992164dd5d51ac401ffb9e0f71078f87ae819df7c127d0275fb  daneshgaran-theme-0.1.0.zip
+11a263a6b8d9cd780cfed678b910f38054862d73f9c4dae95d711fdcc931daef  daneshgaran-theme-0.1.1.zip
+2e733799606cba957b82996ead684c900fbe0d825aa78bf517448ff874fb0dc8  daneshgaran-theme-patch-0.1.1.zip

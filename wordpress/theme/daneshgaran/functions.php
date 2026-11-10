@@ -11,11 +11,25 @@ function dgt_setup() {
 add_action('after_setup_theme','dgt_setup');
 function dgt_assets() {
     $version=wp_get_theme()->get('Version');
-    wp_enqueue_style('daneshgaran',get_template_directory_uri().'/assets/site.css',array(),$version);
+    // CSS در خود پاسخ صفحه قرار می‌گیرد تا خطای دسترسی فایل استایل، ظاهر را از کار نیندازد.
+    // نیازی به جاوااسکریپت، درخواست AJAX یا تایمر برای بارگذاری استایل نیست.
+    wp_register_style('daneshgaran',false,array(),$version);
+    wp_enqueue_style('daneshgaran');
+    $css_file=get_template_directory().'/assets/site.css';
+    if(is_readable($css_file)){
+        $css=file_get_contents($css_file);
+        $css=str_replace("url('Vazirmatn-Regular.ttf')","url('".esc_url_raw(get_template_directory_uri().'/assets/Vazirmatn-Regular.ttf')."')",$css);
+        wp_add_inline_style('daneshgaran',$css);
+    }
     wp_enqueue_script('daneshgaran',get_template_directory_uri().'/assets/site.js',array(),$version,true);
 }
 add_action('wp_enqueue_scripts','dgt_assets');
-add_action('elementor/editor/after_enqueue_styles',function(){wp_enqueue_style('daneshgaran-editor',get_template_directory_uri().'/assets/site.css',array(),'0.1.0');});
+add_action('elementor/editor/after_enqueue_styles',function(){
+    wp_register_style('daneshgaran-editor',false,array(),'0.1.1');
+    wp_enqueue_style('daneshgaran-editor');
+    $file=get_template_directory().'/assets/site.css';
+    if(is_readable($file))wp_add_inline_style('daneshgaran-editor',str_replace("url('Vazirmatn-Regular.ttf')","url('".esc_url_raw(get_template_directory_uri().'/assets/Vazirmatn-Regular.ttf')."')",file_get_contents($file)));
+});
 function dgt_option($name,$default=''){ $v=get_option('dgs_settings',array());return isset($v[$name])&&is_scalar($v[$name])?(string)$v[$name]:$default; }
 function dgt_page_url($key,$fallback='') {
     $pages=get_option('dgs_pages',array());
@@ -37,11 +51,11 @@ function dgt_icon($name='home') {
       'pin'=>'M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0ZM9 10a3 3 0 1 0 6 0 3 3 0 0 0-6 0',
       'phone'=>'M5 3h4l2 5-3 2c2 4 3 5 6 6l2-3 5 2v4c-1 4-7 1-11-2S2 8 3 5Z',
     );
-    return '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="'.esc_attr($paths[$name]??$paths['book']).'"/></svg>';
+    return '<svg width="22" height="22" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="'.esc_attr($paths[$name]??$paths['book']).'"/></svg>';
 }
 function dgt_logo(){
     if(has_custom_logo()){the_custom_logo();return;}
-    echo '<a class="dg-brand" href="'.esc_url(home_url('/')).'" aria-label="صفحه اصلی مدرسه دانشگران"><img src="'.esc_url(get_template_directory_uri().'/assets/logo.svg').'" alt=""><strong>'.esc_html(dgt_option('school_name','مدرسه دانشگران')).'</strong><small>دبیرستان دوره دوم</small></a>';
+    echo '<a class="dg-brand" href="'.esc_url(home_url('/')).'" aria-label="صفحه اصلی مدرسه دانشگران"><img width="85" height="64" src="'.esc_url(get_template_directory_uri().'/assets/logo.svg').'" alt=""><strong>'.esc_html(dgt_option('school_name','مدرسه دانشگران')).'</strong><small>دبیرستان دوره دوم</small></a>';
 }
 function dgt_navigation(){
     if(has_nav_menu('primary')){wp_nav_menu(array('theme_location'=>'primary','container'=>false,'menu_class'=>'dg-menu','depth'=>2));return;}
@@ -59,3 +73,5 @@ function dgt_customizer($wp_customize){
     }
 }
 add_action('customize_register','dgt_customizer');
+
+add_action('wp_head',function(){echo '<meta name="daneshgaran-theme-version" content="'.esc_attr(wp_get_theme()->get('Version')).'">';},1);
