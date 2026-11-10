@@ -1,0 +1,1 @@
+<?php if(!defined('ABSPATH'))exit;get_header(); ?><section class="dg-card dg-empty"><span class="dg-kicker">۴۰۴</span><h1>این صفحه پیدا نشد</h1><p>می‌توانید از منوی مدرسه به صفحه موردنظر بروید.</p><a class="dg-btn" href="<?php echo esc_url(home_url('/')); ?>">بازگشت به صفحه اصلی</a></section><?php get_footer(); ?>
