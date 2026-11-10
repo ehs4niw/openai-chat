@@ -1,0 +1,9 @@
+<?php if(!defined('ABSPATH'))exit; ?><!doctype html>
+<html <?php language_attributes(); ?>><head><meta charset="<?php bloginfo('charset'); ?>"><meta name="viewport" content="width=device-width, initial-scale=1"><?php wp_head(); ?></head>
+<body <?php body_class('dg-site'); ?>><?php wp_body_open(); ?>
+<a class="dg-skip" href="#main-content">رفتن به محتوای اصلی</a>
+<div class="dg-shell">
+<aside id="dg-sidebar" class="dg-sidebar" aria-label="منوی اصلی"><div class="dg-sidebar-brand"><?php dgt_logo(); ?></div><nav><?php dgt_navigation(); ?></nav><div class="dg-sidebar-bottom"><?php echo dgt_icon('book'); ?><span>پایه‌های دهم، یازدهم و دوازدهم</span></div></aside>
+<div class="dg-backdrop" data-dg-close hidden></div>
+<div class="dg-page"><header class="dg-topbar"><div class="dg-top-right"><button class="dg-mobile-toggle" type="button" aria-label="باز کردن منو" aria-controls="dg-sidebar" aria-expanded="false"><?php echo dgt_icon('menu'); ?></button><span class="dg-top-title"><?php echo esc_html(dgt_option('school_name','مدرسه دانشگران')); ?></span><span class="dg-date"><?php echo esc_html(function_exists('dgs_display_date')?dgs_display_date():wp_date('l j F Y')); ?></span></div><div class="dg-top-left"><a class="dg-icon-link" href="<?php echo esc_url(dgt_page_url('news')); ?>" aria-label="اخبار و اطلاعیه‌ها"><?php echo dgt_icon('bell'); ?></a><a class="dg-user-link" href="<?php echo esc_url(dgt_page_url('portal')); ?>"><?php echo dgt_icon('users'); ?><span><?php echo is_user_logged_in()?esc_html(wp_get_current_user()->display_name):'ورود به سامانه'; ?></span></a></div></header>
+<main id="main-content" class="dg-main" tabindex="-1">
