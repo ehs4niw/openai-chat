@@ -18,17 +18,17 @@ function dgt_assets() {
     $css_file=get_template_directory().'/assets/site.css';
     if(is_readable($css_file)){
         $css=file_get_contents($css_file);
-        $css=str_replace("url('Vazirmatn-Regular.ttf')","url('".esc_url_raw(get_template_directory_uri().'/assets/Vazirmatn-Regular.ttf')."')",$css);
+        $css=str_replace("url('Estedad.ttf')","url('".esc_url_raw(get_template_directory_uri().'/assets/Estedad.ttf')."')",$css);
         wp_add_inline_style('daneshgaran',$css);
     }
     wp_enqueue_script('daneshgaran',get_template_directory_uri().'/assets/site.js',array(),$version,true);
 }
 add_action('wp_enqueue_scripts','dgt_assets');
 add_action('elementor/editor/after_enqueue_styles',function(){
-    wp_register_style('daneshgaran-editor',false,array(),'0.1.1');
+    wp_register_style('daneshgaran-editor',false,array(),'0.1.2');
     wp_enqueue_style('daneshgaran-editor');
     $file=get_template_directory().'/assets/site.css';
-    if(is_readable($file))wp_add_inline_style('daneshgaran-editor',str_replace("url('Vazirmatn-Regular.ttf')","url('".esc_url_raw(get_template_directory_uri().'/assets/Vazirmatn-Regular.ttf')."')",file_get_contents($file)));
+    if(is_readable($file))wp_add_inline_style('daneshgaran-editor',str_replace("url('Estedad.ttf')","url('".esc_url_raw(get_template_directory_uri().'/assets/Estedad.ttf')."')",file_get_contents($file)));
 });
 function dgt_option($name,$default=''){ $v=get_option('dgs_settings',array());return isset($v[$name])&&is_scalar($v[$name])?(string)$v[$name]:$default; }
 function dgt_page_url($key,$fallback='') {
