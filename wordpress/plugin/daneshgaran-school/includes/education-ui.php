@@ -18,7 +18,8 @@ function dgs_edu_portal(){
     $out.=dgs_edu_flash();
     if($manager){$callback='dgs_edu_view_'.$tab;$out.=$callback($year);}
     elseif($tabs){
-      if($tab==='quizzes')$out.=dgs_quiz_portal($year);
+      if($tab==='homework')$out.=dgs_hw_portal($year);
+      elseif($tab==='quizzes')$out.=dgs_quiz_portal($year);
       elseif($tab==='grades')$out.=dgs_grade_panel($year);
       elseif($tab==='password')$out.=dgs_edu_password_form();
       elseif($tab==='attendance')$out.=dgs_att_student($year);
