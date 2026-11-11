@@ -16,9 +16,10 @@ function dgs_edu_portal(){
     $tab=dgs_portal_tab();$tabs=dgs_portal_links();
     if($tabs){$out.='<nav class="dge-tabs" aria-label="منوی پنل">';foreach($tabs as $key=>$item)$out.='<a '.($tab===$key?'aria-current="page"':'').' href="'.esc_url(dgs_edu_url($key,$year)).'">'.esc_html($item[0]).'</a>';$out.='</nav>';}
     $out.=dgs_edu_flash();
-    if($manager){$callback='dgs_edu_view_'.$tab;$out.=$callback($year);}
+    if($manager){if($tab==='overview')$out.=dgs_school_manager_dashboard($year);else{$callback='dgs_edu_view_'.$tab;$out.=$callback($year);}}
     elseif($tabs){
-      if($tab==='homework')$out.=dgs_hw_portal($year);
+      if($tab==='timetable')$out.=dgs_school_timetable_page($year);
+      elseif($tab==='homework')$out.=dgs_hw_portal($year);
       elseif($tab==='quizzes')$out.=dgs_quiz_portal($year);
       elseif($tab==='grades')$out.=dgs_grade_panel($year);
       elseif($tab==='password')$out.=dgs_edu_password_form();
@@ -26,7 +27,7 @@ function dgs_edu_portal(){
       elseif($tab==='finance')$out.=dgs_fin_student($year);
       elseif(dgs_edu_role($u,'dgs_teacher'))$out.=dgs_edu_teacher_view($u->ID,$year);
       elseif(dgs_edu_role($u,'dgs_counselor'))$out.=dgs_edu_counselor_view($u->ID,$year);
-      else $out.=dgs_edu_student_view($u->ID,$year);
+      else $out.=dgs_school_student_dashboard($year);
     }else $out.='<p>هنوز نقش مدرسه به حساب شما تخصیص داده نشده است.</p>';
     return $out.'</div>';
 }

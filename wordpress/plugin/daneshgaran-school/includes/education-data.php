@@ -148,7 +148,7 @@ add_action('admin_post_dgs_education',function(){
     if(!current_user_can('dgs_manage_education'))wp_die('دسترسی ندارید.','',array('response'=>403));
     check_admin_referer('dgs_education','dgs_edu_nonce');$data=wp_unslash($_POST);$op=isset($data['operation'])&&is_string($data['operation'])?sanitize_key($data['operation']):'';
     $result=dgs_edu_execute($op,$data);$token=wp_generate_password(24,false,false);set_transient('dgs_edu_flash_'.get_current_user_id().'_'.$token,array('error'=>is_wp_error($result),'text'=>is_wp_error($result)?$result->get_error_message():$result),5*MINUTE_IN_SECONDS);
-    $tab=isset($data['return_tab'])&&is_string($data['return_tab'])?sanitize_key($data['return_tab']):'overview';if(!in_array($tab,array('overview','classes','subjects','users','assignments','counseling'),true))$tab='overview';
+    $tab=isset($data['return_tab'])&&is_string($data['return_tab'])?sanitize_key($data['return_tab']):'overview';if(!in_array($tab,array('overview','classes','subjects','users','assignments','counseling','education'),true))$tab='overview';
     $year=dgs_edu_year((string)($data['year']??''))?:dgs_edu_current_year();wp_safe_redirect(add_query_arg(array('dg_tab'=>$tab,'dg_year'=>$year,'dg_notice'=>$token),dgs_page_url('portal')),303);exit;
 });
 
