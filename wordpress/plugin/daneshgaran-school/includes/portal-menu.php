@@ -2,10 +2,10 @@
 if(!defined('ABSPATH'))exit;
 function dgs_portal_links(){
     if(!is_user_logged_in())return array();$uid=get_current_user_id();
-    if(current_user_can('dgs_manage_education'))return array('overview'=>array('داشبورد مدیریت','home'),'users'=>array('دانش‌آموزان و کاربران','users'),'classes'=>array('کلاس‌ها و پایه‌ها','book'),'subjects'=>array('درس‌ها','book'),'assignments'=>array('تخصیص کلاس و دبیر','users'),'counseling'=>array('تخصیص مشاور','users'),'grades'=>array('نمرات و کارنامه','book'),'attendance'=>array('حضور و غیاب','calendar'),'finance'=>array('مدیریت شهریه','book'));
-    $links=array();if(dgs_edu_role($uid,'dgs_teacher'))$links=array('overview'=>array('پنل مدرس','home'),'classes'=>array('کلاس‌ها و درس‌های من','users'),'grades'=>array('ثبت نمرات و کارنامه','book'));
+    if(current_user_can('dgs_manage_education'))return array('overview'=>array('داشبورد مدیریت','home'),'users'=>array('دانش‌آموزان و کاربران','users'),'classes'=>array('کلاس‌ها و پایه‌ها','book'),'subjects'=>array('درس‌ها','book'),'assignments'=>array('تخصیص کلاس و دبیر','users'),'counseling'=>array('تخصیص مشاور','users'),'quizzes'=>array('آزمون‌ها و کوییزها','book'),'grades'=>array('نمرات و کارنامه','book'),'attendance'=>array('حضور و غیاب','calendar'),'finance'=>array('مدیریت شهریه','book'));
+    $links=array();if(dgs_edu_role($uid,'dgs_teacher'))$links=array('overview'=>array('پنل مدرس','home'),'classes'=>array('کلاس‌ها و درس‌های من','users'),'quizzes'=>array('کوییزهای کلاس','book'),'grades'=>array('ثبت نمرات و کارنامه','book'));
     elseif(dgs_edu_role($uid,'dgs_counselor'))$links=array('overview'=>array('پنل مشاور','home'),'students'=>array('دانش‌آموزان من','users'),'grades'=>array('نمرات دانش‌آموزان','book'));
-    elseif(dgs_edu_role($uid,'dgs_student'))$links=array('overview'=>array('پنل دانش‌آموز','home'),'grades'=>array('نمرات و کارنامه','book'),'attendance'=>array('سوابق حضور و غیاب','calendar'),'finance'=>array('شهریه و پرداخت‌های من','book'));
+    elseif(dgs_edu_role($uid,'dgs_student'))$links=array('overview'=>array('پنل دانش‌آموز','home'),'quizzes'=>array('آزمون‌ها و کوییزها','book'),'grades'=>array('نمرات و کارنامه','book'),'attendance'=>array('سوابق حضور و غیاب','calendar'),'finance'=>array('شهریه و پرداخت‌های من','book'));
     if($links)$links['password']=array('تغییر رمز عبور','login');return $links;
 }
 function dgs_portal_tab(){$raw=isset($_GET['dg_tab'])&&is_string($_GET['dg_tab'])?sanitize_key($_GET['dg_tab']):'overview';return isset(dgs_portal_links()[$raw])?$raw:'overview';}
