@@ -1,3 +1,5 @@
+نسخه **۰.۱۱.۲**: [افزونه کامل](releases/daneshgaran-school-0.11.2.zip) · [راهنما](releases/UPDATE-0.11.2-fa.md).
+
 نسخه **۰.۱۱.۱**: [دانلود افزونه](releases/daneshgaran-school-0.11.1.zip) · [حذف کلاس خالی و ساخت پنج کلاس](releases/UPDATE-0.11.1-fa.md).
 
 نسخه جدید **۰.۱۱.۰**: [افزونه کامل](releases/daneshgaran-school-0.11.0.zip) · [ثبت کامل، اکسل و سال تحصیلی](releases/UPDATE-0.11.0-fa.md).

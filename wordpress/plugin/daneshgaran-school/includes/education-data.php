@@ -90,13 +90,11 @@ function dgs_edu_execute($op,$data){
       case 'year':
         $settings=get_option('dgs_settings',array());$settings['school_year']=$year;update_option('dgs_settings',$settings);dgs_edu_audit('school_year',0);return 'سال تحصیلی فعال ذخیره شد.';
       case 'class_create':
-        $title=sanitize_text_field((string)($data['title']??''));$grade=absint($data['grade']??0);$field=sanitize_key((string)($data['field']??''));
+        $grade=absint($data['grade']??0);$field=sanitize_key((string)($data['field']??''));$title=dgs_edu_class_label((object)array('grade'=>$grade,'field'=>$field));
         if($title===''||dgs_edu_length($title)>100||!in_array($grade,array(10,11,12),true)||!isset(dgs_edu_fields()[$field]))return dgs_edu_error('class','نام کلاس، پایه و رشته را درست وارد کنید.');
-        $exists=$wpdb->get_var($wpdb->prepare("SELECT id FROM {$t['classes']} WHERE school_year=%s AND grade=%d AND field=%s AND title=%s",$year,$grade,$field,$title));
+        $exists=$wpdb->get_var($wpdb->prepare("SELECT id FROM {$t['classes']} WHERE school_year=%s AND grade=%d AND field=%s",$year,$grade,$field));
         if($exists)return dgs_edu_error('duplicate','این کلاس در این سال تحصیلی از قبل وجود دارد.');
         $ok=$wpdb->insert($t['classes'],array('school_year'=>$year,'grade'=>$grade,'field'=>$field,'title'=>$title,'active'=>1,'created_at'=>current_time('mysql')),array('%s','%d','%s','%s','%d','%s'));if(!$ok)return dgs_edu_error('write','کلاس ذخیره نشد.');dgs_edu_audit('class_create',$wpdb->insert_id);return 'کلاس ایجاد شد.';
-      case 'classes_five':
-        return dgs_edu_create_five_classes($year);
       case 'class_delete':
         return dgs_edu_delete_empty_class(absint($data['class_id']??0),$year);
       case 'class_status':
@@ -174,9 +172,5 @@ add_action('admin_post_dgs_change_password',function(){
 });
 
 function dgs_edu_delete_empty_class($id,$year){
- if(!current_user_can('dgs_manage_education'))return dgs_edu_error('access','دسترسی مجاز نیست.');$class=dgs_edu_class($id,false);if(!$class||$class->school_year!==$year)return dgs_edu_error('class','کلاس همین سال را انتخاب کنید.');global $wpdb;$e=dgs_edu_tables();$a=dgs_att_tables();$q=dgs_quiz_tables();$h=dgs_hw_tables();$tables=array($e['enrollments'],$e['teaching'],dgs_grade_table(),$a['sessions'],$q['quizzes'],$h['tasks'],$h['submissions'],dgs_school_schedule_table());$sql="DELETE FROM {$e['classes']} WHERE id=%d AND school_year=%s";$args=array($id,$year);foreach($tables as $table){$sql.=" AND NOT EXISTS (SELECT 1 FROM $table WHERE class_id=%d)";$args[]=$id;}$ok=$wpdb->query($wpdb->prepare($sql,$args));if($ok===false)return dgs_edu_error('write','حذف کلاس انجام نشد.');if($ok!==1)return dgs_edu_error('linked','این کلاس دانش‌آموز، تخصیص دبیر یا سابقه آموزشی دارد و حذف نمی‌شود. برای حفظ اطلاعات از بایگانی استفاده کنید. فقط کلاس کاملاً خالی قابل حذف است.');dgs_edu_audit('class_delete',$id);return 'کلاس خالی حذف شد؛ شناسه کلاس‌های دیگر تغییر نکرد.';
-}
-
-function dgs_edu_create_five_classes($year){
- if(!current_user_can('dgs_manage_education')||!dgs_edu_year($year))return dgs_edu_error('access','دسترسی یا سال معتبر نیست.');global $wpdb;$t=dgs_edu_tables();$items=array(array('دهم ریاضی',10,'math'),array('دهم تجربی',10,'science'),array('یازدهم تجربی',11,'science'),array('دوازدهم ریاضی',12,'math'),array('دوازدهم تجربی',12,'science'));$wpdb->query('START TRANSACTION');$created=0;foreach($items as $item){list($title,$grade,$field)=$item;$old=$wpdb->get_row($wpdb->prepare("SELECT id,active FROM {$t['classes']} WHERE school_year=%s AND grade=%d AND field=%s AND title=%s",$year,$grade,$field,$title));if($old){if(!$old->active){$wpdb->query('ROLLBACK');return dgs_edu_error('archived','کلاس '.$title.' بایگانی است؛ ابتدا از جدول فعالش کنید.');}continue;}$result=dgs_edu_execute('class_create',array('year'=>$year,'title'=>$title,'grade'=>$grade,'field'=>$field));if(is_wp_error($result)){$wpdb->query('ROLLBACK');return $result;}$created++;}$wpdb->query('COMMIT');return dgs_fa_digits($created).' کلاس ساخته شد؛ کلاس‌های هم‌نام موجود تکرار نشدند. شناسه‌های اکسل را از جدول بخوانید.';
+ if(!current_user_can('dgs_manage_education'))return dgs_edu_error('access','دسترسی مجاز نیست.');$class=dgs_edu_class($id,false);if(!$class||$class->school_year!==$year)return dgs_edu_error('class','کلاس همین سال را انتخاب کنید.');global $wpdb;$e=dgs_edu_tables();$a=dgs_att_tables();$q=dgs_quiz_tables();$h=dgs_hw_tables();$tables=array($e['enrollments'],$e['teaching'],dgs_grade_table(),$a['sessions'],$q['quizzes'],$h['tasks'],$h['submissions'],dgs_school_schedule_table());$sql="DELETE FROM {$e['classes']} WHERE id=%d AND school_year=%s";$args=array($id,$year);foreach($tables as $table){$sql.=" AND NOT EXISTS (SELECT 1 FROM $table WHERE class_id=%d)";$args[]=$id;}$ok=$wpdb->query($wpdb->prepare($sql,$args));if($ok===false)return dgs_edu_error('write','حذف کلاس انجام نشد.');if($ok!==1)return dgs_edu_error('linked','این کلاس دانش‌آموز، تخصیص دبیر یا سابقه آموزشی دارد؛ حذف آن باعث از بین رفتن ارتباط سوابق می‌شود. ابتدا وابستگی‌ها را بررسی کنید.');dgs_edu_audit('class_delete',$id);return 'کلاس خالی حذف شد؛ شناسه کلاس‌های دیگر تغییر نکرد.';
 }
