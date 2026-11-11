@@ -1,6 +1,7 @@
 7e4ad45de48ca42836847af19a0128b4370efb756394b3bccede4e1d91a9bd4d  daneshgaran-font-patch-0.1.2.zip
 c1b94d4ba176978bdc73533bd18c73807294bbe4c5c1833cba62910f6173eed8  daneshgaran-school-0.1.0.zip
 d1604c9c9bd1664804c5aa7dcf6f75c4b48fb76e42f14ed71b4c58d458f7d6cd  daneshgaran-school-0.2.0.zip
+3d142fd703b3ea3c11ce54a30eab2567b4d8718caf5b33de34f824eb964dff2c  daneshgaran-school-0.2.1.zip
 afb1257f5c7e2992164dd5d51ac401ffb9e0f71078f87ae819df7c127d0275fb  daneshgaran-theme-0.1.0.zip
 11a263a6b8d9cd780cfed678b910f38054862d73f9c4dae95d711fdcc931daef  daneshgaran-theme-0.1.1.zip
 384a118221ff97a9709288909e4d04ecf037594cccb0437c9af046795f6769c9  daneshgaran-theme-0.1.2.zip
