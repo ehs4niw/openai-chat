@@ -1,6 +1,5 @@
 (function(){'use strict';
 var root=document.querySelector('[data-attendance-root]');if(!root)return;
-var side=root.querySelector('[data-att-side]'),nav=document.querySelector('.dg-sidebar nav');if(side&&nav){nav.replaceChildren(side.content.cloneNode(true));document.body.classList.add('dga-nav-ready');}
 var form=root.querySelector('.dga-editor'),all=root.querySelector('[data-att-all]');
 function fa(n){return String(n).replace(/\d/g,function(d){return '۰۱۲۳۴۵۶۷۸۹'[Number(d)];});}
 function refresh(){if(!form)return;var closed=form.querySelector('[data-att-closed]').checked,counts={present:0,absent:0,late:0},pending=0;

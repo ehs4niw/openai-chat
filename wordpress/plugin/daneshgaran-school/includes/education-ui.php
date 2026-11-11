@@ -12,22 +12,20 @@ function dgs_edu_portal(){
     $u=wp_get_current_user();$year=dgs_edu_request_year();$manager=current_user_can('dgs_manage_education');
     $role=$manager?'مدیر و معاون':(dgs_edu_role($u,'dgs_teacher')?'معلم':(dgs_edu_role($u,'dgs_counselor')?'مشاور':(dgs_edu_role($u,'dgs_student')?'دانش‌آموز':'حساب کاربری')));
     $out='<div class="dge-portal"><header class="dge-heading"><div><span class="dg-kicker">سامانه مدرسه دانشگران · '.esc_html($role).'</span><h2>سلام '.esc_html($u->display_name).'، خوش آمدید</h2></div><a class="dg-btn dg-btn-outline" href="'.esc_url(wp_logout_url(home_url('/'))).'">خروج</a></header>';
-    $out.='<form class="dge-year-filter" method="get" action="'.esc_url(dgs_page_url('portal')).'"><label>سال تحصیلی<input name="dg_year" value="'.esc_attr($year).'" dir="ltr" pattern="14[0-9]{2}-14[0-9]{2}" required></label><button class="dg-btn dg-btn-outline">نمایش</button></form>';
-    if(!$manager&&dgs_edu_role($u,'dgs_student')){
-      $out.='<nav class="dge-tabs" aria-label="پنل دانش‌آموز"><a href="'.esc_url(dgs_page_url('portal')).'">پنل من</a><a href="'.esc_url(dgs_att_url($year)).'">سوابق حضور و غیاب</a></nav>';
-      if(dgs_att_get('dg_tab')==='attendance')return $out.dgs_att_student($year).'</div>';
-    }
-    if($manager){
-      $tab=isset($_GET['dg_tab'])&&is_string($_GET['dg_tab'])?sanitize_key($_GET['dg_tab']):'overview';$tabs=array('overview'=>'پیشخوان','classes'=>'کلاس‌ها','subjects'=>'درس‌ها','users'=>'کاربران مدرسه','assignments'=>'تخصیص کلاس و دبیر','counseling'=>'تخصیص مشاور','grades'=>'نمرات و کارنامه','attendance'=>'حضور و غیاب');if(!isset($tabs[$tab]))$tab='overview';
-      $out.='<nav class="dge-tabs" aria-label="مدیریت آموزشی">';foreach($tabs as $key=>$label)$out.='<a '.($tab===$key?'aria-current="page"':'').' href="'.esc_url(dgs_edu_url($key,$year)).'">'.esc_html($label).'</a>';$out.='</nav>'.dgs_edu_flash();
-      if(get_option('dgs_edu_schema')!=='1')return $out.'<p class="dge-error">راه‌اندازی جدول‌ها کامل نشده است. موضوع را با پشتیبانی بررسی کنید.</p></div>';
-      $callback='dgs_edu_view_'.$tab;$out.=$callback($year);
-    }elseif(dgs_edu_role($u,'dgs_teacher'))$out.=dgs_edu_teacher_view($u->ID,$year);
-    elseif(dgs_edu_role($u,'dgs_student'))$out.=dgs_edu_student_view($u->ID,$year);
-    elseif(dgs_edu_role($u,'dgs_counselor'))$out.=dgs_edu_counselor_view($u->ID,$year);
-    else $out.='<div class="dge-box"><h3>حساب شما</h3><p>هنوز نقش مدرسه به حساب شما تخصیص داده نشده است. با مدیر مدرسه تماس بگیرید.</p></div>';
-    if(!$manager&&(dgs_edu_role($u,'dgs_student')||dgs_edu_role($u,'dgs_teacher')||dgs_edu_role($u,'dgs_counselor')))$out.=dgs_edu_flash().dgs_grade_panel($year);
-    if(!$manager&&(dgs_edu_role($u,'dgs_student')||dgs_edu_role($u,'dgs_teacher')||dgs_edu_role($u,'dgs_counselor')))$out.=dgs_edu_password_form();
+    $out.='<form class="dge-year-filter" method="get" action="'.esc_url(dgs_page_url('portal')).'"><input type="hidden" name="dg_tab" value="'.esc_attr(dgs_portal_tab()).'"><label>سال تحصیلی<input name="dg_year" value="'.esc_attr($year).'" dir="ltr" pattern="14[0-9]{2}-14[0-9]{2}" required></label><button class="dg-btn dg-btn-outline">نمایش</button></form>';
+    $tab=dgs_portal_tab();$tabs=dgs_portal_links();
+    if($tabs){$out.='<nav class="dge-tabs" aria-label="منوی پنل">';foreach($tabs as $key=>$item)$out.='<a '.($tab===$key?'aria-current="page"':'').' href="'.esc_url(dgs_edu_url($key,$year)).'">'.esc_html($item[0]).'</a>';$out.='</nav>';}
+    $out.=dgs_edu_flash();
+    if($manager){$callback='dgs_edu_view_'.$tab;$out.=$callback($year);}
+    elseif($tabs){
+      if($tab==='grades')$out.=dgs_grade_panel($year);
+      elseif($tab==='password')$out.=dgs_edu_password_form();
+      elseif($tab==='attendance')$out.=dgs_att_student($year);
+      elseif($tab==='finance')$out.=dgs_fin_student($year);
+      elseif(dgs_edu_role($u,'dgs_teacher'))$out.=dgs_edu_teacher_view($u->ID,$year);
+      elseif(dgs_edu_role($u,'dgs_counselor'))$out.=dgs_edu_counselor_view($u->ID,$year);
+      else $out.=dgs_edu_student_view($u->ID,$year);
+    }else $out.='<p>هنوز نقش مدرسه به حساب شما تخصیص داده نشده است.</p>';
     return $out.'</div>';
 }
 function dgs_edu_view_overview($year){

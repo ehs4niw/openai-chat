@@ -11,7 +11,7 @@ function dgs_att_range($day,$mode){
     return array($day,$day);
 }
 function dgs_att_badge($status){$labels=array('present'=>'✓ حاضر','absent'=>'× غایب','late'=>'◷ تأخیر','closed'=>'— تعطیل','unknown'=>'ثبت نشده');return '<span class="dga-badge dga-'.esc_attr($status).'">'.esc_html($labels[$status]??$labels['unknown']).'</span>';}
-function dgs_att_heading($student=false){return dgs_att_side_template($student).'<header class="dga-heading"><div><span class="dga-eyebrow">'.($student?'صفحه اصلی ‹ سوابق حضور و غیاب':'مدیریت مدرسه ‹ حضور و غیاب').'</span><h2>'.dgs_icon('calendar').' '.($student?'سوابق حضور و غیاب':'ثبت و گزارش حضور و غیاب').'</h2><p>'.($student?'مشاهده وضعیت حضور، غیبت و تأخیر شما در روزهای مدرسه':'ثبت، ویرایش و گزارش‌گیری روزانه از حضور و غیاب دانش‌آموزان').'</p></div>'.(!$student?'<span class="dga-lock">🔒 ویرایش فقط برای مدیر و معاون</span>':'').'</header>';}
+function dgs_att_heading($student=false){return '<header class="dga-heading"><div><span class="dga-eyebrow">'.($student?'صفحه اصلی ‹ سوابق حضور و غیاب':'مدیریت مدرسه ‹ حضور و غیاب').'</span><h2>'.dgs_icon('calendar').' '.($student?'سوابق حضور و غیاب':'ثبت و گزارش حضور و غیاب').'</h2><p>'.($student?'مشاهده وضعیت حضور، غیبت و تأخیر شما در روزهای مدرسه':'ثبت، ویرایش و گزارش‌گیری روزانه از حضور و غیاب دانش‌آموزان').'</p></div>'.(!$student?'<span class="dga-lock">🔒 ویرایش فقط برای مدیر و معاون</span>':'').'</header>';}
 function dgs_att_cards($counts,$student=false){$out='<div class="dga-stats">';foreach(array('present'=>array('حاضر','✓'),'absent'=>array('غایب','×'),'late'=>array('تأخیر','◷')) as $status=>$a)$out.='<article class="dga-'.$status.'"><span class="dga-stat-icon">'.$a[1].'</span><div><span>'.$a[0].'</span><strong data-att-count="'.$status.'">'.esc_html(dgs_fa_digits($counts[$status]??0)).'</strong><small>'.($student?'روز ثبت‌شده':'نفر در روز انتخاب‌شده').'</small></div></article>';return $out.'</div>';}
 function dgs_edu_view_attendance($year){return dgs_att_manager($year);}
 function dgs_att_manager($year){
@@ -97,9 +97,4 @@ add_action('wp_enqueue_scripts',function(){
     wp_register_script('dgs-attendance',false,array(),DGS_VERSION,true);wp_enqueue_script('dgs-attendance');wp_add_inline_script('dgs-attendance',file_get_contents(DGS_PATH.'assets/attendance.js'));
 });
 
-function dgs_att_side_template($student){
-    $year=dgs_edu_request_year();$links=$student?array('overview'=>array('پنل دانش‌آموز','home'),'grades'=>array('نمرات و کارنامه','book'),'attendance'=>array('سوابق حضور و غیاب','calendar')):array('overview'=>array('داشبورد مدیریت','home'),'users'=>array('دانش‌آموزان و کاربران','users'),'classes'=>array('کلاس‌ها و پایه‌ها','book'),'assignments'=>array('تخصیص کلاس و دبیر','users'),'counseling'=>array('تخصیص مشاور','users'),'grades'=>array('نمرات و کارنامه','book'),'attendance'=>array('حضور و غیاب','calendar'));
-    $out='<template data-att-side><ul class="dg-menu">';foreach($links as $tab=>$a)$out.='<li><a '.($tab==='attendance'?'aria-current="page"':'').' href="'.esc_url(dgs_edu_url($tab,$year)).'">'.dgs_icon($a[1]).'<span>'.$a[0].'</span></a></li>';
-    $out.='<li><a href="'.esc_url(home_url('/')).'">'.dgs_icon('home').'<span>بازگشت به سایت</span></a></li><li><a href="'.esc_url(wp_logout_url(home_url('/'))).'">'.dgs_icon('login').'<span>خروج از حساب</span></a></li></ul></template>';return $out;
-}
 add_filter('body_class',function($classes){$p=get_option('dgs_pages',array());if(!empty($p['portal'])&&is_page((int)$p['portal'])&&dgs_att_get('dg_tab')==='attendance'&&(current_user_can('dgs_manage_education')||dgs_edu_role(get_current_user_id(),'dgs_student')))$classes[]='dgs-attendance-page';return $classes;});
