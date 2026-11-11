@@ -13,6 +13,7 @@ function dgs_edu_portal(){
     $role=$manager?'مدیر و معاون':(dgs_edu_role($u,'dgs_teacher')?'معلم':(dgs_edu_role($u,'dgs_counselor')?'مشاور':(dgs_edu_role($u,'dgs_student')?'دانش‌آموز':'حساب کاربری')));
     $out='<div class="dge-portal"><header class="dge-heading"><div><span class="dg-kicker">سامانه مدرسه دانشگران · '.esc_html($role).'</span><h2>سلام '.esc_html($u->display_name).'، خوش آمدید</h2></div><a class="dg-btn dg-btn-outline" href="'.esc_url(wp_logout_url(home_url('/'))).'">خروج</a></header>';
     $out.='<form class="dge-year-filter" method="get" action="'.esc_url(dgs_page_url('portal')).'"><input type="hidden" name="dg_tab" value="'.esc_attr(dgs_portal_tab()).'"><label>سال تحصیلی<input name="dg_year" value="'.esc_attr($year).'" dir="ltr" pattern="14[0-9]{2}-14[0-9]{2}" required></label><button class="dg-btn dg-btn-outline">نمایش</button></form>';
+    if(dgs_portal_tab()==='records')$out=str_replace('<label>سال تحصیلی<input','<input type="hidden" name="student_id" value="'.absint(dgs_att_get('student_id')).'"><label>سال تحصیلی<input',$out);
     $tab=dgs_portal_tab();$tabs=dgs_portal_links();
     if($tabs){$out.='<nav class="dge-tabs" aria-label="منوی پنل">';foreach($tabs as $key=>$item)$out.='<a '.($tab===$key?'aria-current="page"':'').' href="'.esc_url(dgs_edu_url($key,$year)).'">'.esc_html($item[0]).'</a>';$out.='</nav>';}
     $out.=dgs_edu_flash();

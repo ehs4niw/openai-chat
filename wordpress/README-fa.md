@@ -1,3 +1,5 @@
+نسخه جدید **۰.۱۱.۰**: [افزونه کامل](releases/daneshgaran-school-0.11.0.zip) · [ثبت کامل، اکسل و سال تحصیلی](releases/UPDATE-0.11.0-fa.md).
+
 نسخه جدید: **۰.۱۰.۰** — [دانلود افزونه کامل](releases/daneshgaran-school-0.10.0.zip) و [راهنمای پرونده دانش‌آموز](releases/UPDATE-0.10.0-fa.md).
 
 نسخه جدید: **۰.۹.۰** — [دانلود افزونه کامل](releases/daneshgaran-school-0.9.0.zip) و [راهنمای نصب و چهار بخش پنل](releases/UPDATE-0.9.0-fa.md).
