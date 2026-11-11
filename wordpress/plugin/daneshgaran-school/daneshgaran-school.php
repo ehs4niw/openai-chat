@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name: سامانه دانشگران
- * Description: پایه سامانه مدرسه دانشگران؛ صفحات عمومی، اساتید، کلاس‌های تقویتی، درخواست‌ها و راه‌انداز سازگار با المنتور. نسخه ۰.۱، بخش‌های آموزشی در مراحل بعد اضافه می‌شوند.
- * Version: 0.1.0
+ * Description: سامانه مدرسه دانشگران؛ صفحات عمومی و درخواست‌ها، مدیریت کلاس‌ها، کاربران و تخصیص دانش‌آموز، دبیر و مشاور با دسترسی مبتنی بر نقش.
+ * Version: 0.2.0
  * Requires at least: 6.4
  * Requires PHP: 8.1
  * Author: Daneshgaran
@@ -10,15 +10,17 @@
  * License: GPL-2.0-or-later
  */
 if(!defined('ABSPATH'))exit;
-define('DGS_VERSION','0.1.0');define('DGS_PATH',plugin_dir_path(__FILE__));define('DGS_URL',plugin_dir_url(__FILE__));
+define('DGS_VERSION','0.2.0');define('DGS_PATH',plugin_dir_path(__FILE__));define('DGS_URL',plugin_dir_url(__FILE__));
 require_once DGS_PATH.'includes/content.php';
 require_once DGS_PATH.'includes/requests.php';
 require_once DGS_PATH.'includes/render.php';
 require_once DGS_PATH.'includes/setup.php';
+require_once DGS_PATH.'includes/education-data.php';
+require_once DGS_PATH.'includes/education-ui.php';
 function dgs_activate(){
     foreach(array('dgs_student'=>'دانش‌آموز','dgs_teacher'=>'معلم','dgs_counselor'=>'مشاور','dgs_deputy'=>'معاون مدرسه') as $slug=>$name){add_role($slug,$name,array('read'=>true));}
     foreach(array('administrator','dgs_deputy') as $name){$role=get_role($name);if(!$role)continue;foreach(array('edit_dgs_requests','edit_others_dgs_requests','edit_private_dgs_requests','edit_published_dgs_requests','read_private_dgs_requests','publish_dgs_requests','delete_dgs_requests','delete_others_dgs_requests','delete_private_dgs_requests','delete_published_dgs_requests') as $cap)$role->add_cap($cap);}
-    dgs_register_content();flush_rewrite_rules(false);update_option('dgs_version',DGS_VERSION);
+    dgs_register_content();dgs_edu_upgrade();flush_rewrite_rules(false);update_option('dgs_version',DGS_VERSION);
 }
 register_activation_hook(__FILE__,'dgs_activate');
 // غیرفعال‌سازی و به‌روزرسانی اطلاعات کاربران و درخواست‌ها را حذف نمی‌کند.
