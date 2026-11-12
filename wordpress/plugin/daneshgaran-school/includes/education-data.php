@@ -105,6 +105,7 @@ function dgs_edu_execute($op,$data){
         if($wpdb->get_var($wpdb->prepare("SELECT id FROM {$t['subjects']} WHERE title=%s",$title)))return dgs_edu_error('duplicate','این درس از قبل ثبت شده است.');
         if(!$wpdb->insert($t['subjects'],array('title'=>$title,'active'=>1),array('%s','%d')))return dgs_edu_error('write','درس ذخیره نشد.');dgs_edu_audit('subject_create',$wpdb->insert_id);return 'درس ایجاد شد.';
       case 'user_create':
+        if(($data['role']??'')==='dgs_teacher')return dgs_edu_error('teacher','برای ساخت دبیر از مدیریت آموزشی، بخش دبیران و فرم پرونده کامل استفاده کنید.');
         $role=sanitize_key((string)($data['role']??''));if(!in_array($role,array('dgs_student','dgs_teacher','dgs_counselor'),true))return dgs_edu_error('role','نقش انتخاب‌شده مجاز نیست.');
         $name=sanitize_text_field((string)($data['name']??''));$username=dgs_edu_digits((string)($data['national_id']??''));$password=$username;$email='';
         if($name===''||dgs_edu_length($name)>100)return dgs_edu_error('user','نام و نام خانوادگی معتبر وارد کنید.');

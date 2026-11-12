@@ -1,3 +1,5 @@
+افزونه **۰.۱۶.۰**: [دانلود کامل](releases/daneshgaran-school-0.16.0.zip) · [پرونده دبیر و صفحات اساتید/رزومه/آموزشگاه/اخبار](releases/UPDATE-0.16.0-fa.md) · [الگوی اکسل دبیران](samples/daneshgaran-teachers-template.xlsx).
+
 افزونه **۰.۱۵.۰**: [دانلود کامل](releases/daneshgaran-school-0.15.0.zip) · [صفحه ورود مطابق طرح و رفع اسکرول سند](releases/UPDATE-0.15.0-fa.md).
 
 افزونه **۰.۱۴.۲**: [دانلود کامل](releases/daneshgaran-school-0.14.2.zip) · رفع اسکرول افقی صفحه عمومی.
