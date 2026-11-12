@@ -1,3 +1,5 @@
+نسخه **۰.۱۲.۱**: [دانلود افزونه](releases/daneshgaran-school-0.12.1.zip) · [سال متمرکز، لوگو و فونت پنل](releases/UPDATE-0.12.1-fa.md).
+
 نسخه **۰.۱۲.۰**: [افزونه کامل](releases/daneshgaran-school-0.12.0.zip) · [راهنمای مطالعه روزانه و پنل مشاور](releases/UPDATE-0.12.0-fa.md).
 
 نسخه **۰.۱۱.۲**: [افزونه کامل](releases/daneshgaran-school-0.11.2.zip) · [راهنما](releases/UPDATE-0.11.2-fa.md).
