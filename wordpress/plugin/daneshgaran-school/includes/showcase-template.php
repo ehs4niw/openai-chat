@@ -1,0 +1,1 @@
+<?php if(!defined('ABSPATH'))exit;get_header();$dsh_pages=get_option('dgs_pages',array());echo !empty($dsh_pages['about'])&&is_page((int)$dsh_pages['about'])?dgs_showcase_about():dgs_showcase_home();get_footer();
