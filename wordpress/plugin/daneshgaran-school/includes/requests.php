@@ -3,6 +3,7 @@ if(!defined('ABSPATH'))exit;
 function dgs_request_types(){return array('admission'=>'پیش‌ثبت‌نام مدرسه','class'=>'پیش‌ثبت‌نام کلاس تقویتی','counseling'=>'درخواست مشاوره حضوری','contact'=>'پیام ارتباط با مدرسه');}
 function dgs_normalize_phone($value){$value=strtr((string)$value,array('۰'=>'0','۱'=>'1','۲'=>'2','۳'=>'3','۴'=>'4','۵'=>'5','۶'=>'6','۷'=>'7','۸'=>'8','۹'=>'9','٠'=>'0','١'=>'1','٢'=>'2','٣'=>'3','٤'=>'4','٥'=>'5','٦'=>'6','٧'=>'7','٨'=>'8','٩'=>'9'));$value=preg_replace('/\D/','',$value);if(strpos($value,'0098')===0)$value='0'.substr($value,4);elseif(strlen($value)===12&&strpos($value,'98')===0)$value='0'.substr($value,2);elseif(strlen($value)===10&&strpos($value,'9')===0)$value='0'.$value;return preg_match('/^09[0-9]{9}$/D',$value)?$value:'';}
 function dgs_request_form($type='contact',$class_id=0){
+    if(function_exists('dgs_public_request_view'))return dgs_public_request_view($type,$class_id);
     if(!isset(dgs_request_types()[$type]))return '';
     $ids=get_option('dgs_pages',array());$page_key=$type==='admission'?'admission':($type==='class'?'academy':'contact');$return=$class_id?get_permalink($class_id):dgs_page_url($page_key);
     $uid=wp_unique_id('dgs-form-');ob_start(); ?>
@@ -28,6 +29,7 @@ function dgs_request_form($type='contact',$class_id=0){
 function dgs_validate_request($input){
     foreach(array('dgs_type','name','phone','grade','field','parent_name','email','message','website_url','consent','class_id','prev_school','current_grade','relation') as $key)if(isset($input[$key])&&!is_scalar($input[$key]))return new WP_Error('invalid','اطلاعات فرم معتبر نیست.');
     $type=sanitize_key((string)($input['dgs_type']??''));if(!isset(dgs_request_types()[$type]))return new WP_Error('type','نوع درخواست معتبر نیست.');
+    $enhanced=dgs_public_validate_fields($input,$type);if(is_wp_error($enhanced))return $enhanced;$input=array_merge($input,$enhanced);
     if(!empty($input['website_url']))return new WP_Error('spam','امکان ثبت درخواست وجود ندارد.');
     $name=sanitize_text_field((string)($input['name']??''));$phone=dgs_normalize_phone($input['phone']??'');
     if($name===''||strlen($name)>400||!$phone||($input['consent']??'')!=='1')return new WP_Error('required','نام، شماره موبایل معتبر و تأیید رضایت را وارد کنید.');
@@ -38,7 +40,7 @@ function dgs_validate_request($input){
     $class_id=absint($input['class_id']??0);if($type==='class'&&(!$class_id||get_post_type($class_id)!=='dgs_class'||get_post_status($class_id)!=='publish'))return new WP_Error('class','کلاس انتخاب‌شده در دسترس نیست.');
     $parent=sanitize_text_field((string)($input['parent_name']??''));if(strlen($parent)>400)return new WP_Error('parent','نام ولی بیش از حد طولانی است.');
     $extra=array();foreach(array('prev_school','current_grade','relation') as $key){$extra[$key]=sanitize_text_field((string)($input[$key]??''));if(dgs_edu_length($extra[$key])>100)return new WP_Error('field','اطلاعات تکمیلی بیش از حد طولانی است.');}if($extra['current_grade']!==''&&!in_array($extra['current_grade'],array('7','8','9','10','11','12'),true))return new WP_Error('grade','پایه فعلی معتبر نیست.');
-    return array_merge($extra,array('type'=>$type,'name'=>$name,'phone'=>$phone,'grade'=>$grade,'field'=>$field,'parent_name'=>$parent,'email'=>$email,'message'=>$message,'class_id'=>$type==='class'?$class_id:0,'created'=>current_time('mysql')));
+    return array_merge($enhanced,$extra,array('type'=>$type,'name'=>$name,'phone'=>$phone,'grade'=>$grade,'field'=>$field,'parent_name'=>$parent,'email'=>$email,'message'=>$message,'class_id'=>$type==='class'?$class_id:0,'created'=>current_time('mysql')));
 }
 function dgs_submit_request(){
     if(($_SERVER['REQUEST_METHOD']??'')!=='POST')wp_die('روش درخواست معتبر نیست.','درخواست نامعتبر',array('response'=>405));
@@ -47,8 +49,9 @@ function dgs_submit_request(){
     $data=dgs_validate_request(wp_unslash($_POST));if(is_wp_error($data))wp_die(esc_html($data->get_error_message()),'بررسی اطلاعات',array('response'=>400,'back_link'=>true));
     $ip=(string)($_SERVER['REMOTE_ADDR']??'');$key='dgs_req_'.hash_hmac('sha256',$ip,wp_salt('nonce'));$count=(int)get_transient($key);
     if($count>=5)wp_die('تعداد درخواست‌ها زیاد است؛ کمی بعد دوباره تلاش کنید.','محدودیت درخواست',array('response'=>429,'back_link'=>true));
+    if($data['type']==='admission'){$documents=dgs_public_check_documents($_FILES['documents']??null);if(is_wp_error($documents))wp_die(esc_html($documents->get_error_message()),'مدارک',array('response'=>400,'back_link'=>true));}
     if($data['type']!=='admission'&&!empty($_FILES['documents']))wp_die('مدارک فقط برای پذیرش مدرسه مجازند.','',array('response'=>400));$files_fingerprint=dgs_request_uploads($_FILES['documents']??null);if(is_wp_error($files_fingerprint))wp_die(esc_html($files_fingerprint->get_error_message()),'مدارک',array('response'=>400,'back_link'=>true));
-    $fingerprint='dgs_dup_'.hash_hmac('sha256',wp_json_encode($data['type'].'|'.$data['phone'].'|'.$data['class_id'].'|'.$data['message'].'|'.$files_fingerprint),wp_salt('nonce'));
+    $fingerprint='dgs_dup_'.hash_hmac('sha256',wp_json_encode($data['type'].'|'.$data['phone'].'|'.$data['class_id'].'|'.$data['name'].'|'.($data['student_national']??'').'|'.$data['message'].'|'.$files_fingerprint),wp_salt('nonce'));
     $existing=(int)get_transient($fingerprint);
     if(!$existing||get_post_status($existing)!=='private'){
         $files=dgs_request_uploads($_FILES['documents']??null,true);if(is_wp_error($files))wp_die(esc_html($files->get_error_message()),'مدارک',array('response'=>400,'back_link'=>true));
@@ -57,8 +60,8 @@ function dgs_submit_request(){
         if(get_post_meta($id,'_dgs_data',true)!==$data||($files&&get_post_meta($id,'_dgs_request_files',true)!==$files)){wp_delete_post($id,true);dgs_request_files_cleanup($files);wp_die('ذخیره اطلاعات کامل نشد؛ دوباره تلاش کنید.','خطای ذخیره',array('response'=>500,'back_link'=>true));}
         set_transient($key,$count+1,HOUR_IN_SECONDS);set_transient($fingerprint,$id,5*MINUTE_IN_SECONDS);
     }
-    $return=$data['class_id']?get_permalink($data['class_id']):dgs_page_url($data['type']==='admission'?'admission':'contact');
-    wp_safe_redirect(add_query_arg('dgs_sent','1',$return),303);exit;
+    $return=dgs_public_request_return($data['type'],$data['class_id']);
+    wp_safe_redirect(add_query_arg(array('dgs_sent'=>'1','request_kind'=>$data['type']),$return),303);exit;
 }
 add_action('admin_post_nopriv_dgs_submit_request','dgs_submit_request');add_action('admin_post_dgs_submit_request','dgs_submit_request');
 add_action('template_redirect',function(){

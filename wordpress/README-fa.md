@@ -1,3 +1,5 @@
+نسخه **۰.۱۴.۰**: [افزونه کامل](releases/daneshgaran-school-0.14.0.zip) · [فرم‌های عمومی پیش‌ثبت‌نام و مشاوره](releases/UPDATE-0.14.0-fa.md).
+
 نسخه **۰.۱۳.۰**: [افزونه کامل](releases/daneshgaran-school-0.13.0.zip) · [نظارت/انتشار کارنامه و مدیریت درخواست‌ها](releases/UPDATE-0.13.0-fa.md).
 
 نسخه **۰.۱۲.۳**: [افزونه](releases/daneshgaran-school-0.12.3.zip) · [اصلاح اندازه‌های نمادک](releases/UPDATE-0.12.3-fa.md).

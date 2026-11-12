@@ -9,7 +9,7 @@ function dgs_register_content(){
 add_action('init','dgs_register_content');
 function dgs_meta_fields($type){
     if($type==='dgs_teacher')return array('_dgs_specialty'=>'درس یا سمت','_dgs_group'=>'گروه نمایش: teacher برای اساتید، staff برای مدیریت و کادر','_dgs_video'=>'آدرس مستقیم فیلم معرفی (MP4)');
-    if($type==='dgs_class')return array('_dgs_schedule'=>'روز و ساعت برگزاری','_dgs_teacher_name'=>'نام مدرس','_dgs_grade'=>'پایه تحصیلی','_dgs_capacity'=>'ظرفیت کلاس (عدد)');
+    if($type==='dgs_class')return array('_dgs_start_date'=>'تاریخ شروع (شمسی)','_dgs_schedule'=>'روز و ساعت برگزاری','_dgs_teacher_name'=>'نام مدرس','_dgs_grade'=>'پایه تحصیلی','_dgs_capacity'=>'ظرفیت کلاس (عدد)');
     if($type==='dgs_star')return array('_dgs_period'=>'بازه: week / month / term / year','_dgs_star_class'=>'پایه و رشته','_dgs_achievement'=>'عنوان موفقیت');
     return array();
 }
