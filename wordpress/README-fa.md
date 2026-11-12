@@ -1,3 +1,5 @@
+نسخه **۰.۱۳.۰**: [افزونه کامل](releases/daneshgaran-school-0.13.0.zip) · [نظارت/انتشار کارنامه و مدیریت درخواست‌ها](releases/UPDATE-0.13.0-fa.md).
+
 نسخه **۰.۱۲.۳**: [افزونه](releases/daneshgaran-school-0.12.3.zip) · [اصلاح اندازه‌های نمادک](releases/UPDATE-0.12.3-fa.md).
 
 هویت مشترک کل سایت: **افزونه۰.۱۲.۲ + قالب۰.۱.۳** — [افزونه](releases/daneshgaran-school-0.12.2.zip) · [پچ قالب برای cPanel](releases/daneshgaran-theme-patch-0.1.3.zip) · [قالب کامل](releases/daneshgaran-theme-0.1.3.zip) · [راهنما](releases/UPDATE-0.12.2-fa.md).
