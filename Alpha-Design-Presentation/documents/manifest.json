@@ -1,0 +1,410 @@
+{
+  "package": "Alpha design presentation",
+  "desktop_screens": 50,
+  "mobile_screens": 12,
+  "selected_pdf_pages": 20,
+  "plugins_proposed": 7,
+  "status": "design prototype, not production software",
+  "files": [
+    {
+      "path": "Alpha-All-Screens.pdf",
+      "bytes": 9274568,
+      "sha256": "ea10911e46efc814194ae00e3826dad88b6d0dc1efb34bfb452d2c8edf9c6b6b"
+    },
+    {
+      "path": "Alpha-Client-Presentation.pdf",
+      "bytes": 4156092,
+      "sha256": "ca42ed1b1877fd09a8ff3c5dfb807c2ad986be4b5254416d7c778b10c923a21a"
+    },
+    {
+      "path": "Alpha-Mobile-Preview.pdf",
+      "bytes": 1381298,
+      "sha256": "8cfc6b4e77815a92d2878c445ff386fcfc47bd06722142be3b29f06f1f548b8d"
+    },
+    {
+      "path": "START-HERE-fa.txt",
+      "bytes": 4197,
+      "sha256": "5f0871be943d438f6f5bfb877a92728e570cd2d220909e54ca669fcc48dc4120"
+    },
+    {
+      "path": "assets/FONT-LICENSE.txt",
+      "bytes": 5208,
+      "sha256": "075f91382875da1c4b491f1facf2586f55448705133264d98ce15cab6211b125"
+    },
+    {
+      "path": "assets/app.js",
+      "bytes": 87653,
+      "sha256": "359fe15e3b5a5869bddf3fb42c76dcd9d33787e983a6e2b71a6bf3349220d9e5"
+    },
+    {
+      "path": "assets/arabic-bold.ttf",
+      "bytes": 252940,
+      "sha256": "ded6fc7359ca36d15d7aab9ef0c066e21ce48b26a069994d6602fa2cb9a1b952"
+    },
+    {
+      "path": "assets/arabic-regular.ttf",
+      "bytes": 244072,
+      "sha256": "504d7407d86875acf7d04dfaa0fd7524d0b8797723bc4aa18022f29db25b0b6e"
+    },
+    {
+      "path": "assets/architecture-art.png",
+      "bytes": 1957493,
+      "sha256": "faff2bcd0cbec613b6c5cd07331118adccb2893041dab38692bc51efba07ef94"
+    },
+    {
+      "path": "assets/data.js",
+      "bytes": 8436,
+      "sha256": "7836bbe8403bdd524f26c228bbdeab16d840f246b9f335abe20e8daeb5a9311a"
+    },
+    {
+      "path": "assets/style.css",
+      "bytes": 32539,
+      "sha256": "65c42520dbddc3e34828d08a4a3a9e18f9a797685001fab953445e328cb041ef"
+    },
+    {
+      "path": "desktop/01-cover.png",
+      "bytes": 1197832,
+      "sha256": "84f2351a519c3689aad8d7151290f105302944f4c652caed230a76b6cf29d03b"
+    },
+    {
+      "path": "desktop/02-architecture.png",
+      "bytes": 184156,
+      "sha256": "611be6866d4fbb23f99146e427607d020f3123b7612db3ab89408ffbb9d3e670"
+    },
+    {
+      "path": "desktop/03-roadmap.png",
+      "bytes": 109663,
+      "sha256": "1408f8ac70cb34ea16ca559180bb90cba90d4aac18f1da383e9f71e9e199293f"
+    },
+    {
+      "path": "desktop/04-intake.png",
+      "bytes": 312853,
+      "sha256": "cebc7db321dba7539e7ed9d64c6631609b62b403b4208f069bbef165df04d6b7"
+    },
+    {
+      "path": "desktop/05-intake-success.png",
+      "bytes": 265116,
+      "sha256": "1762a12ab8e16b2b003cef5f553d7db398603047949831c8e2823d122c64a61e"
+    },
+    {
+      "path": "desktop/06-booking.png",
+      "bytes": 180934,
+      "sha256": "9d295b0b366b947674371223ecb411116f956e9ff85fc0ddad6835a18fe57078"
+    },
+    {
+      "path": "desktop/07-booking-success.png",
+      "bytes": 186943,
+      "sha256": "37e302ec53bdf731df5565b581f39976ef79b0c5f1df37ceb4563bf80a426aa3"
+    },
+    {
+      "path": "desktop/08-login.png",
+      "bytes": 283364,
+      "sha256": "aef0077d2ff89a1cdc1e74c49a75bce7e4a4154e3447f433552c6e4162cc261f"
+    },
+    {
+      "path": "desktop/09-dashboard.png",
+      "bytes": 525540,
+      "sha256": "c25fb7ef575d65cf0f58c87e7e2c50fd6bab1bc0e424fe1475cfabe08cf364da"
+    },
+    {
+      "path": "desktop/10-kanban.png",
+      "bytes": 437184,
+      "sha256": "11d1560a5f08dd170e85bd56045cc420515ddd0bc4ecf75d170879d0dee66864"
+    },
+    {
+      "path": "desktop/11-applicant.png",
+      "bytes": 351523,
+      "sha256": "efa9277b775a1a0a936da937de87bd1d7e3338a3e4172397a5871cd15d48b8b6"
+    },
+    {
+      "path": "desktop/12-interview.png",
+      "bytes": 268756,
+      "sha256": "e5f3bc8ff616f4d9bfc78796073b8b9138cd592ee13f12ad1dbd54a2f1d59cad"
+    },
+    {
+      "path": "desktop/13-followups.png",
+      "bytes": 321279,
+      "sha256": "d8656e66134b0ed6eb2d9d8422a8ffb89870782f3a62d91a4d421a929006d80e"
+    },
+    {
+      "path": "desktop/14-calendar.png",
+      "bytes": 322768,
+      "sha256": "8b01f47227efd34023f2e712cc50149036794daba0918db0755e9dc919749c31"
+    },
+    {
+      "path": "desktop/15-availability.png",
+      "bytes": 257066,
+      "sha256": "3e7c438e4482b3fa3024828a76deef04e7b2e5460dcedad0c5cff6787362dfe0"
+    },
+    {
+      "path": "desktop/16-students.png",
+      "bytes": 387531,
+      "sha256": "d9ec4c30902bc47c460b5688356d2f756da4acdf312806dd2d00006ec6afc93f"
+    },
+    {
+      "path": "desktop/17-dossier.png",
+      "bytes": 317790,
+      "sha256": "28af4d9353b53baabe0ba2f6c33d2b928e458b3c6095afc57ebc9c8a0565aa6d"
+    },
+    {
+      "path": "desktop/18-documents.png",
+      "bytes": 276358,
+      "sha256": "4961cb5cbbeb614920c96c6be24866f4865ba45c9526ec66dba80de4ec286750"
+    },
+    {
+      "path": "desktop/19-catalog.png",
+      "bytes": 377623,
+      "sha256": "6ae0b68269c17f0a38dfc0a2b973c5900d167becc0a49e2a55b3b650b969d3fc"
+    },
+    {
+      "path": "desktop/20-service.png",
+      "bytes": 345327,
+      "sha256": "db0e8358fa6d81951c63599872fb3bc55dbcf1352e8a926f7ee23d677feb6466"
+    },
+    {
+      "path": "desktop/21-service-editor.png",
+      "bytes": 264263,
+      "sha256": "40e23672cd9c460e5ccdcb9a7f8f2563079ba2d5d8cd728cca912ddbe6422c42"
+    },
+    {
+      "path": "desktop/22-finance.png",
+      "bytes": 457501,
+      "sha256": "c90443a8b438a5ca5e29bd36e58c190500639347585d046963508df04c9ae344"
+    },
+    {
+      "path": "desktop/23-ledger.png",
+      "bytes": 376075,
+      "sha256": "b9b4502849d8e092af7f09b3bac51ef1cc693df8d9099a48af147291336b157b"
+    },
+    {
+      "path": "desktop/24-payments.png",
+      "bytes": 330792,
+      "sha256": "67e1577ab08c2c8c75472652f15f559aa7da916df787d06248e44bee0abd6ac0"
+    },
+    {
+      "path": "desktop/25-approval.png",
+      "bytes": 270959,
+      "sha256": "1ad03dfadfa2c05a28c71a8ba140eaf31effcd3ef8b5b74c16ad0a539f849996"
+    },
+    {
+      "path": "desktop/26-cheques.png",
+      "bytes": 391015,
+      "sha256": "2f4a2d6d9fb0f338419a1c1d1f706c13452fd8463a91ef084dc5ff8b48cbc64a"
+    },
+    {
+      "path": "desktop/27-installments.png",
+      "bytes": 385147,
+      "sha256": "b935dc01ed8cd0c5e21d00402ac07867b0a716eb1f4af509f9eb7acc5e058be5"
+    },
+    {
+      "path": "desktop/28-plans.png",
+      "bytes": 287768,
+      "sha256": "3e084cda55a151683697e3334335484c6aa2be185db916c279b2e1f5876f7153"
+    },
+    {
+      "path": "desktop/29-registration-reports.png",
+      "bytes": 374863,
+      "sha256": "9b5acd23b67169b6723c4be0a828ee22611d15e0f7371c8e53b04f4efec182a5"
+    },
+    {
+      "path": "desktop/30-financial-reports.png",
+      "bytes": 332264,
+      "sha256": "4c027b7001b28bd6c759b3dea8965d7e394aabb939a70b770551b49b80faddd7"
+    },
+    {
+      "path": "desktop/31-import.png",
+      "bytes": 256351,
+      "sha256": "1495ba69276d6b2e3be7b04545fa9b9fdb295d6ddde66ca535d90762f83047ee"
+    },
+    {
+      "path": "desktop/32-import-validation.png",
+      "bytes": 427483,
+      "sha256": "24317ec42868911fb99153ce8bb02d4ce28a1ce085cf27cb487c0bb5db55258d"
+    },
+    {
+      "path": "desktop/33-exports.png",
+      "bytes": 249383,
+      "sha256": "89c37eaca524a5b61aa411cfaf982a5fe6f3c0554a74a7f461813e9af65228d7"
+    },
+    {
+      "path": "desktop/34-notifications.png",
+      "bytes": 325746,
+      "sha256": "dc610fa5a75de3742a65f7be72233d763a30b4e8f5d9798640e6f9483a2c08f3"
+    },
+    {
+      "path": "desktop/35-automations.png",
+      "bytes": 383470,
+      "sha256": "7451a2c2ba1370c9ff42d89a16f1e7454f2a602e12aaecce9ab181e276e3ee75"
+    },
+    {
+      "path": "desktop/36-permissions.png",
+      "bytes": 298523,
+      "sha256": "7e4a588918776206d8298b50aff58fcaec7a5a1c2c409b7b24601e97be989c40"
+    },
+    {
+      "path": "desktop/37-users.png",
+      "bytes": 257351,
+      "sha256": "a1c10dc389ed866b16f6b5f4f9d1b4f075cfb7ecef5ca071db4fd52f495802e9"
+    },
+    {
+      "path": "desktop/38-settings.png",
+      "bytes": 243788,
+      "sha256": "1446b9f6d4f91530a1513f56712a46a6adaa406c8fbc6a287707895a713d4273"
+    },
+    {
+      "path": "desktop/39-audit.png",
+      "bytes": 263881,
+      "sha256": "fba198107af6d3e0fd8a04a8568bcc8919bf29f462e301b35e39c7933c9e00cc"
+    },
+    {
+      "path": "desktop/40-student-home.png",
+      "bytes": 462392,
+      "sha256": "222f1e6ea4a380b3b2ebccca593b2b8cee93d7ef9d87a8fa80d711bd6e07697b"
+    },
+    {
+      "path": "desktop/41-student-profile.png",
+      "bytes": 239704,
+      "sha256": "786250b5e7f04659afd73250e01662817654942bc5c60434190a422db3df4092"
+    },
+    {
+      "path": "desktop/42-student-services.png",
+      "bytes": 307262,
+      "sha256": "91f17cd3386b3bc2efed621aff1a57478613173cee28b992d957a10c143a1441"
+    },
+    {
+      "path": "desktop/43-student-finance.png",
+      "bytes": 445940,
+      "sha256": "f62d229cbd348d628e7a995dc9729d5f517bb2433ad35626161eb1b503956fe5"
+    },
+    {
+      "path": "desktop/44-student-documents.png",
+      "bytes": 293713,
+      "sha256": "5b5e991cf892bd1938e1b4ddc7678368277aafb44c1634c7c3497af903b3e5f5"
+    },
+    {
+      "path": "desktop/45-student-calendar.png",
+      "bytes": 324694,
+      "sha256": "37eb379efc09e152d207e7978f434ebf42ff956f9334bd93094780bd08dc6dc7"
+    },
+    {
+      "path": "desktop/46-student-messages.png",
+      "bytes": 233831,
+      "sha256": "b03fc8b255a8a018db8fe2c3ed12ead18ea637a5f0dab876a815e3583d4e2691"
+    },
+    {
+      "path": "desktop/47-parent-home.png",
+      "bytes": 427863,
+      "sha256": "8d284be5521f9dd44c90eda11fd33e3c4d3a8add090d0285879c1855f462a4b4"
+    },
+    {
+      "path": "desktop/48-consultant-home.png",
+      "bytes": 420030,
+      "sha256": "5f50d090f184ff6f0649b0f61369085a290930276781cfb7a7da99f3219900c6"
+    },
+    {
+      "path": "desktop/49-future.png",
+      "bytes": 85588,
+      "sha256": "dfffcc2f0c273d1845cbbbfe55165283687ac91cefa0724eee156b7d93b74ada"
+    },
+    {
+      "path": "desktop/50-scope.png",
+      "bytes": 110843,
+      "sha256": "6ac36bb4cf54bf60c3ae905874198fe1eb2b8f6193ce71c3ce2e48ab6db57766"
+    },
+    {
+      "path": "documents/Module-Scope-fa.md",
+      "bytes": 3401,
+      "sha256": "7de3f34fa9b880b08e6f0ef326c8b0806ac45ec3c04a80c0c37d908a87645d71"
+    },
+    {
+      "path": "documents/Pages-fa.md",
+      "bytes": 8301,
+      "sha256": "1c8887c92bb492b3dca0a372341a9c0536bd7a9389847bb8a36acf692f08b543"
+    },
+    {
+      "path": "documents/Proposal-fa.md",
+      "bytes": 5708,
+      "sha256": "3bc2a6c57e5dcaabcd0d34952f86b5f55ce0f9c5ae21dd02e50e77f05ecea91b"
+    },
+    {
+      "path": "documents/Validation-fa.txt",
+      "bytes": 792,
+      "sha256": "6ad6befe7d871234205dba14341373b6df1dc70fa3198dbd5a04e9d18002ee23"
+    },
+    {
+      "path": "documents/pages.json",
+      "bytes": 12782,
+      "sha256": "93ae05eab097c80c4e5d48def2a644cc3716ca0a9bddbf16d088ccdda7a846f8"
+    },
+    {
+      "path": "documents/validation.json",
+      "bytes": 11035,
+      "sha256": "fb6dafc94fab474ac70a6ec39ebcf6464fd3045e647da2311f821676ff1373ad"
+    },
+    {
+      "path": "index.html",
+      "bytes": 426,
+      "sha256": "239e3c56d6aa7096e1babea24bb0e9b6fc7c21cc03d8be170b70ac7422bd97ed"
+    },
+    {
+      "path": "mobile/04-intake.png",
+      "bytes": 188214,
+      "sha256": "fa34489769b25fd196186ee1a0e6ab8b151340768ba332c2c43770b2a1454aab"
+    },
+    {
+      "path": "mobile/06-booking.png",
+      "bytes": 119268,
+      "sha256": "e2872db38e90528d945ffd8cb0c8e2aabd80704a576bb505e61d18be2dce7977"
+    },
+    {
+      "path": "mobile/08-login.png",
+      "bytes": 129855,
+      "sha256": "260c50330f20bcbcce49809dae2ff55fbc0e2fffa5635115b64ae2bfa9c07129"
+    },
+    {
+      "path": "mobile/09-dashboard.png",
+      "bytes": 176182,
+      "sha256": "2d5c695821f3d3728ecb734c920b4f7eac2659b92d0e53fa81891ab0b04d39a8"
+    },
+    {
+      "path": "mobile/10-kanban.png",
+      "bytes": 126753,
+      "sha256": "77afee7e2d362715f7e274f6fc5161f77aa42553605d9638059a88fee5f78215"
+    },
+    {
+      "path": "mobile/25-approval.png",
+      "bytes": 81768,
+      "sha256": "8efc287ffda33a382758003f9f9baf44cc2fab64c12252a48aa5a017f9376dad"
+    },
+    {
+      "path": "mobile/40-student-home.png",
+      "bytes": 182009,
+      "sha256": "5aa58f65cae29cf8341008e56a68563c53e27d9d4645c518695aa054cd596220"
+    },
+    {
+      "path": "mobile/43-student-finance.png",
+      "bytes": 141779,
+      "sha256": "af0199d8c2a743cf50d9d7e01c8b34d8b1ec80d32c2671afdc297fd38664cda6"
+    },
+    {
+      "path": "mobile/44-student-documents.png",
+      "bytes": 69419,
+      "sha256": "59587178ee8f5c1fb5e5b3c4767854d99f97724be390b2811ecfe6bbdfb61139"
+    },
+    {
+      "path": "mobile/45-student-calendar.png",
+      "bytes": 110008,
+      "sha256": "5062eb468004b6340650e0200d9d58f3b8278f41c5ec92ee1fe1075eb0f215c4"
+    },
+    {
+      "path": "mobile/47-parent-home.png",
+      "bytes": 150175,
+      "sha256": "db98a90bd2681e3141fdcc8e447cc274ef2bced46a9ba84689fb643d3a0c39cd"
+    },
+    {
+      "path": "mobile/48-consultant-home.png",
+      "bytes": 150293,
+      "sha256": "c938a56815c043bb9aa032f23118b93a8b3d8c7b23d0aca247ea8c05ba6d3d8e"
+    }
+  ]
+}

@@ -1,0 +1,642 @@
+{
+  "desktop": [
+    {
+      "id": "cover",
+      "width": 1600,
+      "height": 1000,
+      "viewport": 1600
+    },
+    {
+      "id": "architecture",
+      "width": 1600,
+      "height": 1000,
+      "viewport": 1600
+    },
+    {
+      "id": "roadmap",
+      "width": 1600,
+      "height": 1009,
+      "viewport": 1600
+    },
+    {
+      "id": "intake",
+      "width": 1600,
+      "height": 2357,
+      "viewport": 1600
+    },
+    {
+      "id": "intake-success",
+      "width": 1600,
+      "height": 1006,
+      "viewport": 1600
+    },
+    {
+      "id": "booking",
+      "width": 1600,
+      "height": 1040,
+      "viewport": 1600
+    },
+    {
+      "id": "booking-success",
+      "width": 1600,
+      "height": 1181,
+      "viewport": 1600
+    },
+    {
+      "id": "login",
+      "width": 1600,
+      "height": 1000,
+      "viewport": 1600
+    },
+    {
+      "id": "dashboard",
+      "width": 1600,
+      "height": 1375,
+      "viewport": 1600
+    },
+    {
+      "id": "kanban",
+      "width": 1600,
+      "height": 1271,
+      "viewport": 1600
+    },
+    {
+      "id": "applicant",
+      "width": 1600,
+      "height": 1267,
+      "viewport": 1600
+    },
+    {
+      "id": "interview",
+      "width": 1600,
+      "height": 1000,
+      "viewport": 1600
+    },
+    {
+      "id": "followups",
+      "width": 1600,
+      "height": 1021,
+      "viewport": 1600
+    },
+    {
+      "id": "calendar",
+      "width": 1600,
+      "height": 1301,
+      "viewport": 1600
+    },
+    {
+      "id": "availability",
+      "width": 1600,
+      "height": 1000,
+      "viewport": 1600
+    },
+    {
+      "id": "students",
+      "width": 1600,
+      "height": 1190,
+      "viewport": 1600
+    },
+    {
+      "id": "dossier",
+      "width": 1600,
+      "height": 1202,
+      "viewport": 1600
+    },
+    {
+      "id": "documents",
+      "width": 1600,
+      "height": 1000,
+      "viewport": 1600
+    },
+    {
+      "id": "catalog",
+      "width": 1600,
+      "height": 1020,
+      "viewport": 1600
+    },
+    {
+      "id": "service",
+      "width": 1600,
+      "height": 1000,
+      "viewport": 1600
+    },
+    {
+      "id": "service-editor",
+      "width": 1600,
+      "height": 1109,
+      "viewport": 1600
+    },
+    {
+      "id": "finance",
+      "width": 1600,
+      "height": 1335,
+      "viewport": 1600
+    },
+    {
+      "id": "ledger",
+      "width": 1600,
+      "height": 1008,
+      "viewport": 1600
+    },
+    {
+      "id": "payments",
+      "width": 1600,
+      "height": 1092,
+      "viewport": 1600
+    },
+    {
+      "id": "approval",
+      "width": 1600,
+      "height": 1000,
+      "viewport": 1600
+    },
+    {
+      "id": "cheques",
+      "width": 1600,
+      "height": 1190,
+      "viewport": 1600
+    },
+    {
+      "id": "installments",
+      "width": 1600,
+      "height": 1190,
+      "viewport": 1600
+    },
+    {
+      "id": "plans",
+      "width": 1600,
+      "height": 1081,
+      "viewport": 1600
+    },
+    {
+      "id": "registration-reports",
+      "width": 1600,
+      "height": 1092,
+      "viewport": 1600
+    },
+    {
+      "id": "financial-reports",
+      "width": 1600,
+      "height": 1000,
+      "viewport": 1600
+    },
+    {
+      "id": "import",
+      "width": 1600,
+      "height": 1000,
+      "viewport": 1600
+    },
+    {
+      "id": "import-validation",
+      "width": 1600,
+      "height": 1255,
+      "viewport": 1600
+    },
+    {
+      "id": "exports",
+      "width": 1600,
+      "height": 1000,
+      "viewport": 1600
+    },
+    {
+      "id": "notifications",
+      "width": 1600,
+      "height": 1000,
+      "viewport": 1600
+    },
+    {
+      "id": "automations",
+      "width": 1600,
+      "height": 1339,
+      "viewport": 1600
+    },
+    {
+      "id": "permissions",
+      "width": 1600,
+      "height": 1054,
+      "viewport": 1600
+    },
+    {
+      "id": "users",
+      "width": 1600,
+      "height": 1000,
+      "viewport": 1600
+    },
+    {
+      "id": "settings",
+      "width": 1600,
+      "height": 1000,
+      "viewport": 1600
+    },
+    {
+      "id": "audit",
+      "width": 1600,
+      "height": 1000,
+      "viewport": 1600
+    },
+    {
+      "id": "student-home",
+      "width": 1600,
+      "height": 1221,
+      "viewport": 1600
+    },
+    {
+      "id": "student-profile",
+      "width": 1600,
+      "height": 1000,
+      "viewport": 1600
+    },
+    {
+      "id": "student-services",
+      "width": 1600,
+      "height": 1000,
+      "viewport": 1600
+    },
+    {
+      "id": "student-finance",
+      "width": 1600,
+      "height": 1413,
+      "viewport": 1600
+    },
+    {
+      "id": "student-documents",
+      "width": 1600,
+      "height": 1090,
+      "viewport": 1600
+    },
+    {
+      "id": "student-calendar",
+      "width": 1600,
+      "height": 1000,
+      "viewport": 1600
+    },
+    {
+      "id": "student-messages",
+      "width": 1600,
+      "height": 1000,
+      "viewport": 1600
+    },
+    {
+      "id": "parent-home",
+      "width": 1600,
+      "height": 1054,
+      "viewport": 1600
+    },
+    {
+      "id": "consultant-home",
+      "width": 1600,
+      "height": 1118,
+      "viewport": 1600
+    },
+    {
+      "id": "future",
+      "width": 1600,
+      "height": 1000,
+      "viewport": 1600
+    },
+    {
+      "id": "scope",
+      "width": 1600,
+      "height": 1051,
+      "viewport": 1600
+    }
+  ],
+  "mobile": [
+    {
+      "id": "intake",
+      "width": 390,
+      "height": 3683,
+      "viewport": 390
+    },
+    {
+      "id": "booking",
+      "width": 390,
+      "height": 1440,
+      "viewport": 390
+    },
+    {
+      "id": "login",
+      "width": 390,
+      "height": 1061,
+      "viewport": 390
+    },
+    {
+      "id": "dashboard",
+      "width": 390,
+      "height": 2074,
+      "viewport": 390
+    },
+    {
+      "id": "kanban",
+      "width": 390,
+      "height": 1627,
+      "viewport": 390
+    },
+    {
+      "id": "approval",
+      "width": 390,
+      "height": 1451,
+      "viewport": 390
+    },
+    {
+      "id": "student-home",
+      "width": 390,
+      "height": 1929,
+      "viewport": 390
+    },
+    {
+      "id": "student-finance",
+      "width": 390,
+      "height": 1898,
+      "viewport": 390
+    },
+    {
+      "id": "student-documents",
+      "width": 390,
+      "height": 1387,
+      "viewport": 390
+    },
+    {
+      "id": "student-calendar",
+      "width": 390,
+      "height": 1432,
+      "viewport": 390
+    },
+    {
+      "id": "parent-home",
+      "width": 390,
+      "height": 1553,
+      "viewport": 390
+    },
+    {
+      "id": "consultant-home",
+      "width": 390,
+      "height": 1596,
+      "viewport": 390
+    }
+  ],
+  "errors": [],
+  "interactions": {
+    "gallery_count": 50,
+    "gallery_filter_visible": 5,
+    "filtered_kanban_cards": 1,
+    "kanban_drag_target": "1",
+    "kanban_button_target": "1",
+    "slot_selected": "۱۵:۰۰",
+    "intake_next": "#intake-success",
+    "approval_disclaimer": "تأیید نمایشی انتخاب شد؛ سند واقعی ثبت یا تأیید نشده است.",
+    "mobile_nav_open": true
+  },
+  "mobile_all": [
+    {
+      "id": "cover",
+      "width": 390,
+      "viewport": 390
+    },
+    {
+      "id": "architecture",
+      "width": 390,
+      "viewport": 390
+    },
+    {
+      "id": "roadmap",
+      "width": 390,
+      "viewport": 390
+    },
+    {
+      "id": "intake",
+      "width": 390,
+      "viewport": 390
+    },
+    {
+      "id": "intake-success",
+      "width": 390,
+      "viewport": 390
+    },
+    {
+      "id": "booking",
+      "width": 390,
+      "viewport": 390
+    },
+    {
+      "id": "booking-success",
+      "width": 390,
+      "viewport": 390
+    },
+    {
+      "id": "login",
+      "width": 390,
+      "viewport": 390
+    },
+    {
+      "id": "dashboard",
+      "width": 390,
+      "viewport": 390
+    },
+    {
+      "id": "kanban",
+      "width": 390,
+      "viewport": 390
+    },
+    {
+      "id": "applicant",
+      "width": 390,
+      "viewport": 390
+    },
+    {
+      "id": "interview",
+      "width": 390,
+      "viewport": 390
+    },
+    {
+      "id": "followups",
+      "width": 390,
+      "viewport": 390
+    },
+    {
+      "id": "calendar",
+      "width": 390,
+      "viewport": 390
+    },
+    {
+      "id": "availability",
+      "width": 390,
+      "viewport": 390
+    },
+    {
+      "id": "students",
+      "width": 390,
+      "viewport": 390
+    },
+    {
+      "id": "dossier",
+      "width": 390,
+      "viewport": 390
+    },
+    {
+      "id": "documents",
+      "width": 390,
+      "viewport": 390
+    },
+    {
+      "id": "catalog",
+      "width": 390,
+      "viewport": 390
+    },
+    {
+      "id": "service",
+      "width": 390,
+      "viewport": 390
+    },
+    {
+      "id": "service-editor",
+      "width": 390,
+      "viewport": 390
+    },
+    {
+      "id": "finance",
+      "width": 390,
+      "viewport": 390
+    },
+    {
+      "id": "ledger",
+      "width": 390,
+      "viewport": 390
+    },
+    {
+      "id": "payments",
+      "width": 390,
+      "viewport": 390
+    },
+    {
+      "id": "approval",
+      "width": 390,
+      "viewport": 390
+    },
+    {
+      "id": "cheques",
+      "width": 390,
+      "viewport": 390
+    },
+    {
+      "id": "installments",
+      "width": 390,
+      "viewport": 390
+    },
+    {
+      "id": "plans",
+      "width": 390,
+      "viewport": 390
+    },
+    {
+      "id": "registration-reports",
+      "width": 390,
+      "viewport": 390
+    },
+    {
+      "id": "financial-reports",
+      "width": 390,
+      "viewport": 390
+    },
+    {
+      "id": "import",
+      "width": 390,
+      "viewport": 390
+    },
+    {
+      "id": "import-validation",
+      "width": 390,
+      "viewport": 390
+    },
+    {
+      "id": "exports",
+      "width": 390,
+      "viewport": 390
+    },
+    {
+      "id": "notifications",
+      "width": 390,
+      "viewport": 390
+    },
+    {
+      "id": "automations",
+      "width": 390,
+      "viewport": 390
+    },
+    {
+      "id": "permissions",
+      "width": 390,
+      "viewport": 390
+    },
+    {
+      "id": "users",
+      "width": 390,
+      "viewport": 390
+    },
+    {
+      "id": "settings",
+      "width": 390,
+      "viewport": 390
+    },
+    {
+      "id": "audit",
+      "width": 390,
+      "viewport": 390
+    },
+    {
+      "id": "student-home",
+      "width": 390,
+      "viewport": 390
+    },
+    {
+      "id": "student-profile",
+      "width": 390,
+      "viewport": 390
+    },
+    {
+      "id": "student-services",
+      "width": 390,
+      "viewport": 390
+    },
+    {
+      "id": "student-finance",
+      "width": 390,
+      "viewport": 390
+    },
+    {
+      "id": "student-documents",
+      "width": 390,
+      "viewport": 390
+    },
+    {
+      "id": "student-calendar",
+      "width": 390,
+      "viewport": 390
+    },
+    {
+      "id": "student-messages",
+      "width": 390,
+      "viewport": 390
+    },
+    {
+      "id": "parent-home",
+      "width": 390,
+      "viewport": 390
+    },
+    {
+      "id": "consultant-home",
+      "width": 390,
+      "viewport": 390
+    },
+    {
+      "id": "future",
+      "width": 390,
+      "viewport": 390
+    },
+    {
+      "id": "scope",
+      "width": 390,
+      "viewport": 390
+    }
+  ]
+}
