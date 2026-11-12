@@ -20,7 +20,8 @@ function dgs_edu_portal(){
     $out.=dgs_edu_flash();
     if($manager){if($tab==='overview')$out.=dgs_school_manager_dashboard($year);else{$callback='dgs_edu_view_'.$tab;$out.=$callback($year);}}
     elseif($tabs){
-      if($tab==='timetable')$out.=dgs_school_timetable_page($year);
+      if($tab==='study')$out.=dgs_study_portal($year);
+      elseif($tab==='timetable')$out.=dgs_school_timetable_page($year);
       elseif($tab==='homework')$out.=dgs_hw_portal($year);
       elseif($tab==='quizzes')$out.=dgs_quiz_portal($year);
       elseif($tab==='grades')$out.=dgs_grade_panel($year);
@@ -66,6 +67,7 @@ function dgs_edu_view_assignments($year){
     $out.='<h3>دبیران این کلاس</h3>'.dgs_edu_table_start(array('درس','معلم','عملیات'));foreach($teaching as $r)$out.='<tr><td>'.esc_html($r->title).'</td><td>'.esc_html($r->display_name).'</td><td>'.dgs_edu_form_start('unteach','assignments',$year).'<input type="hidden" name="teaching_id" value="'.(int)$r->id.'"><button class="dge-small-btn" data-dge-confirm="تخصیص این دبیر برداشته شود؟">برداشتن تخصیص</button></form></td></tr>';return $out.'</tbody></table></div></section>';
 }
 function dgs_edu_view_counseling($year){
+    return dgs_study_staff($year);
     global $wpdb;$t=dgs_edu_tables();$students=$wpdb->get_results($wpdb->prepare("SELECT e.student_id,u.display_name,c.title,c.grade FROM {$t['enrollments']} e JOIN {$wpdb->users} u ON u.ID=e.student_id JOIN {$t['classes']} c ON c.id=e.class_id WHERE e.school_year=%s AND c.active=1 ORDER BY u.display_name",$year));$opts=array();foreach($students as $s)$opts[$s->student_id]=$s->display_name.' — '.dgs_edu_grade_label($s->grade).' '.$s->title;
     $out='<section class="dge-box"><h3>تعیین مشاور دانش‌آموز</h3>'.dgs_edu_form_start('counsel','counseling',$year).'<div class="dge-grid">'.dgs_edu_select('student_id','دانش‌آموز دارای کلاس',$opts).dgs_edu_select('counselor_id','مشاور',dgs_edu_user_options('dgs_counselor')).'</div><label class="dge-consent"><input type="checkbox" name="replace" value="1">در صورت وجود مشاور قبلی، جایگزین شود.</label><button class="dg-btn">تخصیص مشاور</button></form></section><section class="dge-box"><h3>تخصیص‌های مشاوره</h3>';
     $rows=$wpdb->get_results($wpdb->prepare("SELECT a.id,s.display_name AS student_name,u.display_name AS counselor_name FROM {$t['counseling']} a JOIN {$wpdb->users} s ON s.ID=a.student_id JOIN {$wpdb->users} u ON u.ID=a.counselor_id WHERE a.school_year=%s ORDER BY s.display_name",$year));
@@ -84,10 +86,7 @@ function dgs_edu_student_view($student,$year){
     $rows=$wpdb->get_results($wpdb->prepare("SELECT s.title,u.display_name FROM {$t['teaching']} a JOIN {$t['subjects']} s ON s.id=a.subject_id JOIN {$wpdb->users} u ON u.ID=a.teacher_id WHERE a.class_id=%d ORDER BY s.title",$class->id));$out.='<section class="dge-box"><h3>درس‌ها و معلم‌های کلاس من</h3>'.dgs_edu_table_start(array('درس','معلم'));foreach($rows as $r)$out.='<tr><td>'.esc_html($r->title).'</td><td>'.esc_html($r->display_name).'</td></tr>';$out.='</tbody></table></div></section>';
     $counselor=$wpdb->get_var($wpdb->prepare("SELECT u.display_name FROM {$t['counseling']} a JOIN {$wpdb->users} u ON u.ID=a.counselor_id WHERE a.student_id=%d AND a.school_year=%s",$student,$year));if($counselor)$out.='<section class="dge-box"><h3>مشاور من</h3><p>'.esc_html($counselor).'</p></section>';return $out;
 }
-function dgs_edu_counselor_view($counselor,$year){
-    global $wpdb;$t=dgs_edu_tables();$students=$wpdb->get_results($wpdb->prepare("SELECT u.display_name,c.title,c.grade,c.field FROM {$t['counseling']} a JOIN {$wpdb->users} u ON u.ID=a.student_id JOIN {$t['enrollments']} e ON e.student_id=a.student_id AND e.school_year=a.school_year JOIN {$t['classes']} c ON c.id=e.class_id WHERE a.counselor_id=%d AND a.school_year=%s AND c.active=1 ORDER BY c.grade,c.title,u.display_name",$counselor,$year));
-    if(!$students)return dgs_empty('در این سال هنوز دانش‌آموزی به شما تخصیص داده نشده است.');$out='<section class="dge-box"><h3>دانش‌آموزان تحت مسئولیت من</h3>'.dgs_edu_table_start(array('نام و نام خانوادگی','کلاس','پایه','رشته'));foreach($students as $s)$out.='<tr><td>'.esc_html($s->display_name).'</td><td>'.esc_html($s->title).'</td><td>'.esc_html(dgs_edu_grade_label($s->grade)).'</td><td>'.esc_html(dgs_edu_fields()[$s->field]??'').'</td></tr>';return $out.'</tbody></table></div></section>';
-}
+function dgs_edu_counselor_view($counselor,$year){return dgs_study_staff($year);}
 add_action('wp_enqueue_scripts',function(){
     $p=get_option('dgs_pages',array());if(empty($p['portal'])||!is_page((int)$p['portal']))return;
     wp_register_style('dgs-education',false,array(),'0.2.0');wp_enqueue_style('dgs-education');wp_add_inline_style('dgs-education',file_get_contents(DGS_PATH.'assets/education.css'));
