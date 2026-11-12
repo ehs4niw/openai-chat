@@ -19,3 +19,5 @@ body.dg-site .elementor-widget-heading h2.elementor-heading-title{font-weight:70
 .dg-menu a,.dg-btn,.dg-site a.dg-btn{font-weight:600}
 .dg-topbar,.dg-person-subject,.dg-footer{font-weight:400}
 .dg-site .dg-brand strong{font-weight:750}
+
+.dg-brand>svg{width:118px;height:96px;max-width:100%;margin-bottom:6px}

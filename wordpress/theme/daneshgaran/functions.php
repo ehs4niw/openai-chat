@@ -36,6 +36,7 @@ function dgt_page_url($key,$fallback='') {
     return !empty($pages[$key]) && get_post_status((int)$pages[$key])==='publish' ? get_permalink((int)$pages[$key]) : ($fallback?:home_url('/'));
 }
 function dgt_icon($name='home') {
+    if(function_exists('dgs_portal_icon'))return dgs_portal_icon($name);
     $paths=array(
       'home'=>'M3 11 12 3l9 8M5 10v11h5v-7h4v7h5V10',
       'book'=>'M12 5c-3-3-7-3-10-2v16c4-1 7-1 10 2 3-3 6-3 10-2V3c-3-1-7-1-10 2Zm0 0v16',
@@ -54,8 +55,8 @@ function dgt_icon($name='home') {
     return '<svg width="22" height="22" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="'.esc_attr($paths[$name]??$paths['book']).'"/></svg>';
 }
 function dgt_logo(){
-    if(has_custom_logo()){the_custom_logo();return;}
-    echo '<a class="dg-brand" href="'.esc_url(home_url('/')).'" aria-label="صفحه اصلی مدرسه دانشگران"><img width="85" height="64" src="'.esc_url(get_template_directory_uri().'/assets/logo.svg').'" alt=""><strong>'.esc_html(dgt_option('school_name','مدرسه دانشگران')).'</strong><small>دبیرستان دوره دوم</small></a>';
+    if(function_exists('dgs_brand_markup')){echo dgs_brand_markup();return;}
+    $logo=get_template_directory().'/assets/logo.svg';echo '<a class="dg-brand dgs-school-brand" href="'.esc_url(home_url('/')).'" aria-label="مدرسه دانشگران">'.(is_readable($logo)?file_get_contents($logo):'').'<strong>'.esc_html(dgt_option('school_name','مدرسه دانشگران')).'</strong><small>دبیرستان دوره دوم</small></a>';
 }
 function dgt_navigation(){
     if(has_nav_menu('primary')){wp_nav_menu(array('theme_location'=>'primary','container'=>false,'menu_class'=>'dg-menu','depth'=>2));return;}

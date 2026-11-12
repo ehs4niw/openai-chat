@@ -1,3 +1,5 @@
+هویت مشترک کل سایت: **افزونه۰.۱۲.۲ + قالب۰.۱.۳** — [افزونه](releases/daneshgaran-school-0.12.2.zip) · [پچ قالب برای cPanel](releases/daneshgaran-theme-patch-0.1.3.zip) · [قالب کامل](releases/daneshgaran-theme-0.1.3.zip) · [راهنما](releases/UPDATE-0.12.2-fa.md).
+
 نسخه **۰.۱۲.۱**: [دانلود افزونه](releases/daneshgaran-school-0.12.1.zip) · [سال متمرکز، لوگو و فونت پنل](releases/UPDATE-0.12.1-fa.md).
 
 نسخه **۰.۱۲.۰**: [افزونه کامل](releases/daneshgaran-school-0.12.0.zip) · [راهنمای مطالعه روزانه و پنل مشاور](releases/UPDATE-0.12.0-fa.md).
