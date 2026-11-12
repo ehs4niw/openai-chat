@@ -1,3 +1,5 @@
+افزونه۰.۱۴.۲: userاسکرولافقیخودcontactگفت؛تستقبلیفقطdialogبود. actualoffenderlocalhoneypotleft-9953thoughdocWidthlocalnotexceed. honeypotdisplaynoneدرpublicforms بدونتغییرserverantispam،shell100%borderbox،controlsmax100،bodyoverflowXclip. کلعرضdoc/body+controlsوfooterدر۴viewport×۳page×topbottomبررسی.
+
 افزونه۰.۱۴.۱: screenshotslivehomeهنوزfooterCSSقدیمی/contactجدید. shared-footer.cssدرwp_head100برایتمامpublicthemeبدونشرطshortcode؛portalexclude. admin_initmanagerone-timeversionpurgeباrocket_clean_domain. Dialogfixedcenterheightmin780/viewport،bodyappendقبلshowModal،scrolllockhtml/body+closeunlock،textarearesizeNone،hiddenhoneypotfixedclipرفعscrollXواقعی.۱۰browserchecksسهviewportdialog+۷publicfooterموفق. فقطافزونهfull۰.۱۴.۱تعویض،قالبنیازندارد،liveنصبنشده.
 
 قالب۰.۱.۷: امضا10/11pxکادرظریف،footerCSSجدا ازsitecss و inline کنار footerهمهpublicpages برای استقلال ازبقیهCSS؛portalguardمحفوظ. پاکسازی کلکش وunusedCSSدرliveلازم. patch۴فایلfooter/style/sitecss/footerCSSبرای۰.۱.۶.

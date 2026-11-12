@@ -11,3 +11,10 @@ body.dg-site dialog.dgp-dialog textarea{width:100%;max-width:100%;resize:none}
 body.dg-site dialog.dgp-dialog .dgp-consent{overflow-wrap:anywhere}
 @media(max-width:700px){body.dg-site dialog.dgp-dialog{padding:22px 14px;max-height:calc(100dvh - 20px)}body.dg-site dialog.dgp-dialog .dgp-grid{grid-template-columns:minmax(0,1fr)}}
 body.dg-site dialog.dgp-dialog .dg-honeypot{position:fixed;left:0;top:0;width:1px;height:1px;clip-path:inset(50%);visibility:hidden;pointer-events:none;overflow:hidden}
+
+/* Honeypots must not create an off-screen scroll area in RTL documents. */
+body.dg-site .dgp-form .dg-honeypot{display:none!important;position:static!important;inset:auto!important;width:0!important;height:0!important;overflow:hidden!important}
+body.dgp-public-page .dg-shell{width:100%;max-width:1660px;min-width:0;box-sizing:border-box}
+body.dgp-public-page .dg-page,body.dgp-public-page .dg-main,body.dgp-public-page .dg-content-page,body.dgp-public-page .dgp-page{min-width:0;max-width:100%;box-sizing:border-box}
+body.dgp-public-page .dgp-page input,body.dgp-public-page .dgp-page select,body.dgp-public-page .dgp-page textarea{min-width:0;max-width:100%;box-sizing:border-box}
+body.dgp-public-page{overflow-x:clip}
