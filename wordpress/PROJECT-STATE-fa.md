@@ -1,3 +1,5 @@
+قالب۰.۱.۵: userفوترفقطpublicخواست؛footer.php شرطportal pageID یاdgs_is_role_portal سمتserver؛wp_footerهمیشه. دهحالتguest/manager/teacher/student/counselor×portal/contactموفق. patch۲فایلfooter/styleبرای۰.۱.۴،full۰.۱.۵.
+
 قالب۰.۱.۴: فوتر طرح۳یاسی با brandمرکزکوچک۶۴px بدونمدالیون،contactراستlinksچپ،copyright+ehs4niwbadge. انتخابlogoدرCustomizer dg_school/dgt_footer_logo،fallbacksiteicon سپسassets/footer-logo.png. اصل لوگوی جدیدinlineدرworkspaceنیست؛ کاربرازmediaانتخابکند. desktop/mobilerender+64px+load+overflowگذشت. فقطقالب،افزونه۰.۱۴.۰بدونتغییر؛full+patch۵فایل. نصبزنده‌نشده.
 
 نسخه۰.۱۴.۰: ورودی عمومی انتخاب مدرسه/کلاس، فرم کامل مدرسه با سه مدرک الزامی۵MB، کلاس عمومی منتشرشده و متادیتای واقعی، تماس و مشاوره native dialog؛ بدون ایمیل؛ SVG مشترک و responsive. public-requests.php/css/js، اتصال به مسیر امن درخواست قبلی و مدیریت، هویت دانش‌آموز/ولی و برچسب مدارک در جزئیات. تنظیمات office_hours/map_url و تاریخ شروع کلاس. ۲۰validation+۱۲browser+private persistence موفق. نصب زنده نشده. راهنما UPDATE-0.14.0-fa.md؛ افزونه کامل۰.۱۴.۰، قالب۰.۱.۳ بدون تغییر.
