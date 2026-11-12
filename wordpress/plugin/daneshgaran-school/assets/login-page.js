@@ -1,0 +1,1 @@
+(function(){var b=document.querySelector('[data-dgl-password]'),input=document.getElementById('dgl-pass');if(b&&input)b.addEventListener('click',function(){var show=input.type==='password';input.type=show?'text':'password';b.setAttribute('aria-pressed',String(show));b.setAttribute('aria-label',show?'پنهان کردن رمز عبور':'نمایش رمز عبور');});})();

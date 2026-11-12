@@ -1,3 +1,5 @@
+افزونه **۰.۱۵.۰**: [دانلود کامل](releases/daneshgaran-school-0.15.0.zip) · [صفحه ورود مطابق طرح و رفع اسکرول سند](releases/UPDATE-0.15.0-fa.md).
+
 افزونه **۰.۱۴.۲**: [دانلود کامل](releases/daneshgaran-school-0.14.2.zip) · رفع اسکرول افقی صفحه عمومی.
 
 افزونه **۰.۱۴.۱**: [دانلود کامل](releases/daneshgaran-school-0.14.1.zip) · [رفع فوتر عمومی و پنجره مشاوره](releases/UPDATE-0.14.1-fa.md).

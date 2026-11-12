@@ -57,7 +57,7 @@ function dgs_contact(){
 }
 function dgs_portal(){
     if(is_user_logged_in()&&function_exists('dgs_edu_portal'))return dgs_edu_portal();
-    if(!is_user_logged_in()){return '<div class="dg-portal-login"><h2>ورود به سامانه دانشگران</h2><p>با نام کاربری و رمز عبور حساب مدرسه وارد شوید.</p>'.wp_login_form(array('echo'=>false,'redirect'=>dgs_page_url('portal'),'label_username'=>'نام کاربری یا ایمیل','label_password'=>'رمز عبور','label_remember'=>'مرا به خاطر بسپار','label_log_in'=>'ورود به سامانه')).'<a href="'.esc_url(wp_lostpassword_url(dgs_page_url('portal'))).'">بازیابی رمز عبور</a></div>';}
+    if(!is_user_logged_in())return dgs_login_page();
     $u=wp_get_current_user();$roles=array('administrator'=>'مدیر کل','dgs_deputy'=>'معاون مدرسه','dgs_teacher'=>'معلم','dgs_student'=>'دانش‌آموز','dgs_counselor'=>'مشاور');$role='حساب کاربری';foreach($roles as $key=>$label)if(in_array($key,$u->roles,true)){$role=$label;break;}
     $out='<section class="dg-portal-welcome"><span class="dg-kicker">'.esc_html($role).'</span><h2>سلام '.esc_html($u->display_name).'، خوش آمدید</h2><p>به سامانه مدرسه دانشگران خوش آمدید.</p></section><div class="dg-account-card"><h3>اطلاعات حساب من</h3><dl><dt>نام نمایشی</dt><dd>'.esc_html($u->display_name).'</dd><dt>نام کاربری</dt><dd>'.esc_html($u->user_login).'</dd></dl></div><div class="dg-portal-actions">';
     if(current_user_can('manage_options'))$out.='<a class="dg-btn" href="'.esc_url(admin_url('admin.php?page=dgs-setup')).'">مدیریت و راه‌اندازی مدرسه</a>';
