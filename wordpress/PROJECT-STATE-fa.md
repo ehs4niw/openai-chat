@@ -1,3 +1,5 @@
+افزونه۰.۱۴.۱: screenshotslivehomeهنوزfooterCSSقدیمی/contactجدید. shared-footer.cssدرwp_head100برایتمامpublicthemeبدونشرطshortcode؛portalexclude. admin_initmanagerone-timeversionpurgeباrocket_clean_domain. Dialogfixedcenterheightmin780/viewport،bodyappendقبلshowModal،scrolllockhtml/body+closeunlock،textarearesizeNone،hiddenhoneypotfixedclipرفعscrollXواقعی.۱۰browserchecksسهviewportdialog+۷publicfooterموفق. فقطافزونهfull۰.۱۴.۱تعویض،قالبنیازندارد،liveنصبنشده.
+
 قالب۰.۱.۷: امضا10/11pxکادرظریف،footerCSSجدا ازsitecss و inline کنار footerهمهpublicpages برای استقلال ازبقیهCSS؛portalguardمحفوظ. پاکسازی کلکش وunusedCSSدرliveلازم. patch۴فایلfooter/style/sitecss/footerCSSبرای۰.۱.۶.
 
 قالب۰.۱.۶: موبایلcontactscreenshotshrink/menuunclickable/footertall. high-specificitymobile shell/sidebar/container/honeypot، immediateonclickheader/backdrop و حذف duplicateJSlistener، attributionmutednobordercompactbottom. ۱۰mobilechecks395pxسهpageباexternalJSabortموفق. patch۴فایلheader/style/sitecss/sitejsبرای۰.۱.۵؛full۰.۱.۶.

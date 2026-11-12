@@ -1,3 +1,5 @@
+افزونه **۰.۱۴.۱**: [دانلود کامل](releases/daneshgaran-school-0.14.1.zip) · [رفع فوتر عمومی و پنجره مشاوره](releases/UPDATE-0.14.1-fa.md).
+
 قالب **۰.۱.۷**: [پچ فوتر یکپارچه](releases/daneshgaran-theme-patch-0.1.7.zip) · [قالب کامل](releases/daneshgaran-theme-0.1.7.zip).
 
 قالب **۰.۱.۶**: [پچ موبایل و فوتر](releases/daneshgaran-theme-patch-0.1.6.zip) · [قالب کامل](releases/daneshgaran-theme-0.1.6.zip).

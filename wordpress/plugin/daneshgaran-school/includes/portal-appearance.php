@@ -43,3 +43,16 @@ function dgs_uses_school_site_icon(){if(get_template()!=='daneshgaran')return fa
 function dgs_school_site_icon_url($size){$supported=array(32,180,192,270,512);if(!in_array((int)$size,$supported,true))return '';return add_query_arg('ver',DGS_VERSION,set_url_scheme(DGS_URL.'assets/site-icons/icon-'.(int)$size.'.png',is_ssl()?'https':null));}
 add_filter('get_site_icon_url',function($url,$size,$blog_id){if($blog_id&&is_multisite()&&(int)$blog_id!==get_current_blog_id())return $url;if(!dgs_uses_school_site_icon())return $url;$replacement=dgs_school_site_icon_url($size);return $replacement?:$url;},20,3);
 add_filter('site_icon_meta_tags',function($tags){if(dgs_uses_school_site_icon())array_unshift($tags,'<link rel="shortcut icon" type="image/x-icon" href="'.esc_url(add_query_arg('ver',DGS_VERSION,set_url_scheme(DGS_URL.'assets/site-icons/favicon.ico',is_ssl()?'https':null))).'">');return $tags;},20);
+
+// One shared footer style on every public theme route, including Elementor pages.
+add_action('wp_head',function(){
+    if(get_template()!=='daneshgaran'||dgs_is_role_portal())return;
+    $p=get_option('dgs_pages',array());if(!empty($p['portal'])&&is_page((int)$p['portal']))return;
+    echo '<style id="dgs-shared-footer-0141">'.file_get_contents(DGS_PATH.'assets/shared-footer.css').'</style>';
+},100);
+// Refresh cached public HTML once when the updated plugin is opened by management.
+add_action('admin_init',function(){
+    if(!current_user_can('manage_options')||get_option('dgs_footer_cache_version')===DGS_VERSION)return;
+    if(function_exists('rocket_clean_domain'))rocket_clean_domain();
+    update_option('dgs_footer_cache_version',DGS_VERSION,false);
+});
