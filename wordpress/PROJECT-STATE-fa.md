@@ -1,3 +1,5 @@
+قالب۰.۱.۷: امضا10/11pxکادرظریف،footerCSSجدا ازsitecss و inline کنار footerهمهpublicpages برای استقلال ازبقیهCSS؛portalguardمحفوظ. پاکسازی کلکش وunusedCSSدرliveلازم. patch۴فایلfooter/style/sitecss/footerCSSبرای۰.۱.۶.
+
 قالب۰.۱.۶: موبایلcontactscreenshotshrink/menuunclickable/footertall. high-specificitymobile shell/sidebar/container/honeypot، immediateonclickheader/backdrop و حذف duplicateJSlistener، attributionmutednobordercompactbottom. ۱۰mobilechecks395pxسهpageباexternalJSabortموفق. patch۴فایلheader/style/sitecss/sitejsبرای۰.۱.۵؛full۰.۱.۶.
 
 قالب۰.۱.۵: userفوترفقطpublicخواست؛footer.php شرطportal pageID یاdgs_is_role_portal سمتserver؛wp_footerهمیشه. دهحالتguest/manager/teacher/student/counselor×portal/contactموفق. patch۲فایلfooter/styleبرای۰.۱.۴،full۰.۱.۵.

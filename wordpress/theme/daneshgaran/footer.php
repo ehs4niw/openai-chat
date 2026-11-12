@@ -1,5 +1,6 @@
 <?php if(!defined('ABSPATH'))exit; ?></main>
 <?php $dgt_pages=get_option('dgs_pages',array());$dgt_panel=(!empty($dgt_pages['portal'])&&is_page((int)$dgt_pages['portal']))||(function_exists('dgs_is_role_portal')&&dgs_is_role_portal());if(!$dgt_panel): ?>
+<?php $dgt_footer_css=get_template_directory().'/assets/footer.css';if(is_readable($dgt_footer_css))echo '<style id="dgt-shared-footer-css">'.file_get_contents($dgt_footer_css).'</style>'; ?>
 <footer class="dg-footer dg-footer-lilac" aria-label="پایین صفحه">
 <div class="dg-footer-columns">
 <section class="dg-footer-contact"><h2>ارتباط با مدرسه</h2><?php foreach(array('phone'=>'phone','address'=>'pin') as $key=>$icon){$value=dgt_option($key);if($value)echo '<p class="dg-contact-line">'.dgt_icon($icon).'<span>'.esc_html($value).'</span></p>';} ?><a href="<?php echo esc_url(dgt_page_url('contact')); ?>">راه‌های ارتباطی <?php echo dgt_icon('arrow'); ?></a></section>
