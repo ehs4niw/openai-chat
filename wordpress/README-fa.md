@@ -1,3 +1,5 @@
+قالب **۰.۱.۴**: [قالب کامل](releases/daneshgaran-theme-0.1.4.zip) · [پچ فوتر](releases/daneshgaran-theme-patch-0.1.4.zip) · [راهنما](releases/UPDATE-THEME-0.1.4-fa.md).
+
 نسخه **۰.۱۴.۰**: [افزونه کامل](releases/daneshgaran-school-0.14.0.zip) · [فرم‌های عمومی پیش‌ثبت‌نام و مشاوره](releases/UPDATE-0.14.0-fa.md).
 
 نسخه **۰.۱۳.۰**: [افزونه کامل](releases/daneshgaran-school-0.13.0.zip) · [نظارت/انتشار کارنامه و مدیریت درخواست‌ها](releases/UPDATE-0.13.0-fa.md).

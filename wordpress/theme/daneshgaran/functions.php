@@ -67,6 +67,8 @@ function dgt_navigation(){
 }
 function dgt_customizer($wp_customize){
     $wp_customize->add_section('dg_school',array('title'=>'اطلاعات مدرسه دانشگران','priority'=>35));
+    $wp_customize->add_setting('dgt_footer_logo',array('sanitize_callback'=>'absint','capability'=>'edit_theme_options'));
+    $wp_customize->add_control(new WP_Customize_Media_Control($wp_customize,'dgt_footer_logo',array('section'=>'dg_school','label'=>'لوگوی کوچک فوتر','mime_type'=>'image')));
     foreach(array('school_name'=>'نام مدرسه','phone'=>'تلفن دفتر','email'=>'ایمیل','address'=>'نشانی') as $key=>$label){
         $sanitize=$key==='email'?'sanitize_email':'sanitize_text_field';
         $wp_customize->add_setting('dgs_settings['.$key.']',array('type'=>'option','sanitize_callback'=>$sanitize,'capability'=>'manage_options'));
