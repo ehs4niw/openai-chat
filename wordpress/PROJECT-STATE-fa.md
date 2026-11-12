@@ -1,3 +1,5 @@
+قالب۰.۱.۶: موبایلcontactscreenshotshrink/menuunclickable/footertall. high-specificitymobile shell/sidebar/container/honeypot، immediateonclickheader/backdrop و حذف duplicateJSlistener، attributionmutednobordercompactbottom. ۱۰mobilechecks395pxسهpageباexternalJSabortموفق. patch۴فایلheader/style/sitecss/sitejsبرای۰.۱.۵؛full۰.۱.۶.
+
 قالب۰.۱.۵: userفوترفقطpublicخواست؛footer.php شرطportal pageID یاdgs_is_role_portal سمتserver؛wp_footerهمیشه. دهحالتguest/manager/teacher/student/counselor×portal/contactموفق. patch۲فایلfooter/styleبرای۰.۱.۴،full۰.۱.۵.
 
 قالب۰.۱.۴: فوتر طرح۳یاسی با brandمرکزکوچک۶۴px بدونمدالیون،contactراستlinksچپ،copyright+ehs4niwbadge. انتخابlogoدرCustomizer dg_school/dgt_footer_logo،fallbacksiteicon سپسassets/footer-logo.png. اصل لوگوی جدیدinlineدرworkspaceنیست؛ کاربرازmediaانتخابکند. desktop/mobilerender+64px+load+overflowگذشت. فقطقالب،افزونه۰.۱۴.۰بدونتغییر؛full+patch۵فایل. نصبزنده‌نشده.

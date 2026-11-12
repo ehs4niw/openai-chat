@@ -1,3 +1,5 @@
+قالب **۰.۱.۶**: [پچ موبایل و فوتر](releases/daneshgaran-theme-patch-0.1.6.zip) · [قالب کامل](releases/daneshgaran-theme-0.1.6.zip).
+
 قالب **۰.۱.۵**: [پچ حذف فوتر پنل‌ها](releases/daneshgaran-theme-patch-0.1.5.zip) · [قالب کامل](releases/daneshgaran-theme-0.1.5.zip).
 
 قالب **۰.۱.۴**: [قالب کامل](releases/daneshgaran-theme-0.1.4.zip) · [پچ فوتر](releases/daneshgaran-theme-patch-0.1.4.zip) · [راهنما](releases/UPDATE-THEME-0.1.4-fa.md).
