@@ -1,3 +1,5 @@
+افزونه **۰.۱۹.۱**: [دانلود کامل](releases/daneshgaran-school-0.19.1.zip) · [تصویر اصلی ورود و اصلاح مجوز فایل‌های تصویر](releases/UPDATE-0.19.1-fa.md). همه فایل‌های ZIP با مجوز۶۴۴، پوشه‌ها۷۵۵؛ نصب در cPanel داخل plugins.
+
 **قالب‌های مستقل المنتور پرو، فقط محتوای وسط صفحات:** [بسته همه قالب‌ها](releases/daneshgaran-elementor-content-1.0.zip) · [فقط صفحه اصلی](releases/daneshgaran-elementor-home-1.0.zip) · [فقط معرفی](releases/daneshgaran-elementor-about-1.0.zip) · [راهنمای درون‌ریزی و فهرست بخش‌ها](elementor-templates/README-fa.md). این بسته افزونه نیست و صفحات را خودکار عوض نمی‌کند؛ به افزونه فعلی۰.۱۹.۰ متصل است.
 
 افزونه **۰.۱۹.۰**: [دانلود کامل](releases/daneshgaran-school-0.19.0.zip) · [گالری قابل مدیریت و ردیف ورود](releases/UPDATE-0.19.0-fa.md). نصب از cPanel در `wp-content/plugins/`؛ قالب تغییر نکرده است.
