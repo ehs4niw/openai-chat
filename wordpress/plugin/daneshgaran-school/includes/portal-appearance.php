@@ -36,7 +36,20 @@ function dgs_main_logo_url(){
  }
  static $uri=null;if($uri===null){$file=DGS_PATH.'assets/school-brand-256.png';$data=is_readable($file)?file_get_contents($file):false;$uri=$data!==false?'data:image/png;base64,'.base64_encode($data):'';}return $uri;
 }
-function dgs_brand_markup(){return '<a class="dg-brand dgs-school-brand" href="'.esc_url(home_url('/')).'" aria-label="صفحه اصلی مدرسه دانشگران"><img class="dgs-main-logo" src="'.esc_attr(dgs_main_logo_url()).'" alt="نشان مدرسه دانشگران" width="118" height="118" decoding="async"><strong>'.esc_html(dgs_setting('school_name','مدرسه دانشگران')).'</strong><small>دبیرستان دوره دوم</small><span class="dgs-brand-grades">پایه‌های دهم، یازدهم و دوازدهم</span></a>';}
+// Sidebar color variant is independent of the main/footer logo.
+function dgs_sidebar_logo_url(){
+ $id=absint(get_theme_mod('dgs_sidebar_logo'));if($id&&wp_attachment_is_image($id)){
+  $url=wp_get_attachment_image_url($id,'medium')?:wp_get_attachment_url($id);
+  if($url)return esc_url_raw($url,array('http','https'));
+ }
+ static $uri=null;if($uri===null){$file=DGS_PATH.'assets/sidebar-logo-option3-256.png';$data=is_readable($file)?file_get_contents($file):false;$uri=$data!==false?'data:image/png;base64,'.base64_encode($data):dgs_main_logo_url();}return $uri;
+}
+add_action('customize_register',function($customizer){
+ if(!class_exists('WP_Customize_Media_Control'))return;
+ $customizer->add_setting('dgs_sidebar_logo',array('sanitize_callback'=>'absint','capability'=>'edit_theme_options'));
+ $customizer->add_control(new WP_Customize_Media_Control($customizer,'dgs_sidebar_logo',array('section'=>'dg_school','label'=>'لوگوی سایدبار (پیش‌فرض: طرح ۳)','mime_type'=>'image')));
+},20);
+function dgs_brand_markup(){return '<a class="dg-brand dgs-school-brand" href="'.esc_url(home_url('/')).'" aria-label="صفحه اصلی مدرسه دانشگران"><img class="dgs-main-logo" src="'.esc_attr(dgs_sidebar_logo_url()).'" alt="نشان مدرسه دانشگران" width="118" height="118" decoding="async"><strong>'.esc_html(dgs_setting('school_name','مدرسه دانشگران')).'</strong><small>دبیرستان دوره دوم</small><span class="dgs-brand-grades">پایه‌های دهم، یازدهم و دوازدهم</span></a>';}
 add_action('wp_footer',function(){if(get_template()!=='daneshgaran'&&!dgs_is_role_portal())return;echo '<template id="dgs-portal-brand">'.dgs_brand_markup().'</template>';if(!dgs_is_role_portal())return;$u=wp_get_current_user();$class=dgs_edu_role($u,'dgs_student')?dgs_hw_student_class(dgs_edu_request_year()):null;$role=current_user_can('dgs_manage_education')?'مدیر و معاون':(dgs_edu_role($u,'dgs_counselor')?'مشاور':(dgs_edu_role($u,'dgs_teacher')?'مدرس':($class?'دانش‌آموز پایه '.dgs_edu_grade_label($class->grade):'دانش‌آموز')));echo '<template id="dgs-portal-profile"><span class="dgs-profile-avatar">'.dgs_portal_icon('users').'</span><span class="dgs-profile-label"><strong>'.esc_html($u->display_name).'</strong><small>'.esc_html($role).'</small></span></template>';},10);
 add_action('wp_enqueue_scripts',function(){if(get_template()!=='daneshgaran'&&!dgs_is_role_portal())return;$css=str_replace("url('portal-Estedad.ttf')","url('".esc_url_raw(DGS_URL.'assets/portal-Estedad.ttf')."')",file_get_contents(DGS_PATH.'assets/portal-appearance.css'));wp_register_style('dgs-portal-appearance',false,array(),DGS_VERSION);wp_enqueue_style('dgs-portal-appearance');wp_add_inline_style('dgs-portal-appearance',$css);wp_register_script('dgs-portal-appearance',false,array(),DGS_VERSION,true);wp_enqueue_script('dgs-portal-appearance');wp_add_inline_script('dgs-portal-appearance',file_get_contents(DGS_PATH.'assets/portal-appearance.js'));},50);
 
