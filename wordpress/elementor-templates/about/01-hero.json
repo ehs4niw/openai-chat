@@ -1,0 +1,180 @@
+{
+    "version": "0.4",
+    "title": "معرفی مدرسه — بنر معرفی مدرسه",
+    "type": "section",
+    "content": [
+        {
+            "id": "5b62347",
+            "elType": "section",
+            "settings": {
+                "content_width": {
+                    "unit": "px",
+                    "size": 1200
+                },
+                "layout": "full_width",
+                "gap": "no",
+                "column_position": "middle",
+                "css_classes": "dse-section det-section det-about-hero",
+                "margin": {
+                    "unit": "px",
+                    "top": "0",
+                    "right": "0",
+                    "bottom": "12",
+                    "left": "0",
+                    "isLinked": false
+                },
+                "padding": {
+                    "unit": "px",
+                    "top": "14",
+                    "right": "14",
+                    "bottom": "14",
+                    "left": "14",
+                    "isLinked": true
+                },
+                "background_background": "gradient",
+                "background_color": "#ffffff",
+                "background_color_b": "#f6efff",
+                "background_gradient_angle": {
+                    "unit": "deg",
+                    "size": 125
+                },
+                "border_border": "solid",
+                "border_width": {
+                    "unit": "px",
+                    "top": "1",
+                    "right": "1",
+                    "bottom": "1",
+                    "left": "1",
+                    "isLinked": true
+                },
+                "border_color": "#dac0ee",
+                "border_radius": {
+                    "unit": "px",
+                    "top": "15",
+                    "right": "15",
+                    "bottom": "15",
+                    "left": "15",
+                    "isLinked": true
+                },
+                "custom_css": "selector{direction:rtl;box-sizing:border-box;overflow:hidden;color:#45215e;font-family:DgsPortal,Estedad,Tahoma,sans-serif;min-width:0}\nselector>.elementor-container{display:grid!important;grid-template-columns:1fr 1.15fr;gap:14px;align-items:center;max-width:none!important}\nselector>.elementor-container>.elementor-column{width:auto!important;min-width:0}\nselector .elementor-widget-wrap{min-width:0;align-content:center;box-sizing:border-box}\nselector .elementor-widget:not(:last-child){margin-bottom:8px}\nselector p{margin:0;line-height:1.9}\nselector h1,selector h2,selector h3{margin:0;line-height:1.65;overflow-wrap:normal!important}\nselector a{text-decoration:none}\nselector svg{flex-shrink:0}\nselector .elementor-button{line-height:1.7;min-height:0;box-shadow:none}\nselector .elementor-widget-text-editor{font-size:13px;line-height:1.9}\nselector .dse-live,selector .dsh-carousel,selector .dsh-featured-main{min-width:0}\nselector .dg-empty-inline{font-size:12px;padding:16px;border-radius:10px}\n@media(max-width:767px){selector>.elementor-container{grid-template-columns:1fr!important;gap:14px}selector{padding:14px!important}selector .elementor-heading-title{overflow-wrap:normal!important}}\nselector .dsh-reference{background-image:url('https://daneshgaranedu.ir/wp-content/plugins/daneshgaran-school/assets/showcase-reference.jpg');background-size:193.39% 524.8%;background-position:0 5.18%;background-repeat:no-repeat}selector .dse-picture-frame{mask-image:none;min-height:0;max-height:none}\nselector{padding:0!important}selector>.elementor-container{gap:0}selector>.elementor-container>.elementor-column:first-child>.elementor-widget-wrap{padding:22px}selector .dse-picture-frame{mask-image:linear-gradient(to right,#000 70%,transparent)}@media(max-width:767px){selector .dse-picture-frame{mask-image:none}}"
+            },
+            "elements": [
+                {
+                    "id": "68e09d8",
+                    "elType": "column",
+                    "settings": {
+                        "_column_size": 47,
+                        "padding": {
+                            "unit": "px",
+                            "top": "0",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": true
+                        },
+                        "_inline_size": 47,
+                        "css_classes": ""
+                    },
+                    "elements": [
+                        {
+                            "id": "a3b9cc8",
+                            "elType": "widget",
+                            "widgetType": "heading",
+                            "settings": {
+                                "title": "معرفی مدرسه و کادر آموزشی",
+                                "header_size": "h1",
+                                "title_color": "#511c72",
+                                "align": "right",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 33,
+                                    "unit": "px"
+                                },
+                                "typography_font_size_mobile": {
+                                    "size": 28,
+                                    "unit": "px"
+                                },
+                                "typography_font_weight": "800",
+                                "typography_line_height": {
+                                    "size": 1.6,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "88dd3b6",
+                            "elType": "widget",
+                            "widgetType": "text-editor",
+                            "settings": {
+                                "editor": "<p>آشنایی با مدرسه دانشگران، رسالت آموزشی، امکانات و تیم آموزشی در مقطع متوسطه دوم (پایه‌های دهم، یازدهم و دوازدهم)</p>\n",
+                                "align": "right",
+                                "text_color": "#654879",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 16,
+                                    "unit": "px"
+                                },
+                                "typography_line_height": {
+                                    "size": 1.9,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        }
+                    ]
+                },
+                {
+                    "id": "ad5553f",
+                    "elType": "column",
+                    "settings": {
+                        "_column_size": 53,
+                        "padding": {
+                            "unit": "px",
+                            "top": "0",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": true
+                        },
+                        "_inline_size": 53,
+                        "css_classes": ""
+                    },
+                    "elements": [
+                        {
+                            "id": "ce29ed2",
+                            "elType": "widget",
+                            "widgetType": "dgs_picture",
+                            "settings": {
+                                "image": {
+                                    "id": 0,
+                                    "url": ""
+                                },
+                                "reference": "hero",
+                                "alt": "نمای مدرسه؛ تصویر نمایشی قابل جایگزینی",
+                                "caption": "",
+                                "priority": "yes",
+                                "height": {
+                                    "size": 270,
+                                    "unit": "px"
+                                },
+                                "height_mobile": {
+                                    "size": 210,
+                                    "unit": "px"
+                                },
+                                "radius": {
+                                    "size": 14,
+                                    "unit": "px"
+                                }
+                            },
+                            "elements": []
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "page_settings": {
+        "hide_title": "yes"
+    }
+}

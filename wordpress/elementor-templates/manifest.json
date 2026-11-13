@@ -1,0 +1,28 @@
+{
+    "requires": [
+        "Elementor Pro",
+        "Daneshgaran School >= 0.19.0"
+    ],
+    "pages": {
+        "home": [
+            "01-hero.json",
+            "02-introduction.json",
+            "03-teachers.json",
+            "04-featured.json",
+            "05-news.json",
+            "06-staff.json",
+            "07-gallery.json",
+            "08-login.json"
+        ],
+        "about": [
+            "01-hero.json",
+            "02-overview.json",
+            "03-director.json",
+            "04-team.json",
+            "05-gallery.json",
+            "06-facilities.json",
+            "07-admission-contact.json"
+        ]
+    },
+    "automatic_changes": false
+}

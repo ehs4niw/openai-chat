@@ -1,3 +1,5 @@
+**قالب‌های مستقل المنتور پرو، فقط محتوای وسط صفحات:** [بسته همه قالب‌ها](releases/daneshgaran-elementor-content-1.0.zip) · [فقط صفحه اصلی](releases/daneshgaran-elementor-home-1.0.zip) · [فقط معرفی](releases/daneshgaran-elementor-about-1.0.zip) · [راهنمای درون‌ریزی و فهرست بخش‌ها](elementor-templates/README-fa.md). این بسته افزونه نیست و صفحات را خودکار عوض نمی‌کند؛ به افزونه فعلی۰.۱۹.۰ متصل است.
+
 افزونه **۰.۱۹.۰**: [دانلود کامل](releases/daneshgaran-school-0.19.0.zip) · [گالری قابل مدیریت و ردیف ورود](releases/UPDATE-0.19.0-fa.md). نصب از cPanel در `wp-content/plugins/`؛ قالب تغییر نکرده است.
 
 افزونه **۰.۱۸.۰**: [دانلود کامل](releases/daneshgaran-school-0.18.0.zip) · [پچ برای۰.۱۷.۰](releases/daneshgaran-school-patch-0.18.0.zip) · [ویرایش واقعی خانه و معرفی با المنتور](releases/UPDATE-0.18.0-fa.md).
