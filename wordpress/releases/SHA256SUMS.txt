@@ -51,3 +51,6 @@ d2510f300c5296ba773692b9ce8cec1888d4f5ce9f3477e3e34b55457132b16d  daneshgaran-sc
 9e95ce08a3cd0be8579e746d21bb92e2967c1ba42fd6e78069dee8b771e53d6e  daneshgaran-school-0.19.2.zip
 3fd26e58abee7b591c0ed703c6a8df20add74aa16a62e91451aed662b167bdc1  daneshgaran-school-0.19.3.zip
 b73e91230635ff88b11e387a23da8ab0ec51360a14c51c0ae325a729edd1f068  daneshgaran-school-0.19.4.zip
+2f80f2d0b28f52039409d26a59f724dc143a3d14732e29fbfb26222d022b2c6b  daneshgaran-school-0.19.5.zip
+3dbec74ad8073b31982f1afad55cd1af29f28aad32cd0f8403e25825111b7919  daneshgaran-theme-0.1.8.zip
+99513c7dda29fd36c9e4654983a7bd885bc1251d152f4acd426c37e2bfd4aa1c  daneshgaran-branding-0.19.5-cpanel.zip

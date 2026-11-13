@@ -1,3 +1,5 @@
+**لوگوی شفاف سایدبار و فوتر — افزونه۰.۱۹.۵ + قالب۰.۱.۸:** [بسته یک‌مرحله‌ای cPanel](releases/daneshgaran-branding-0.19.5-cpanel.zip) در `public_html/wp-content/` استخراج شود · [راهنما](releases/UPDATE-0.19.5-fa.md) · [PNG شفاف۵۱۲](branding/school-main-logo-transparent-512.png).
+
 افزونه **۰.۱۹.۴**: [دانلود کامل](releases/daneshgaran-school-0.19.4.zip) · [لوگوی اصلی جدید روی ساختمان تصویر ورود و جامدادی بنر آموزشگاه](releases/UPDATE-0.19.4-fa.md). سایر لوگوها و نمادک در این نسخه تغییر نکرده‌اند.
 
 افزونه **۰.۱۹.۳**: [دانلود کامل](releases/daneshgaran-school-0.19.3.zip) · [بازگشت نمادک سفارشی به اندازه‌های استاندارد وردپرس](releases/UPDATE-0.19.3-fa.md). اصلاح فیلتر۰.۱۹.۲ که فایل اصلی را برای همه اندازه‌ها تحمیل می‌کرد.

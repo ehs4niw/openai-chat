@@ -18,3 +18,5 @@ body.dg-site .dg-footer-lilac .dg-developer strong{border:0;background:none;padd
 body.dg-site .dg-footer-lilac .dg-developer svg{width:15px!important;height:15px!important;opacity:.8}
 
 @media(max-width:700px){body.dg-site .dg-footer-lilac .dg-footer-bottom{padding:8px 12px;gap:6px;justify-content:center;text-align:center}}
+
+body.dg-site .dg-footer-lilac .dg-footer-logo{background:transparent;border:0;border-radius:0;box-shadow:none;object-fit:contain}

@@ -33,3 +33,5 @@ body.dg-site.dg-menu-open{overflow:hidden}
 body.dg-site .dg-honeypot{position:fixed;left:0;top:0;clip-path:inset(50%);visibility:hidden;pointer-events:none}
 body.dg-site .dg-content-page .elementor,body.dg-site .dg-content-page .elementor-section,body.dg-site .dg-content-page .elementor-container,body.dg-site .dg-content-page .elementor-column,body.dg-site .dg-content-page .elementor-widget-wrap{min-width:0;max-width:100%;box-sizing:border-box}
 }
+
+body.dg-site .dg-sidebar-brand .dgs-main-logo{display:block;width:118px;height:118px;max-width:100%;max-height:none;object-fit:contain;margin:0 auto 6px;background:transparent;border:0;border-radius:0}

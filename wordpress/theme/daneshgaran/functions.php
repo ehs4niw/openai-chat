@@ -54,9 +54,14 @@ function dgt_icon($name='home') {
     );
     return '<svg width="22" height="22" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="'.esc_attr($paths[$name]??$paths['book']).'"/></svg>';
 }
+function dgt_main_logo_url(){
+    if(function_exists('dgs_main_logo_url'))return dgs_main_logo_url();
+    $id=absint(get_theme_mod('custom_logo'));if($id&&wp_attachment_is_image($id)){$url=wp_get_attachment_image_url($id,'medium')?:wp_get_attachment_url($id);if($url)return esc_url_raw($url,array('http','https'));}
+    static $uri=null;if($uri===null){$file=get_template_directory().'/assets/footer-logo.png';$data=is_readable($file)?file_get_contents($file):false;$uri=$data!==false?'data:image/png;base64,'.base64_encode($data):'';}return $uri;
+}
 function dgt_logo(){
     if(function_exists('dgs_brand_markup')){echo dgs_brand_markup();return;}
-    $logo=get_template_directory().'/assets/logo.svg';echo '<a class="dg-brand dgs-school-brand" href="'.esc_url(home_url('/')).'" aria-label="مدرسه دانشگران">'.(is_readable($logo)?file_get_contents($logo):'').'<strong>'.esc_html(dgt_option('school_name','مدرسه دانشگران')).'</strong><small>دبیرستان دوره دوم</small></a>';
+    echo '<a class="dg-brand dgs-school-brand" href="'.esc_url(home_url('/')).'" aria-label="مدرسه دانشگران"><img class="dgs-main-logo" src="'.esc_attr(dgt_main_logo_url()).'" alt="نشان مدرسه دانشگران" width="118" height="118"><strong>'.esc_html(dgt_option('school_name','مدرسه دانشگران')).'</strong><small>دبیرستان دوره دوم</small></a>';
 }
 function dgt_navigation(){
     if(has_nav_menu('primary')){wp_nav_menu(array('theme_location'=>'primary','container'=>false,'menu_class'=>'dg-menu','depth'=>2));return;}
@@ -67,8 +72,8 @@ function dgt_navigation(){
 }
 function dgt_customizer($wp_customize){
     $wp_customize->add_section('dg_school',array('title'=>'اطلاعات مدرسه دانشگران','priority'=>35));
-    $wp_customize->add_setting('dgt_footer_logo',array('sanitize_callback'=>'absint','capability'=>'edit_theme_options'));
-    $wp_customize->add_control(new WP_Customize_Media_Control($wp_customize,'dgt_footer_logo',array('section'=>'dg_school','label'=>'لوگوی کوچک فوتر','mime_type'=>'image')));
+    // Sidebar and footer now share the standard Site Identity > Logo control.
+    $logo_control=$wp_customize->get_control('custom_logo');if($logo_control)$logo_control->label='لوگوی اصلی سایت (سایدبار و فوتر)';
     foreach(array('school_name'=>'نام مدرسه','phone'=>'تلفن دفتر','email'=>'ایمیل','address'=>'نشانی') as $key=>$label){
         $sanitize=$key==='email'?'sanitize_email':'sanitize_text_field';
         $wp_customize->add_setting('dgs_settings['.$key.']',array('type'=>'option','sanitize_callback'=>$sanitize,'capability'=>'manage_options'));
