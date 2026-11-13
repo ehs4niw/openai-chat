@@ -15,6 +15,7 @@ b7c6be56b1edb35cb2918bb83cf577054461cc853b3f2bcd7b2a9ed93906cf04  daneshgaran-sc
 0f7a6a948f3abce7898d3c13d277ab5cce742ce68ff6ac3561255b9c9c2d71ea  daneshgaran-school-0.15.0.zip
 47e9a5727e7dd13ba2a158fb611c6337799d3ed202f245ab816c61b878a81a53  daneshgaran-school-0.16.0.zip
 393c2a06385fdd4c9fc45ac40a362e1f2a7ba4d5edf3c98241e5cdb773f79775  daneshgaran-school-0.17.0.zip
+77701f320bed67629b491ab515eb3e321300a5cf048cb1f9ea31231e0bc13dbc  daneshgaran-school-0.18.0.zip
 d1604c9c9bd1664804c5aa7dcf6f75c4b48fb76e42f14ed71b4c58d458f7d6cd  daneshgaran-school-0.2.0.zip
 3d142fd703b3ea3c11ce54a30eab2567b4d8718caf5b33de34f824eb964dff2c  daneshgaran-school-0.2.1.zip
 8efe3a56e2c95a232d7f9dcba6c20a10b14db3c72d52d9ca26fb1a77ae856346  daneshgaran-school-0.3.0.zip
@@ -27,6 +28,7 @@ adead348ef08e7ed8852eb4373617cc6221581b071a188296b48881e693723b7  daneshgaran-sc
 e4877ba691aa1c80fc823b5221dc33ce4c18fff4cf6327be1984cd61012e72de  daneshgaran-school-0.8.0.zip
 1f33b1aa47809cb733072eaf0b0d984440acc0055ea97dd6d4cfea95d4e999c4  daneshgaran-school-0.9.0.zip
 2b5f93481c05bae6c2593f54e08c6affcb3eb21b351969c69e7ad464a8c7456c  daneshgaran-school-patch-0.17.0.zip
+6ff179eae7d4d3d5d6768626410b30e9c1c817def61088e699fcb73816320d98  daneshgaran-school-patch-0.18.0.zip
 afb1257f5c7e2992164dd5d51ac401ffb9e0f71078f87ae819df7c127d0275fb  daneshgaran-theme-0.1.0.zip
 11a263a6b8d9cd780cfed678b910f38054862d73f9c4dae95d711fdcc931daef  daneshgaran-theme-0.1.1.zip
 384a118221ff97a9709288909e4d04ecf037594cccb0437c9af046795f6769c9  daneshgaran-theme-0.1.2.zip

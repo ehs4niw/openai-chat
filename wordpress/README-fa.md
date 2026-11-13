@@ -1,3 +1,5 @@
+افزونه **۰.۱۸.۰**: [دانلود کامل](releases/daneshgaran-school-0.18.0.zip) · [پچ برای۰.۱۷.۰](releases/daneshgaran-school-patch-0.18.0.zip) · [ویرایش واقعی خانه و معرفی با المنتور](releases/UPDATE-0.18.0-fa.md).
+
 افزونه **۰.۱۷.۰**: [دانلود کامل](releases/daneshgaran-school-0.17.0.zip) · [پچ سبک برای۰.۱۶.۰](releases/daneshgaran-school-patch-0.17.0.zip) · [صفحه اصلی و معرفی مدرسه](releases/UPDATE-0.17.0-fa.md).
 
 افزونه **۰.۱۶.۰**: [دانلود کامل](releases/daneshgaran-school-0.16.0.zip) · [پرونده دبیر و صفحات اساتید/رزومه/آموزشگاه/اخبار](releases/UPDATE-0.16.0-fa.md) · [الگوی اکسل دبیران](samples/daneshgaran-teachers-template.xlsx).
