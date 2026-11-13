@@ -49,3 +49,4 @@ d020f3d885b58e95ccd961dad4cab61bd635b0e80f54069f4cff2e54d5a911a8  daneshgaran-el
 221798928e026f8595c000d34a76628943762feafa798d8d3b7d62bb4a2104d7  daneshgaran-elementor-about-1.0.zip
 d2510f300c5296ba773692b9ce8cec1888d4f5ce9f3477e3e34b55457132b16d  daneshgaran-school-0.19.1.zip
 9e95ce08a3cd0be8579e746d21bb92e2967c1ba42fd6e78069dee8b771e53d6e  daneshgaran-school-0.19.2.zip
+3fd26e58abee7b591c0ed703c6a8df20add74aa16a62e91451aed662b167bdc1  daneshgaran-school-0.19.3.zip

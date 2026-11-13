@@ -40,13 +40,13 @@ function dgs_visual_action_icons($html){return preg_replace_callback('~(<(button
 // Only the selected Daneshgaran icon is mapped; a future custom site icon remains untouched.
 function dgs_uses_school_site_icon(){if(get_template()!=='daneshgaran')return false;$id=(int)get_option('site_icon');if(!$id)return false;$file=get_attached_file($id);return is_string($file)&&(bool)preg_match('/(?:^|-)daneshgaran-site-icon-512(?:-[0-9]+x[0-9]+)?(?:-[0-9]+)?\.png$/i',wp_basename($file));}
 function dgs_school_site_icon_url($size){$supported=array(32,180,192,270,512);if(!in_array((int)$size,$supported,true))return '';return add_query_arg('ver',DGS_VERSION,set_url_scheme(DGS_URL.'assets/site-icons/icon-'.(int)$size.'.png',is_ssl()?'https':null));}
-// Use one PNG/image source across public pages, the portal, wp-admin and wp-login.
-// The original custom upload avoids stale/missing generated favicon thumbnails.
+// Preserve WordPress's generated size-specific URLs for custom site icons.
+// Never label the original full-size upload as a 32px or 192px thumbnail.
 add_filter('get_site_icon_url',function($url,$size,$blog_id){
  if(get_template()!=='daneshgaran'||($blog_id&&is_multisite()&&(int)$blog_id!==get_current_blog_id()))return $url;
- $id=(int)get_option('site_icon');$image='';
- if($id&&!dgs_uses_school_site_icon()&&wp_attachment_is_image($id))$image=wp_get_original_image_url($id)?:wp_get_attachment_url($id);
- if(!$image)$image=dgs_school_site_icon_url($size)?:dgs_school_site_icon_url(512);
+ $id=(int)get_option('site_icon');$image=$url;
+ if(!$id||dgs_uses_school_site_icon())$image=dgs_school_site_icon_url($size)?:$url;
+ if(!$image)return $url;
  $scheme=wp_parse_url(home_url('/'),PHP_URL_SCHEME)?:'https';
  return add_query_arg('dgs_icon',DGS_VERSION,set_url_scheme($image,$scheme));
 },100,3);
