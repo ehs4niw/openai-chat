@@ -36,13 +36,22 @@ function dgs_visual_heading_icons($html,$context='study'){
  return preg_replace_callback('~(<h[23]\b[^>]*>)(.*?)(</h[23]>)~su',function($m)use($context){if(stripos($m[2],'<svg')!==false||stripos($m[2],'<img')!==false)return $m[0];$body=preg_replace('/^\s*[☷▤▦▥▣♧☎⚖◷✓✎☁▷▶]+\s*/u','',$m[2]);$text=wp_strip_all_tags($body);$icon=dgs_visual_icon_name($text,$context);return $m[1].str_replace('<svg ','<svg class="dgs-context-icon" ',dgs_portal_icon($icon)).$body.$m[3];},$html);
 }
 add_filter('do_shortcode_tag',function($output,$tag){if(strpos($tag,'daneshgaran_')!==0||!is_string($output)||in_array($tag,array('daneshgaran_teachers','daneshgaran_academy','daneshgaran_home','daneshgaran_about'),true))return $output;$context=dgs_is_role_portal()?dgs_portal_tab():'study';return dgs_visual_action_icons(dgs_visual_heading_icons($output,$context));},20,2);
-add_action('wp_head',function(){if(get_template()==='daneshgaran'&&!has_site_icon())echo '<link rel="icon" type="image/svg+xml" href="'.esc_url(DGS_URL.'assets/portal-logo.svg').'">';},100);
 function dgs_visual_action_icons($html){return preg_replace_callback('~(<(button|a)\b[^>]*>)(.*?)(</\2>)~su',function($m){if(stripos($m[3],'<svg')!==false||stripos($m[3],'<img')!==false)return $m[0];$map=array('✓'=>'check','✎'=>'edit','⌕'=>'search','➤'=>'send','↓'=>'file','←'=>'arrow','▣'=>'file','▤'=>'file','↻'=>'refresh');foreach($map as $symbol=>$name){$q=preg_quote($symbol,'/');if(preg_match('/^\s*'.$q.'\s*/u',$m[3]))$body=preg_replace('/^\s*'.$q.'\s*/u','',$m[3],1);elseif(preg_match('/\s*'.$q.'\s*$/u',$m[3]))$body=preg_replace('/\s*'.$q.'\s*$/u','',$m[3],1);else continue;return $m[1].dgs_portal_icon($name).$body.$m[4];}return $m[0];},$html);}
 // Only the selected Daneshgaran icon is mapped; a future custom site icon remains untouched.
 function dgs_uses_school_site_icon(){if(get_template()!=='daneshgaran')return false;$id=(int)get_option('site_icon');if(!$id)return false;$file=get_attached_file($id);return is_string($file)&&(bool)preg_match('/(?:^|-)daneshgaran-site-icon-512(?:-[0-9]+x[0-9]+)?(?:-[0-9]+)?\.png$/i',wp_basename($file));}
 function dgs_school_site_icon_url($size){$supported=array(32,180,192,270,512);if(!in_array((int)$size,$supported,true))return '';return add_query_arg('ver',DGS_VERSION,set_url_scheme(DGS_URL.'assets/site-icons/icon-'.(int)$size.'.png',is_ssl()?'https':null));}
-add_filter('get_site_icon_url',function($url,$size,$blog_id){if($blog_id&&is_multisite()&&(int)$blog_id!==get_current_blog_id())return $url;if(!dgs_uses_school_site_icon())return $url;$replacement=dgs_school_site_icon_url($size);return $replacement?:$url;},20,3);
-add_filter('site_icon_meta_tags',function($tags){if(dgs_uses_school_site_icon())array_unshift($tags,'<link rel="shortcut icon" type="image/x-icon" href="'.esc_url(add_query_arg('ver',DGS_VERSION,set_url_scheme(DGS_URL.'assets/site-icons/favicon.ico',is_ssl()?'https':null))).'">');return $tags;},20);
+// Use one PNG/image source across public pages, the portal, wp-admin and wp-login.
+// The original custom upload avoids stale/missing generated favicon thumbnails.
+add_filter('get_site_icon_url',function($url,$size,$blog_id){
+ if(get_template()!=='daneshgaran'||($blog_id&&is_multisite()&&(int)$blog_id!==get_current_blog_id()))return $url;
+ $id=(int)get_option('site_icon');$image='';
+ if($id&&!dgs_uses_school_site_icon()&&wp_attachment_is_image($id))$image=wp_get_original_image_url($id)?:wp_get_attachment_url($id);
+ if(!$image)$image=dgs_school_site_icon_url($size)?:dgs_school_site_icon_url(512);
+ $scheme=wp_parse_url(home_url('/'),PHP_URL_SCHEME)?:'https';
+ return add_query_arg('dgs_icon',DGS_VERSION,set_url_scheme($image,$scheme));
+},100,3);
+// Let WordPress print its normal PNG/image tags on all three head hooks. A second
+// shortcut .ico candidate can still be forbidden even after the PNG is repaired.
 
 // One shared footer style on every public theme route, including Elementor pages.
 add_action('wp_head',function(){

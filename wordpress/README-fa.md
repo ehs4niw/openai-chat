@@ -1,3 +1,5 @@
+افزونه **۰.۱۹.۲**: [دانلود کامل](releases/daneshgaran-school-0.19.2.zip) · [نمادک تب در سایت و پنل + فرم ورود جمع‌وجور](releases/UPDATE-0.19.2-fa.md). لوگوی انتخابی وردپرس حفظ می‌شود؛ تغییر خودکار در محتوای المنتور ندارد.
+
 افزونه **۰.۱۹.۱**: [دانلود کامل](releases/daneshgaran-school-0.19.1.zip) · [تصویر اصلی ورود و اصلاح مجوز فایل‌های تصویر](releases/UPDATE-0.19.1-fa.md). همه فایل‌های ZIP با مجوز۶۴۴، پوشه‌ها۷۵۵؛ نصب در cPanel داخل plugins.
 
 **قالب‌های مستقل المنتور پرو، فقط محتوای وسط صفحات:** [بسته همه قالب‌ها](releases/daneshgaran-elementor-content-1.0.zip) · [فقط صفحه اصلی](releases/daneshgaran-elementor-home-1.0.zip) · [فقط معرفی](releases/daneshgaran-elementor-about-1.0.zip) · [راهنمای درون‌ریزی و فهرست بخش‌ها](elementor-templates/README-fa.md). این بسته افزونه نیست و صفحات را خودکار عوض نمی‌کند؛ به افزونه فعلی۰.۱۹.۰ متصل است.
