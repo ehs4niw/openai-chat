@@ -43,3 +43,4 @@ a6e9aaf2526b3a9a65cee4da2af880d99f6349d9123cc8390a864cfd148e5693  daneshgaran-th
 366edae0254506e264e507aa8f8098183c753e06fc8603dd89a60a07eb752523  daneshgaran-theme-patch-0.1.5.zip
 8a43cdc6384c5c024275cf2dcdbd145b7a1269c1d72de24efd5d14a6f8ee5ed3  daneshgaran-theme-patch-0.1.6.zip
 d3e7956bd8bd8a3c2a981435e9bda3491fa53f5d0a72159516a065a452159d53  daneshgaran-theme-patch-0.1.7.zip
+b26e6df06ed71ddea14cb71062cfb5f32d4f0678772d9848448258df43be4d3f  daneshgaran-school-0.19.0.zip

@@ -1,3 +1,5 @@
+افزونه **۰.۱۹.۰**: [دانلود کامل](releases/daneshgaran-school-0.19.0.zip) · [گالری قابل مدیریت و ردیف ورود](releases/UPDATE-0.19.0-fa.md). نصب از cPanel در `wp-content/plugins/`؛ قالب تغییر نکرده است.
+
 افزونه **۰.۱۸.۰**: [دانلود کامل](releases/daneshgaran-school-0.18.0.zip) · [پچ برای۰.۱۷.۰](releases/daneshgaran-school-patch-0.18.0.zip) · [ویرایش واقعی خانه و معرفی با المنتور](releases/UPDATE-0.18.0-fa.md).
 
 افزونه **۰.۱۷.۰**: [دانلود کامل](releases/daneshgaran-school-0.17.0.zip) · [پچ سبک برای۰.۱۶.۰](releases/daneshgaran-school-patch-0.17.0.zip) · [صفحه اصلی و معرفی مدرسه](releases/UPDATE-0.17.0-fa.md).

@@ -2,8 +2,8 @@
 if(!defined('ABSPATH')||!class_exists('\\Elementor\\Widget_Base'))exit;
 class DGS_Elementor_Live_Widget extends \Elementor\Widget_Base{
  public function get_name(){return 'dgs_live';}
- public function get_style_depends(){return array('dgs-showcase','dgs-elementor-design');}
- public function get_script_depends(){return array('dgs-showcase');}
+ public function get_style_depends(){return array('dgs-showcase','dgs-elementor-design','dgs-gallery');}
+ public function get_script_depends(){return array('dgs-showcase','dgs-gallery');}
  protected function is_dynamic_content(): bool{return true;}
  public function get_title(){return 'اطلاعات زنده دانشگران';}
  public function get_icon(){return 'eicon-post-list';}
@@ -11,8 +11,9 @@ class DGS_Elementor_Live_Widget extends \Elementor\Widget_Base{
  public function get_keywords(){return array('دانشگران','اساتید','اخبار','کادر','برگزیده');}
  protected function register_controls(){
   $this->start_controls_section('content',array('label'=>'اطلاعات سامانه'));
-  $this->add_control('kind',array('label'=>'نوع اطلاعات','type'=>\Elementor\Controls_Manager::SELECT,'default'=>'teachers','options'=>array('teachers'=>'اساتید','staff'=>'کادر مدرسه','director'=>'مدیر مدرسه','featured'=>'دانش‌آموز برگزیده','news'=>'اخبار','contact'=>'اطلاعات تماس عمومی')));
-  $this->add_control('count',array('label'=>'تعداد نمایش','type'=>\Elementor\Controls_Manager::NUMBER,'default'=>6,'min'=>1,'max'=>30,'condition'=>array('kind'=>array('teachers','staff','news'))));
+  $this->add_control('kind',array('label'=>'نوع اطلاعات','type'=>\Elementor\Controls_Manager::SELECT,'default'=>'teachers','options'=>array('teachers'=>'اساتید','staff'=>'کادر مدرسه','director'=>'مدیر مدرسه','featured'=>'دانش‌آموز برگزیده','news'=>'اخبار','gallery'=>'گالری تصاویر مدرسه','contact'=>'اطلاعات تماس عمومی')));
+  $this->add_control('count',array('label'=>'تعداد نمایش','type'=>\Elementor\Controls_Manager::NUMBER,'default'=>6,'min'=>1,'max'=>30,'condition'=>array('kind'=>array('teachers','staff','news','gallery'))));
+  foreach(array('gallery_title'=>array('عنوان بخش','گالری تصاویر مدرسه'),'gallery_description'=>array('توضیح بخش','نگاهی به فضای آموزشی، امکانات و فعالیت‌های فرهنگی و علمی مدرسه'),'gallery_link_label'=>array('متن دکمه','مشاهده گالری کامل')) as $key=>$field)$this->add_control($key,array('label'=>$field[0],'type'=>\Elementor\Controls_Manager::TEXT,'default'=>$field[1],'condition'=>array('kind'=>'gallery')));
   $this->add_control('category',array('label'=>'گروه خبر','type'=>\Elementor\Controls_Manager::SELECT,'default'=>'school','options'=>array('school'=>'اخبار مدرسه','ministry'=>'آموزش و پرورش'),'condition'=>array('kind'=>'news')));
   $this->add_control('staff_group',array('label'=>'گروه کادر','type'=>\Elementor\Controls_Manager::SELECT,'default'=>'all','options'=>array('all'=>'همه کادر','deputies'=>'معاونت'),'condition'=>array('kind'=>'staff')));
   $staff=array('0'=>'انتخاب از تنظیمات مدرسه');foreach(dgs_showcase_staff() as $post)$staff[(string)$post->ID]=$post->post_title;
@@ -60,11 +61,11 @@ class DGS_Elementor_Icon_Widget extends \Elementor\Widget_Base{
  public function get_categories(){return array('general');}
  protected function register_controls(){
   $this->start_controls_section('icon',array('label'=>'آیکن'));
-  $this->add_control('icon_name',array('label'=>'نماد','type'=>\Elementor\Controls_Manager::SELECT,'default'=>'study','options'=>array('study'=>'کتاب','education'=>'آموزش','users'=>'افراد','teacher'=>'معلم','building'=>'مدرسه','target'=>'رسالت','image'=>'تصویر','settings'=>'امکانات','timetable'=>'تقویم','trophy'=>'برگزیده','phone'=>'تلفن','home'=>'خانه')));
+  $this->add_control('icon_name',array('label'=>'نماد','type'=>\Elementor\Controls_Manager::SELECT,'default'=>'study','options'=>array('study'=>'کتاب','education'=>'آموزش','users'=>'افراد','teacher'=>'معلم','building'=>'مدرسه','target'=>'رسالت','image'=>'تصویر','settings'=>'امکانات','timetable'=>'تقویم','trophy'=>'برگزیده','phone'=>'تلفن','home'=>'خانه','login'=>'ورود')));
   $this->add_control('color',array('label'=>'رنگ','type'=>\Elementor\Controls_Manager::COLOR,'default'=>'#7b28a4','selectors'=>array('{{WRAPPER}} .dse-icon'=>'color:{{VALUE}};')));
   $this->add_control('size',array('label'=>'اندازه','type'=>\Elementor\Controls_Manager::SLIDER,'default'=>array('size'=>30,'unit'=>'px'),'range'=>array('px'=>array('min'=>15,'max'=>150)),'selectors'=>array('{{WRAPPER}} .dse-icon svg'=>'width:{{SIZE}}{{UNIT}}!important;height:{{SIZE}}{{UNIT}}!important;')));
   $this->add_control('align',array('label'=>'چیدمان','type'=>\Elementor\Controls_Manager::SELECT,'default'=>'center','options'=>array('right'=>'راست','center'=>'وسط','left'=>'چپ'),'selectors'=>array('{{WRAPPER}} .dse-icon'=>'text-align:{{VALUE}};')));
   $this->end_controls_section();
  }
- protected function render(){$s=$this->get_settings_for_display();$allowed=array('study','education','users','teacher','building','target','image','settings','timetable','trophy','phone','home');$icon=in_array($s['icon_name']??'',$allowed,true)?$s['icon_name']:'study';echo '<div class="dse-icon">'.dgs_showcase_icon($icon).'</div>';}
+ protected function render(){$s=$this->get_settings_for_display();$allowed=array('study','education','users','teacher','building','target','image','settings','timetable','trophy','phone','home','login');$icon=in_array($s['icon_name']??'',$allowed,true)?$s['icon_name']:'study';echo '<div class="dse-icon">'.dgs_showcase_icon($icon).'</div>';}
 }
