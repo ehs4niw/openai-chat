@@ -16,3 +16,6 @@ body.dg-site.dgs-role-portal .dgs-main-logo{width:96px!important;height:96px!imp
 body.dg-site.dgs-role-portal .dg-sidebar:after{display:none}
 .dgs-role-portal .cm-status{font-size:12px}.dgs-role-portal .cm-status h3{font-size:15px;margin:6px 0}.dgs-role-portal .cm-status p{line-height:1.7}.dgs-role-portal .cm-status .cm-credit{padding:8px 0;margin:8px 0}
 @media(max-width:820px){body.dg-site #dg-sidebar,body.dg-site.admin-bar #dg-sidebar{position:absolute!important;height:auto!important;min-height:100dvh;max-height:none;overflow:visible!important}body.dg-site #dg-sidebar nav{overflow:visible!important;max-height:none!important;flex:0 0 auto}body.dg-site #dg-sidebar .dg-sidebar-bottom{margin-top:18px}}
+
+/* Match the home page's 14px top inset on desktop portal pages. */
+@media(min-width:821px){body.dg-site.dgs-role-portal .dg-shell{padding-top:14px!important;margin-top:0!important}body.dg-site.dgs-role-portal .dg-shell>.dg-sidebar,body.dg-site.dgs-role-portal.admin-bar .dg-shell>.dg-sidebar{margin-top:0!important;top:auto!important;transform:none!important;align-self:start}}
