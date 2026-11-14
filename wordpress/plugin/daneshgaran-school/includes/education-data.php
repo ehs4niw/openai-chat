@@ -88,7 +88,7 @@ function dgs_edu_execute($op,$data){
     if(!$year)return dgs_edu_error('year','سال تحصیلی معتبر وارد کنید؛ مانند 1405-1406.');
     switch($op){
       case 'year':
-        $settings=get_option('dgs_settings',array());$settings['school_year']=$year;update_option('dgs_settings',$settings);dgs_edu_audit('school_year',0);return 'سال تحصیلی فعال ذخیره شد.';
+        return dgs_edu_error('settings','سال فعال را از تنظیمات مدرسه تغییر دهید.');
       case 'class_create':
         $grade=absint($data['grade']??0);$field=sanitize_key((string)($data['field']??''));$title=dgs_edu_class_label((object)array('grade'=>$grade,'field'=>$field));
         if($title===''||dgs_edu_length($title)>100||!in_array($grade,array(10,11,12),true)||!isset(dgs_edu_fields()[$field]))return dgs_edu_error('class','نام کلاس، پایه و رشته را درست وارد کنید.');
@@ -158,18 +158,18 @@ add_action('admin_post_dgs_education',function(){
 function dgs_edu_digits($value){return strtr(trim($value),array('۰'=>'0','۱'=>'1','۲'=>'2','۳'=>'3','۴'=>'4','۵'=>'5','۶'=>'6','۷'=>'7','۸'=>'8','۹'=>'9','٠'=>'0','١'=>'1','٢'=>'2','٣'=>'3','٤'=>'4','٥'=>'5','٦'=>'6','٧'=>'7','٨'=>'8','٩'=>'9'));}
 function dgs_edu_national_id($id){if(!preg_match('/^[0-9]{10}$/D',$id)||preg_match('/^(.)\1{9}$/D',$id))return false;$sum=0;for($i=0;$i<9;$i++)$sum+=(int)$id[$i]*(10-$i);$r=$sum%11;return (int)$id[9]===($r<2?$r:11-$r);}
 function dgs_edu_change_password($data){
-    $u=wp_get_current_user();if(!$u->exists()||!(dgs_edu_role($u,'dgs_student')||dgs_edu_role($u,'dgs_teacher')||dgs_edu_role($u,'dgs_counselor')))return dgs_edu_error('access','دسترسی مجاز نیست.');
+    $u=wp_get_current_user();if(!$u->exists()||!(current_user_can('dgs_manage_education')||dgs_edu_role($u,'dgs_student')||dgs_edu_role($u,'dgs_teacher')||dgs_edu_role($u,'dgs_counselor')))return dgs_edu_error('access','دسترسی مجاز نیست.');
     foreach(array('current_password','new_password','confirm_password') as $key)if(!isset($data[$key])||!is_string($data[$key]))return dgs_edu_error('input','اطلاعات رمز معتبر نیست.');
     if(!wp_check_password($data['current_password'],$u->user_pass,$u->ID))return dgs_edu_error('current','رمز فعلی درست نیست.');
     $new=$data['new_password'];if(dgs_edu_length($new)<12||strlen($new)>128||$new===$u->user_login||$new===$data['current_password'])return dgs_edu_error('password','رمز جدید متفاوت و حداقل ۱۲ نویسه باشد.');
     if($new!==$data['confirm_password'])return dgs_edu_error('confirm','تکرار رمز جدید یکسان نیست.');
-    wp_set_password($new,$u->ID);return true;
+    wp_set_password($new,$u->ID);$saved=get_userdata($u->ID);if(!$saved||!wp_check_password($new,$saved->user_pass,$u->ID))return dgs_edu_error('write','رمز ذخیره نشد؛ دوباره تلاش کنید.');dgs_um_password_ready($u->ID);return true;
 }
 add_action('admin_post_dgs_change_password',function(){
     if(($_SERVER['REQUEST_METHOD']??'')!=='POST'||!is_user_logged_in())wp_die('درخواست مجاز نیست.',403);
     check_admin_referer('dgs_change_password','dgs_password_nonce');$result=dgs_edu_change_password(wp_unslash($_POST));
     if(is_wp_error($result)){wp_die(esc_html($result->get_error_message()).' <a href="'.esc_url(dgs_page_url('portal')).'">بازگشت به پنل</a>','تغییر رمز',array('response'=>400));}
-    wp_logout();wp_safe_redirect(add_query_arg('dgs_password_changed','1',wp_login_url(dgs_page_url('portal'))),303);exit;
+    wp_logout();wp_safe_redirect(add_query_arg('dgs_password_changed','1',dgs_page_url('portal')),303);exit;
 });
 
 function dgs_edu_delete_empty_class($id,$year){

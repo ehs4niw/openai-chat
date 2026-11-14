@@ -1,0 +1,1 @@
+(function(){document.querySelectorAll('[data-um-confirm]').forEach(function(button){button.addEventListener('click',function(event){if(!window.confirm(button.dataset.umConfirm))event.preventDefault();});});})();

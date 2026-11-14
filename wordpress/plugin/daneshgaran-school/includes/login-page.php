@@ -12,6 +12,7 @@ function dgs_login_art_uri(){
 function dgs_login_page(){
  $roles=dgs_login_roles();$chosen=isset($_GET['login_role'])&&is_string($_GET['login_role'])&&isset($roles[$_GET['login_role']])?$_GET['login_role']:'student';ob_start(); ?>
 <div class="dgl-page"><header class="dgl-heading"><img src="<?php echo esc_url(DGS_URL.'assets/portal-logo.svg'); ?>" alt="" width="110" height="86"><strong><?php echo esc_html(dgs_setting('school_name','مدرسه دانشگران')); ?></strong><p>دبیرستان دوره دوم <span>│</span> پایه‌های دهم، یازدهم و دوازدهم</p><h1>ورود به سامانه مدرسه دانشگران</h1><p class="dgl-subheading">مدیریت آموزشی، ارتباطی و اجرایی مدرسه در یک سامانه یکپارچه</p></header>
+<?php if(isset($_GET['dgs_password_changed'])): ?><p class="dg-alert dg-success">رمز با موفقیت تغییر کرد؛ با رمز جدید وارد شوید.</p><?php endif; ?>
 <section class="dgl-card"><div class="dgl-form-side"><form action="<?php echo esc_url(admin_url('admin-post.php')); ?>" method="post" class="dgl-form">
 <input type="hidden" name="action" value="dgs_portal_login"><?php wp_nonce_field('dgs_portal_login','dgs_login_nonce'); ?>
 <fieldset><legend>نقش خود را انتخاب کنید:</legend><div class="dgl-roles"><?php foreach($roles as $key=>$data): ?><label><input type="radio" name="login_role" value="<?php echo esc_attr($key); ?>" <?php checked($chosen,$key); ?> required><span><?php echo dgs_login_icon($data[1]); ?><b><?php echo esc_html($data[0]); ?></b></span></label><?php endforeach; ?></div></fieldset>

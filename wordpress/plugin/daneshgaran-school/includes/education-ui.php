@@ -9,7 +9,7 @@ function dgs_edu_user_options($role){$users=get_users(array('role'=>$role,'numbe
 function dgs_edu_table_start($headers){$out='<div class="dge-table-wrap" tabindex="0" aria-label="جدول؛ در صفحه کوچک قابل پیمایش است"><table class="dge-table"><thead><tr>';foreach($headers as $h)$out.='<th scope="col">'.esc_html($h).'</th>';return $out.'</tr></thead><tbody>';}
 function dgs_edu_flash(){if(!isset($_GET['dg_notice'])||!is_string($_GET['dg_notice'])||!preg_match('/^[a-zA-Z0-9]{24}$/D',$_GET['dg_notice']))return '';$key='dgs_edu_flash_'.get_current_user_id().'_'.$_GET['dg_notice'];$data=get_transient($key);if(!is_array($data))return '';delete_transient($key);return '<div class="dg-alert '.(!empty($data['error'])?'dge-error':'dg-success').'" role="status">'.esc_html($data['text']).'</div>';}
 function dgs_edu_portal(){
-    if(!is_user_logged_in())return '';
+    if(!is_user_logged_in())return '';if(function_exists('dgs_um_password_required')&&dgs_um_password_required())return '<div class="dge-portal">'.dgs_edu_flash().dgs_edu_view_account(dgs_edu_request_year()).'</div>';
     $u=wp_get_current_user();$year=dgs_edu_request_year();$manager=current_user_can('dgs_manage_education');
     $role=$manager?'مدیر و معاون':(dgs_edu_role($u,'dgs_teacher')?'معلم':(dgs_edu_role($u,'dgs_counselor')?'مشاور':(dgs_edu_role($u,'dgs_student')?'دانش‌آموز':'حساب کاربری')));
     $out='<div class="dge-portal"><header class="dge-heading"><div><span class="dg-kicker">سامانه مدرسه دانشگران · '.esc_html($role).'</span><h2>سلام '.esc_html($u->display_name).'، خوش آمدید</h2></div><a class="dg-btn dg-btn-outline" href="'.esc_url(wp_logout_url(home_url('/'))).'">خروج</a></header>';
@@ -23,7 +23,7 @@ function dgs_edu_portal(){
       elseif($tab==='homework')$out.=dgs_hw_portal($year);
       elseif($tab==='quizzes')$out.=dgs_quiz_portal($year);
       elseif($tab==='grades')$out.=dgs_grade_panel($year);
-      elseif($tab==='password')$out.=dgs_edu_password_form();
+      elseif($tab==='account')$out.=dgs_edu_view_account($year);
       elseif($tab==='attendance')$out.=dgs_att_student($year);
       elseif($tab==='finance')$out.=dgs_fin_student($year);
       elseif(dgs_edu_role($u,'dgs_teacher'))$out.=dgs_edu_teacher_view($u->ID,$year);
@@ -44,15 +44,7 @@ function dgs_edu_view_classes($year){
  return $out.'</tbody></table></div></section>';
 }
 function dgs_edu_view_subjects($year){$out='<section class="dge-box"><h3>تعریف درس</h3>'.dgs_edu_form_start('subject_create','subjects',$year).'<label>نام درس<input name="title" maxlength="100" required placeholder="مثلاً ریاضی ۲"></label><button class="dg-btn">افزودن درس</button></form></section><section class="dge-box"><h3>فهرست درس‌ها</h3>';foreach(dgs_edu_subjects() as $s)$out.='<span class="dge-pill">'.esc_html($s->title).'</span>';return $out.'</section>';}
-function dgs_edu_view_users($year){
-    $role=isset($_GET['school_role'])&&is_string($_GET['school_role'])?sanitize_key($_GET['school_role']):'dgs_student';$roles=array('dgs_student'=>'دانش‌آموز','dgs_teacher'=>'معلم','dgs_counselor'=>'مشاور');if(!isset($roles[$role]))$role='dgs_student';$page=max(1,min(10000,absint($_GET['users_page']??1)));$search=isset($_GET['student_search'])&&is_string($_GET['student_search'])?sanitize_text_field(wp_unslash($_GET['student_search'])):'';
-    $args=array('role'=>$role,'number'=>20,'paged'=>$page,'orderby'=>'display_name','order'=>'ASC','count_total'=>true);if($search!==''){$args['search']='*'.$search.'*';$args['search_columns']=array('user_login','display_name','user_email');}$query=new WP_User_Query($args);
-    $out='<a class="dg-btn" href="'.esc_url(dgs_teacher_url(array('dt_add'=>1))).'">افزودن حساب استاد با پرونده کامل</a><details class="dge-box"><summary>افزودن حساب دانش‌آموز یا مشاور</summary>'.dgs_edu_form_start('user_create','users',$year).'<div class="dge-grid"><label>نام و نام خانوادگی<input name="name" maxlength="100" required autocomplete="off"></label>'.dgs_edu_select('role','نقش',array_diff_key($roles,array('dgs_teacher'=>true))).'<label>کد ملی (نام کاربری و رمز اولیه)<input name="national_id" inputmode="numeric" minlength="10" maxlength="10" dir="ltr" autocomplete="off" required></label><label>شماره تماس همراه (الزامی، فقط مدیریت)<input name="phone" inputmode="tel" dir="ltr" maxlength="18" autocomplete="off" required></label></div><p class="dg-muted">نام کاربری و رمز اولیه کد ملی است. پس از ورود می‌توانید رمز را تغییر دهید. نام کاربری ثابت می‌ماند. نقش حساب از این فرم فقط یکی از نقش‌های مدرسه خواهد بود. ساخت معاون از بخش کاربران وردپرس و فقط توسط مدیرکل انجام می‌شود.</p><button class="dg-btn">ساخت حساب</button></form></details>';
-    $out.='<section class="dge-box"><h3>کاربران مدرسه</h3><form method="get" action="'.esc_url(dgs_page_url('portal')).'" class="dge-filter"><input type="hidden" name="dg_tab" value="users"><input type="hidden" name="dg_year" value="'.esc_attr($year).'">'.dgs_edu_select('school_role','نقش',$roles,$role).'<label>نام، نام کاربری یا ایمیل<input name="student_search" value="'.esc_attr($search).'" maxlength="100"></label><button class="dg-btn dg-btn-outline">جست‌وجو</button></form>';
-    $out.=dgs_edu_table_start(array('نام و نام خانوادگی','نام کاربری','نقش','شماره تماس'));
-    foreach($query->get_results() as $u){if(user_can($u,'manage_options'))continue;$out.='<tr><td>'.esc_html($u->display_name).'</td><td dir="ltr">'.esc_html($u->user_login).'</td><td>'.esc_html($roles[$role]).'</td><td dir="ltr">'.esc_html(get_user_meta($u->ID,'_dgs_contact_phone',true)).'</td></tr>';}
-    $out.='</tbody></table></div><nav class="dge-pagination" aria-label="صفحه‌بندی کاربران">';$total=(int)ceil($query->get_total()/20);if($page>1)$out.='<a href="'.esc_url(add_query_arg(array('users_page'=>$page-1,'school_role'=>$role,'student_search'=>$search),dgs_edu_url('users',$year))).'">قبلی</a>';$out.='<span>'.esc_html(dgs_fa_digits($page)).' / '.esc_html(dgs_fa_digits(max(1,$total))).'</span>';if($page<$total)$out.='<a href="'.esc_url(add_query_arg(array('users_page'=>$page+1,'school_role'=>$role,'student_search'=>$search),dgs_edu_url('users',$year))).'">بعدی</a>';return $out.'</nav></section>';
-}
+function dgs_edu_view_users($year){return dgs_um_users_page($year);}
 function dgs_edu_view_assignments($year){
     global $wpdb;$t=dgs_edu_tables();$classes=dgs_edu_classes($year);if(!$classes)return dgs_empty('ابتدا در بخش کلاس‌ها یک کلاس فعال تعریف کنید.');$options=dgs_edu_class_options($classes);$class_id=absint($_GET['dg_class']??0);if(!isset($options[$class_id]))$class_id=(int)$classes[0]->id;
     $out='<div class="dge-two"><section class="dge-box"><h3>تخصیص دانش‌آموزان به کلاس</h3>'.dgs_edu_form_start('enroll','assignments',$year).dgs_edu_select('class_id','کلاس مقصد',$options,$class_id).'<fieldset class="dge-checklist"><legend>دانش‌آموزان</legend>';
