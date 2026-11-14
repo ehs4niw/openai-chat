@@ -72,6 +72,7 @@ function dgs_grade_pairs($year){
 }
 function dgs_edu_view_grades($year){return dgs_grade_panel($year);}
 function dgs_grade_panel($year){
+ if(function_exists('dgs_rc_panel')&&!current_user_can('dgs_manage_education')&&!dgs_edu_role(get_current_user_id(),'dgs_teacher'))return dgs_rc_panel($year);
  if(function_exists('dgs_mg_panel')&&(current_user_can('dgs_manage_education')||dgs_edu_role(get_current_user_id(),'dgs_teacher')))return dgs_mg_panel($year);
  global $wpdb;$t=dgs_edu_tables();$table=dgs_grade_table();$manager=current_user_can('dgs_manage_education');$teacher=dgs_edu_role(get_current_user_id(),'dgs_teacher');$period=dgs_grade_context($year);
  $out='<section class="dge-box"><h3>نمرات و کارنامه ماهانه</h3><form method="get" action="'.esc_url(dgs_page_url('portal')).'" class="dge-filter"><input type="hidden" name="dg_tab" value="grades"><input type="hidden" name="dg_year" value="'.esc_attr($year).'"><label>ماه شمسی (مثلاً 1405-07)<input name="grade_period" dir="ltr" pattern="14[0-9]{2}-(0[1-9]|1[0-2])" value="'.esc_attr($period).'" required></label>';
