@@ -47,8 +47,8 @@ function dgs_home(){ob_start(); ?>
 <section class="dg-card dg-home-section dg-intro"><?php echo dgs_heading('معرفی مدرسه دانشگران','book'); ?><p>در مدرسه دانشگران، آموزش هدفمند و همراهی مستمر، زمینه رشد علمی و فردی دانش‌آموزان را فراهم می‌کند. با برنامه‌های مدرسه، اساتید و محیط آموزشی ما آشنا شوید.</p><a class="dg-text-link" href="<?php echo esc_url(dgs_page_url('about')); ?>">بیشتر درباره مدرسه <?php echo dgs_icon('arrow'); ?></a></section>
 <?php foreach(array('teachers','featured','news','staff','gallery','roles') as $section)echo dgs_section($section);return ob_get_clean();}
 function dgs_academy(){
-    $posts=get_posts(array('post_type'=>'dgs_class','post_status'=>'publish','numberposts'=>24));$out='<div class="dg-page-intro"><span class="dg-kicker">یادگیری عمیق‌تر، مسیر روشن‌تر</span><h2>آموزشگاه و کلاس‌های تقویتی</h2><p>برنامه کلاس‌ها و استاد مربوطه را ببینید و درخواست پیش‌ثبت‌نام خود را ثبت کنید.</p></div>';
-    if(!$posts)return $out.dgs_empty('برنامه کلاس‌های تقویتی پس از اعلام مدرسه منتشر می‌شود.');
+    $posts=get_posts(array('post_type'=>'dgs_class','post_status'=>'publish','numberposts'=>24));$out='<div class="dg-page-intro"><span class="dg-kicker">یادگیری عمیق‌تر، مسیر روشن‌تر</span><h2>کلاس کنکور - تقویتی</h2><p>برنامه کلاس‌ها و استاد مربوطه را ببینید و درخواست پیش‌ثبت‌نام خود را ثبت کنید.</p></div>';
+    if(!$posts)return $out.dgs_empty('برنامه کلاس کنکور - تقویتی پس از اعلام مدرسه منتشر می‌شود.');
     $out.='<div class="dg-course-grid">';foreach($posts as $post){$out.='<article class="dg-course-card">';if(has_post_thumbnail($post))$out.=get_the_post_thumbnail($post,'medium_large',array('loading'=>'lazy'));$out.='<div><span class="dg-kicker">'.esc_html(get_post_meta($post->ID,'_dgs_grade',true)).'</span><h3>'.esc_html($post->post_title).'</h3><p>مدرس: '.esc_html(get_post_meta($post->ID,'_dgs_teacher_name',true)).'</p><p>'.esc_html(get_post_meta($post->ID,'_dgs_schedule',true)).'</p><a class="dg-btn" href="'.esc_url(get_permalink($post)).'">برنامه و پیش‌ثبت‌نام</a></div></article>';}$out.='</div>';return $out;
 }
 function dgs_contact(){

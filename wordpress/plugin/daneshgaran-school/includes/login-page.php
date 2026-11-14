@@ -1,6 +1,6 @@
 <?php
 if(!defined('ABSPATH'))exit;
-function dgs_login_roles(){return array('student'=>array('دانش‌آموز','education'),'teacher'=>array('معلم','teacher'),'counselor'=>array('مشاور','counselor'),'manager'=>array('مدیر و معاون','manager'));}
+function dgs_login_roles(){return array('student'=>array('دانش‌آموز و اولیا','education'),'teacher'=>array('معلم','teacher'),'counselor'=>array('مشاور','counselor'),'manager'=>array('مدیر و معاون','manager'));}
 function dgs_login_role_matches($u,$role){if($role==='manager')return user_can($u,'dgs_manage_education')||user_can($u,'manage_options');return in_array('dgs_'.$role,(array)$u->roles,true);}
 function dgs_login_icon($name){$paths=array('teacher'=>'M12 3h10v12H12M15 19v-4M4 21v-4c0-4 9-4 9 0v4M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8M12 11l4-3','counselor'=>'M7 4h10a4 4 0 0 1 0 8h-4l-4 3v-3H7a4 4 0 0 1 0-8M4 22v-2c0-3 5-3 5 0v2M6.5 17a2 2 0 1 0 0-4 2 2 0 0 0 0 4M16 22v-2c0-3 5-3 5 0v2M18.5 17a2 2 0 1 0 0-4 2 2 0 0 0 0 4','manager'=>'M12 3a4 4 0 1 0 0 8 4 4 0 0 0 0-8M4 22v-5c0-6 16-6 16 0v5zM10 13l2 3 2-3M12 16l-2 5h4z');return isset($paths[$name])?'<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="'.$paths[$name].'"/></svg>':dgs_portal_icon($name);}
 // Read trusted packaged images server-side so blocked public plugin asset URLs do not hide the login artwork.

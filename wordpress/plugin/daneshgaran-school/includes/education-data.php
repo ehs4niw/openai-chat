@@ -161,15 +161,15 @@ function dgs_edu_change_password($data){
     $u=wp_get_current_user();if(!$u->exists()||!(current_user_can('dgs_manage_education')||dgs_edu_role($u,'dgs_student')||dgs_edu_role($u,'dgs_teacher')||dgs_edu_role($u,'dgs_counselor')))return dgs_edu_error('access','دسترسی مجاز نیست.');
     foreach(array('current_password','new_password','confirm_password') as $key)if(!isset($data[$key])||!is_string($data[$key]))return dgs_edu_error('input','اطلاعات رمز معتبر نیست.');
     if(!wp_check_password($data['current_password'],$u->user_pass,$u->ID))return dgs_edu_error('current','رمز فعلی درست نیست.');
-    $new=$data['new_password'];if(dgs_edu_length($new)<12||strlen($new)>128||$new===$u->user_login||$new===$data['current_password'])return dgs_edu_error('password','رمز جدید متفاوت و حداقل ۱۲ نویسه باشد.');
+    $new=$data['new_password'];if(dgs_edu_length($new)<8||strlen($new)>128||$new===$u->user_login||$new===$data['current_password'])return dgs_edu_error('password','رمز جدید متفاوت و حداقل ۸ نویسه باشد.');
     if($new!==$data['confirm_password'])return dgs_edu_error('confirm','تکرار رمز جدید یکسان نیست.');
     wp_set_password($new,$u->ID);$saved=get_userdata($u->ID);if(!$saved||!wp_check_password($new,$saved->user_pass,$u->ID))return dgs_edu_error('write','رمز ذخیره نشد؛ دوباره تلاش کنید.');dgs_um_password_ready($u->ID);return true;
 }
 add_action('admin_post_dgs_change_password',function(){
     if(($_SERVER['REQUEST_METHOD']??'')!=='POST'||!is_user_logged_in())wp_die('درخواست مجاز نیست.',403);
-    check_admin_referer('dgs_change_password','dgs_password_nonce');$result=dgs_edu_change_password(wp_unslash($_POST));
+    check_admin_referer('dgs_change_password','dgs_password_nonce');$oldCookie=wp_parse_auth_cookie('','logged_in');$remember=(int)($oldCookie['expiration']??0)>time()+2*DAY_IN_SECONDS;$result=dgs_edu_change_password(wp_unslash($_POST));
     if(is_wp_error($result)){wp_die(esc_html($result->get_error_message()).' <a href="'.esc_url(dgs_page_url('portal')).'">بازگشت به پنل</a>','تغییر رمز',array('response'=>400));}
-    wp_logout();wp_safe_redirect(add_query_arg('dgs_password_changed','1',dgs_page_url('portal')),303);exit;
+    wp_set_current_user(get_current_user_id());$uid=get_current_user_id();WP_Session_Tokens::get_instance($uid)->destroy_all();wp_set_auth_cookie($uid,$remember,is_ssl());wp_safe_redirect(add_query_arg('password_saved','1',dgs_um_account_url()),303);exit;
 });
 
 function dgs_edu_delete_empty_class($id,$year){

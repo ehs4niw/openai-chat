@@ -18,3 +18,5 @@ body.dgp-public-page .dg-shell{width:100%;max-width:1660px;min-width:0;box-sizin
 body.dgp-public-page .dg-page,body.dgp-public-page .dg-main,body.dgp-public-page .dg-content-page,body.dgp-public-page .dgp-page{min-width:0;max-width:100%;box-sizing:border-box}
 body.dgp-public-page .dgp-page input,body.dgp-public-page .dgp-page select,body.dgp-public-page .dgp-page textarea{min-width:0;max-width:100%;box-sizing:border-box}
 body.dgp-public-page{overflow-x:clip}
+
+.dgp-school .dgp-steps{grid-template-columns:repeat(2,minmax(0,1fr))}

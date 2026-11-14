@@ -1,6 +1,6 @@
 <?php
 if(!defined('ABSPATH'))exit;
-function dgs_request_types(){return array('admission'=>'پیش‌ثبت‌نام مدرسه','class'=>'پیش‌ثبت‌نام کلاس تقویتی','counseling'=>'درخواست مشاوره حضوری','contact'=>'پیام ارتباط با مدرسه');}
+function dgs_request_types(){return array('admission'=>'پیش‌ثبت‌نام مدرسه','class'=>'پیش‌ثبت‌نام کلاس کنکور - تقویتی','counseling'=>'درخواست مشاوره حضوری','contact'=>'پیام ارتباط با مدرسه');}
 function dgs_normalize_phone($value){$value=strtr((string)$value,array('۰'=>'0','۱'=>'1','۲'=>'2','۳'=>'3','۴'=>'4','۵'=>'5','۶'=>'6','۷'=>'7','۸'=>'8','۹'=>'9','٠'=>'0','١'=>'1','٢'=>'2','٣'=>'3','٤'=>'4','٥'=>'5','٦'=>'6','٧'=>'7','٨'=>'8','٩'=>'9'));$value=preg_replace('/\D/','',$value);if(strpos($value,'0098')===0)$value='0'.substr($value,4);elseif(strlen($value)===12&&strpos($value,'98')===0)$value='0'.substr($value,2);elseif(strlen($value)===10&&strpos($value,'9')===0)$value='0'.$value;return preg_match('/^09[0-9]{9}$/D',$value)?$value:'';}
 function dgs_request_form($type='contact',$class_id=0){
     if(function_exists('dgs_public_request_view'))return dgs_public_request_view($type,$class_id);
@@ -19,7 +19,6 @@ function dgs_request_form($type='contact',$class_id=0){
     <?php if($type!=='contact'): ?><label>پایه تحصیلی <span>*</span><select name="grade" required><option value="">انتخاب پایه</option><option value="10">دهم</option><option value="11">یازدهم</option><option value="12">دوازدهم</option></select></label><label>رشته تحصیلی<select name="field"><option value="">انتخاب رشته</option><option value="science">علوم تجربی</option><option value="math">ریاضی و فیزیک</option><option value="humanities">علوم انسانی</option></select></label><?php endif; ?>
     <?php if($type==='admission'): ?><label>نام و نام خانوادگی ولی<input name="parent_name" maxlength="100"></label><?php endif; ?>
     <?php if($type==='admission'): ?><label>مدرسه فعلی<input name="prev_school" maxlength="100"></label><label>پایه فعلی<select name="current_grade"><option value="">انتخاب کنید</option><?php foreach(range(7,12) as $g)echo '<option value="'.$g.'">'.esc_html(dgs_fa_digits($g)).'</option>'; ?></select></label><label>نسبت ولی با دانش‌آموز<input name="relation" maxlength="60" placeholder="مثلاً پدر یا مادر"></label><?php endif; ?></div>
-    <?php if($type==='admission'): ?><label>مدارک پیوست (اختیاری)<input name="documents[]" type="file" accept=".pdf,.png,.jpg,.jpeg" multiple></label><p class="dg-muted">حداکثر ۵ فایل PDF/JPG/PNG؛ هر فایل ۱۰ مگابایت و مجموع ۲۰ مگابایت، محدود به سقف هاست. مدارک فقط برای مدیریت مدرسه قابل دریافت‌اند.</p><?php endif; ?>
     <label for="<?php echo esc_attr($uid); ?>message"><?php echo $type==='counseling'?'موضوع مشاوره و زمان‌های مناسب تماس':'توضیحات (اختیاری)'; ?><textarea id="<?php echo esc_attr($uid); ?>message" name="message" rows="4" maxlength="2000"></textarea></label>
     <label class="dg-consent"><input type="checkbox" name="consent" value="1" required>با ثبت و بررسی این اطلاعات توسط مسئولان مجاز مدرسه برای پیگیری درخواست موافقم.</label>
     <button class="dg-btn" type="submit">ثبت درخواست <?php echo dgs_icon('arrow'); ?></button>
@@ -49,12 +48,11 @@ function dgs_submit_request(){
     $data=dgs_validate_request(wp_unslash($_POST));if(is_wp_error($data))wp_die(esc_html($data->get_error_message()),'بررسی اطلاعات',array('response'=>400,'back_link'=>true));
     $ip=(string)($_SERVER['REMOTE_ADDR']??'');$key='dgs_req_'.hash_hmac('sha256',$ip,wp_salt('nonce'));$count=(int)get_transient($key);
     if($count>=5)wp_die('تعداد درخواست‌ها زیاد است؛ کمی بعد دوباره تلاش کنید.','محدودیت درخواست',array('response'=>429,'back_link'=>true));
-    if($data['type']==='admission'){$documents=dgs_public_check_documents($_FILES['documents']??null);if(is_wp_error($documents))wp_die(esc_html($documents->get_error_message()),'مدارک',array('response'=>400,'back_link'=>true));}
-    if($data['type']!=='admission'&&!empty($_FILES['documents']))wp_die('مدارک فقط برای پذیرش مدرسه مجازند.','',array('response'=>400));$files_fingerprint=dgs_request_uploads($_FILES['documents']??null);if(is_wp_error($files_fingerprint))wp_die(esc_html($files_fingerprint->get_error_message()),'مدارک',array('response'=>400,'back_link'=>true));
+    if(!empty($_FILES))wp_die('بارگذاری فایل در پیش‌ثبت‌نام لازم نیست و پذیرفته نمی‌شود.','',array('response'=>400));$files_fingerprint=array();
     $fingerprint='dgs_dup_'.hash_hmac('sha256',wp_json_encode($data['type'].'|'.$data['phone'].'|'.$data['class_id'].'|'.$data['name'].'|'.($data['student_national']??'').'|'.$data['message'].'|'.$files_fingerprint),wp_salt('nonce'));
     $existing=(int)get_transient($fingerprint);
     if(!$existing||get_post_status($existing)!=='private'){
-        $files=dgs_request_uploads($_FILES['documents']??null,true);if(is_wp_error($files))wp_die(esc_html($files->get_error_message()),'مدارک',array('response'=>400,'back_link'=>true));
+        $files=array();if(is_wp_error($files))wp_die(esc_html($files->get_error_message()),'مدارک',array('response'=>400,'back_link'=>true));
         $id=wp_insert_post(wp_slash(array('post_type'=>'dgs_request','post_status'=>'private','post_title'=>dgs_request_types()[$data['type']].' — '.$data['name'],'meta_input'=>array('_dgs_data'=>$data,'_dgs_status'=>'new','_dgs_request_files'=>$files))),true);
         if(is_wp_error($id)||!$id){dgs_request_files_cleanup($files);wp_die('درخواست ذخیره نشد؛ دوباره تلاش کنید.','خطای ذخیره',array('response'=>500,'back_link'=>true));}
         if(get_post_meta($id,'_dgs_data',true)!==$data||($files&&get_post_meta($id,'_dgs_request_files',true)!==$files)){wp_delete_post($id,true);dgs_request_files_cleanup($files);wp_die('ذخیره اطلاعات کامل نشد؛ دوباره تلاش کنید.','خطای ذخیره',array('response'=>500,'back_link'=>true));}

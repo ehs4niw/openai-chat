@@ -49,7 +49,7 @@ function dgs_cm_map($raw){
  $map=array();foreach(preg_split('/\R/u',trim($raw)) as $line){if(trim($line)==='')continue;if(!preg_match('/^\s*([A-Za-z][A-Za-z0-9_]{0,49})\s*=\s*([a-z]+)\s*$/D',$line,$m)||!isset(dgs_cm_sources()[$m[2]])||isset($map[$m[1]]))return dgs_edu_error('map','هر خط متغیر به صورت نام_متغیر=منبع باشد؛ نام متغیر انگلیسی و یکتا باشد.');$map[$m[1]]=$m[2];}return count($map)>20?dgs_edu_error('map','حداکثر ۲۰ متغیر مجاز است.'):$map;
 }
 function dgs_cm_settings_save($d){
- if(!current_user_can('manage_options'))return dgs_edu_error('access','تنظیمات اتصال فقط برای مدیر اصلی سایت است.');foreach($d as $v)if(!is_scalar($v))return dgs_edu_error('input','درخواست معتبر نیست.');
+ if(!current_user_can('dgs_manage_education'))return dgs_edu_error('access','تنظیمات اتصال برای مدیریت مدرسه است.');foreach($d as $v)if(!is_scalar($v))return dgs_edu_error('input','درخواست معتبر نیست.');
  $old=dgs_cm_config();if((string)($d['revision']??'')!==(string)($old['revision']??0))return dgs_edu_error('stale','تنظیمات تغییر کرده؛ صفحه را تازه کنید.');$next=$old;
  $sender=dgs_edu_digits(trim($d['sender']??''));if($sender!==''&&!preg_match('/^\+?98[0-9]{3,18}$/D',$sender))return dgs_edu_error('sender','شماره خط را با پیش‌شماره۹۸ وارد کنید.');$next['sender']=$sender?'+'.ltrim($sender,'+'):'';
  $key=trim($d['api_key']??'');if($key!==''){if(strlen($key)<10||strlen($key)>512||preg_match('/[\r\n]/',$key))return dgs_edu_error('key','کلید اتصال معتبر نیست.');$encrypted=dgs_cm_secret($key);if(is_wp_error($encrypted))return $encrypted;$next['secret']=$encrypted;}
