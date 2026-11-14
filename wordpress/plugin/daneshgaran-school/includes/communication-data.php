@@ -55,9 +55,7 @@ function dgs_cm_settings_save($d){
  $key=trim($d['api_key']??'');if($key!==''){if(strlen($key)<10||strlen($key)>512||preg_match('/[\r\n]/',$key))return dgs_edu_error('key','کلید اتصال معتبر نیست.');$encrypted=dgs_cm_secret($key);if(is_wp_error($encrypted))return $encrypted;$next['secret']=$encrypted;}
  if(($d['remove_key']??'')==='1')$next['secret']='';$next['enabled']=($d['enabled']??'')==='1';
  foreach(dgs_cm_purposes() as $p=>$label){$code=trim($d[$p.'_code']??'');$text=sanitize_textarea_field($d[$p.'_text']??'');$map=dgs_cm_map($d[$p.'_map']??'');if(is_wp_error($map))return $map;if($code!==''&&!preg_match('/^[A-Za-z0-9_-]{1,100}$/D',$code))return dgs_edu_error('pattern','کد پترن معتبر نیست.');if(dgs_edu_length($text)>2000)return dgs_edu_error('length','متن پترن حداکثر۲۰۰۰ نویسه باشد.');preg_match_all('/\{([A-Za-z][A-Za-z0-9_]*)\}/',$text,$matches);foreach($matches[1] as $variable)if(!isset($map[$variable]))return dgs_edu_error('map','متغیر متن پیش‌نمایش در نگاشت تعریف نشده است.');$next['patterns'][$p]=array('code'=>$code,'text'=>$text,'map'=>$map);}
- $next['auto_absence']=($d['auto_absence']??'')==='1';$next['auto_report']=($d['auto_report']??'')==='1';
- foreach(array('absence','report') as $p)if($next['auto_'.$p]&&(!$next['patterns'][$p]['code']||!$next['patterns'][$p]['text']))return dgs_edu_error('pattern','برای فعال‌کردن ارسال خودکار، کد و متن پترن همان رویداد را تکمیل کنید.');
- foreach(array('absence'=>array('student','class','date','school'),'report'=>array('student','class','date','school','month','score')) as $purpose=>$allowed)if($next['auto_'.$purpose])foreach($next['patterns'][$purpose]['map'] as $source)if(!in_array($source,$allowed,true))return dgs_edu_error('auto_variable','پترن خودکار نمی‌تواند به متغیر توضیح دستی یا متغیر نامرتبط وابسته باشد.');
+ unset($next['auto_absence'],$next['auto_report']);
  $next['revision']=(int)($old['revision']??0)+1;
  // Preserve the existing value if another administrator saved concurrently.
  if($old){global $wpdb;$ok=$wpdb->query($wpdb->prepare("UPDATE {$wpdb->options} SET option_value=%s WHERE option_name='dgs_sms_settings' AND option_value=%s",maybe_serialize($next),maybe_serialize($old)));wp_cache_delete('dgs_sms_settings','options');wp_cache_delete('alloptions','options');if(!$ok)return dgs_edu_error('stale','تنظیمات هم‌زمان تغییر کرد.');}elseif(!add_option('dgs_sms_settings',$next,'','no'))return dgs_edu_error('stale','تنظیمات هم‌زمان تغییر کرد.');
@@ -101,7 +99,7 @@ function dgs_cm_prepare($d){
 }
 function dgs_cm_confirm($id){
  if(!dgs_manage_allowed())return dgs_edu_error('access','اجازه ارسال ندارید.');$s=dgs_cm_config();if(empty($s['enabled'])||!dgs_cm_key())return dgs_edu_error('disabled','اتصال IPPanel را فعال و کلید را وارد کنید.');
- return dgs_mg_locked(function()use($id){global $wpdb;$t=dgs_cm_tables();$batch=$wpdb->get_row($wpdb->prepare("SELECT * FROM {$t['batches']} WHERE id=%d",$id));if(!$batch||(int)$batch->actor_id!==get_current_user_id())return dgs_edu_error('access','این پیش‌نمایش متعلق به حساب شما نیست.');if($batch->status!=='draft')return 'این درخواست قبلاً تعیین تکلیف شده است.';
+ return dgs_mg_locked(function()use($id){global $wpdb;$t=dgs_cm_tables();$batch=$wpdb->get_row($wpdb->prepare("SELECT * FROM {$t['batches']} WHERE id=%d",$id));if(!$batch||!in_array($batch->audience,array('individual','class','group'),true)||(int)$batch->actor_id!==get_current_user_id())return dgs_edu_error('access','این پیش‌نمایش متعلق به حساب شما نیست.');if($batch->status!=='draft')return 'این درخواست قبلاً تعیین تکلیف شده است.';
  if(strtotime($batch->created_at.' UTC')<time()-3600)return dgs_edu_error('expired','پیش‌نمایش منقضی شده؛ دوباره پیش‌نمایش بگیرید.');$count=(int)$wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM {$t['items']} WHERE batch_id=%d AND status='draft'",$id));if(!$count)return dgs_edu_error('empty','شماره معتبر برای ارسال وجود ندارد.');
  if($wpdb->update($t['items'],array('status'=>'queued','updated_at'=>dgs_mg_utc()),array('batch_id'=>$id,'status'=>'draft'))===false||$wpdb->update($t['batches'],array('status'=>'queued'),array('id'=>$id))===false)throw new RuntimeException('صف ارسال ذخیره نشد.');dgs_edu_audit('sms_confirm',$id);return 'ارسال تأیید شد و در صف IPPanel قرار گرفت.';});
 }
@@ -122,7 +120,7 @@ function dgs_cm_worker(){
  try{
  $wpdb->query($wpdb->prepare("UPDATE {$t['items']} SET status='unknown',error_code='interrupted' WHERE status='submitting' AND updated_at<%s",gmdate('Y-m-d H:i:s',time()-300)));
  $rows=$wpdb->get_results("SELECT * FROM {$t['items']} WHERE status='queued' ORDER BY id LIMIT 5");foreach($rows as $item){$batch=$wpdb->get_row($wpdb->prepare("SELECT * FROM {$t['batches']} WHERE id=%d",$item->batch_id));if(!$batch)continue;
- $ctx=json_decode($item->context_json,true);$eligible=$batch->purpose==='report'?dgs_cm_report_complete($item->student_id,$batch->school_year,$ctx['period']??''):null;$okay=$batch->purpose==='report'?(!empty($eligible['complete'])&&dgs_cm_guardian($item->student_id)===$item->phone&&($ctx['score']??'')===dgs_rc_number($eligible['average'])):dgs_cm_eligible($item,$batch);if(strtotime($item->created_at.' UTC')<time()-DAY_IN_SECONDS)$okay=false;if($batch->purpose==='absence'&&empty($ctx['manual'])&&($ctx['day']??'')!==dgs_mg_now()->format('Y-m-d'))$okay=false;
+ $ctx=json_decode($item->context_json,true);if(!dgs_cm_manual_item($item,$batch)){$wpdb->update($t['items'],array('status'=>'canceled','error_code'=>'manual_only','updated_at'=>dgs_mg_utc()),array('id'=>$item->id,'status'=>'queued'));continue;}$eligible=$batch->purpose==='report'?dgs_cm_report_complete($item->student_id,$batch->school_year,$ctx['period']??''):null;$okay=$batch->purpose==='report'?(!empty($eligible['complete'])&&dgs_cm_guardian($item->student_id)===$item->phone&&($ctx['score']??'')===dgs_rc_number($eligible['average'])):dgs_cm_eligible($item,$batch);if(strtotime($item->created_at.' UTC')<time()-DAY_IN_SECONDS)$okay=false;
  if(!$okay){$wpdb->update($t['items'],array('status'=>'canceled','error_code'=>strtotime($item->created_at.' UTC')<time()-DAY_IN_SECONDS?'queue_expired':'recipient_changed','updated_at'=>dgs_mg_utc()),array('id'=>$item->id,'status'=>'queued'));continue;}
  if($wpdb->update($t['items'],array('status'=>'submitting','updated_at'=>dgs_mg_utc()),array('id'=>$item->id,'status'=>'queued'))!==1)continue;
  $payload=json_decode($item->payload_json,true);$payload['params']=(object)($payload['params']??array());$payload['recipients']=array($item->phone);$r=dgs_cm_request('/api/send',$payload);$status='accepted';$error='';$provider='';if(is_wp_error($r)){$error=$r->get_error_code();$status=$error==='uncertain'?'unknown':'failed';}else{$ids=$r['message_outbox_ids']??array();if(!is_array($ids)||count($ids)!==1||!is_scalar($ids[0])||!preg_match('/^[0-9]{1,64}$/D',(string)$ids[0])){$status='unknown';$error='missing_tracking';}else $provider=(string)$ids[0];}
@@ -137,15 +135,6 @@ function dgs_cm_sync_item($row){
 function dgs_cm_status_refresh($batch){
  if(!dgs_manage_allowed())return dgs_edu_error('access','دسترسی مجاز نیست.');global $wpdb;$t=dgs_cm_tables();$rows=$wpdb->get_results($wpdb->prepare("SELECT * FROM {$t['items']} WHERE batch_id=%d AND provider_id<>'' AND status IN ('accepted','unknown') ORDER BY updated_at,id LIMIT 3",$batch));$count=0;foreach($rows as $row)if(dgs_cm_sync_item($row))$count++;return 'وضعیت '.dgs_fa_digits($count).' ارسال از IPPanel بررسی شد. «ارسال‌شده» تأیید تحویل به گوشی نیست.';
 }
-function dgs_cm_auto_enqueue($purpose,$student,$year,$event,$extra){
- $s=dgs_cm_config();if(empty($s['enabled'])||empty($s['auto_'.$purpose]))return;global $wpdb;$t=dgs_cm_tables();$key=hash('sha256','auto|'.$purpose.'|'.$student.'|'.$year.'|'.$event);if($wpdb->get_var($wpdb->prepare("SELECT id FROM {$t['items']} WHERE dedupe_key=%s",$key)))return;
- $ctx=dgs_cm_context($student,$year,$extra);$p=dgs_cm_payload($purpose,$ctx);if(is_wp_error($p)){update_option('dgs_sms_auto_warning',array('purpose'=>$purpose,'student'=>$student,'at'=>dgs_mg_utc(),'error'=>$p->get_error_code()),false);return;}$phone=dgs_cm_guardian($student);
- $r=dgs_mg_locked(function()use($purpose,$student,$year,$key,$ctx,$p,$phone){global $wpdb;$t=dgs_cm_tables();if($wpdb->get_var($wpdb->prepare("SELECT id FROM {$t['items']} WHERE dedupe_key=%s",$key)))return;$wpdb->insert($t['batches'],array('request_key'=>$key,'actor_id'=>get_current_user_id(),'school_year'=>$year,'purpose'=>$purpose,'audience'=>'خودکار','status'=>'queued','created_at'=>dgs_mg_utc()));$batch=(int)$wpdb->insert_id;if(!$batch)throw new RuntimeException('صف اعلان ذخیره نشد.');if(!$wpdb->insert($t['items'],array('batch_id'=>$batch,'dedupe_key'=>$key,'student_id'=>$student,'phone'=>$phone,'context_json'=>wp_json_encode($ctx),'payload_json'=>wp_json_encode($p['payload']),'preview'=>$p['preview'],'status'=>$phone?'queued':'missing_phone','created_at'=>dgs_mg_utc(),'updated_at'=>dgs_mg_utc())))throw new RuntimeException('اعلان ذخیره نشد.');});if(is_wp_error($r))update_option('dgs_sms_auto_warning',array('purpose'=>$purpose,'student'=>$student,'at'=>dgs_mg_utc(),'error'=>'queue'),false);
-}
-add_action('dgs_attendance_saved',function($year,$day,$rows){foreach($rows as $r)if($r['status']==='absent')dgs_cm_auto_enqueue('absence',$r['student_id'],$year,$day,array('day'=>$day,'date'=>dgs_att_jdate($day)));},10,3);
-add_action('dgs_report_published',function($ctx){
- $s=dgs_cm_config();if(empty($s['enabled'])||empty($s['auto_report']))return;$data=dgs_os_data($ctx);$seen=array();foreach($data['records'] as $r){$key=$r->student_id.':'.$r->period;if(isset($seen[$key]))continue;$seen[$key]=true;$m=dgs_cm_report_complete($r->student_id,$ctx['year'],$r->period);if(empty($m['complete']))continue;dgs_cm_auto_enqueue('report',$r->student_id,$ctx['year'],$r->period,array('period'=>$r->period,'month'=>dgs_mg_label($r->period),'score'=>dgs_rc_number($m['average'])));}
-});
 add_filter('cron_schedules',function($s){$s['dgs_sms_minute']=array('interval'=>60,'display'=>'صف پیامک مدرسه');return $s;});
 add_action('init',function(){if(!wp_next_scheduled('dgs_sms_tick'))wp_schedule_event(time()+60,'dgs_sms_minute','dgs_sms_tick');},20);
 add_action('dgs_sms_tick','dgs_cm_worker');
@@ -172,3 +161,19 @@ function dgs_cm_units($text){
  $extra="^{}\\[]~|€";$units=0;$unicode=false;preg_match_all('/./us',$text,$m);foreach($m[0] as $c){if(str_contains($extra,$c))$units+=2;elseif(str_contains($gsm,$c))$units++;else{$unicode=true;break;}}
  if($unicode){$units=0;foreach($m[0] as $c)$units+=strlen($c)===4?2:1;}$single=$unicode?70:160;$multi=$unicode?67:153;return array('units'=>$units,'parts'=>$units<=$single?1:(int)ceil($units/$multi));
 }
+
+// Never submit an unconfirmed or legacy automatic item, even if migration has not run.
+function dgs_cm_manual_item($item,$batch){
+ $ctx=json_decode($item->context_json,true);return $batch->status==='queued'&&in_array($batch->audience,array('individual','class','group'),true)&&($ctx['manual']??null)===true;
+}
+function dgs_cm_manual_migrate(){
+ if(get_option('dgs_cm_schema')!=='1'||get_option('dgs_sms_manual_only')==='1')return;
+ global $wpdb;$t=dgs_cm_tables();$legacy="SELECT id FROM {$t['batches']} WHERE audience NOT IN ('individual','class','group')";
+ if($wpdb->query("UPDATE {$t['items']} SET status='canceled',error_code='manual_only' WHERE batch_id IN ($legacy) AND status IN ('draft','queued')")===false)return;
+ // A request already in flight may have reached the provider; keep it for review, never retry it.
+ if($wpdb->query("UPDATE {$t['items']} SET status='unknown',error_code='manual_only_inflight' WHERE batch_id IN ($legacy) AND status='submitting'")===false)return;
+ if($wpdb->query("UPDATE {$t['batches']} SET status='canceled' WHERE audience NOT IN ('individual','class','group') AND status IN ('draft','queued')")===false)return;
+ $s=dgs_cm_config();if(isset($s['auto_absence'])||isset($s['auto_report'])){unset($s['auto_absence'],$s['auto_report']);$s['revision']=(int)($s['revision']??0)+1;update_option('dgs_sms_settings',$s,false);}
+ delete_option('dgs_sms_auto_warning');update_option('dgs_sms_manual_only','1',false);
+}
+add_action('init','dgs_cm_manual_migrate',18);

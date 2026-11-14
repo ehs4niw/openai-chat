@@ -84,7 +84,7 @@ function dgs_att_save($data){
     if(!$ok){$wpdb->query('ROLLBACK');return dgs_edu_error('write','ذخیره انجام نشد یا نسخه اطلاعات تغییر کرده؛ صفحه را تازه کنید.');}
     if($wpdb->delete($t['records'],array('session_id'=>$sid))===false){$wpdb->query('ROLLBACK');return dgs_edu_error('write','ذخیره کامل نشد.');}
     foreach($valid as $row){$row['session_id']=$sid;if(!$wpdb->insert($t['records'],$row)){$wpdb->query('ROLLBACK');return dgs_edu_error('write','ذخیره کامل نشد؛ دوباره تلاش کنید.');}}
-    $wpdb->query('COMMIT');dgs_edu_audit($closed?'attendance_closed':'attendance_save',$sid);do_action('dgs_attendance_saved',$year,$day,$valid);return $closed?'تعطیلی این کلاس برای روز انتخاب‌شده ثبت شد.':'حضور و غیاب ذخیره شد.';
+    $wpdb->query('COMMIT');dgs_edu_audit($closed?'attendance_closed':'attendance_save',$sid);return $closed?'تعطیلی این کلاس برای روز انتخاب‌شده ثبت شد.':'حضور و غیاب ذخیره شد.';
 }
 add_action('admin_post_dgs_attendance',function(){
     if(($_SERVER['REQUEST_METHOD']??'')!=='POST'||!current_user_can('dgs_manage_education'))wp_die('دسترسی مجاز نیست.','',array('response'=>403));
