@@ -3,7 +3,7 @@ body.dg-site.dgs-role-portal .dg-shell{max-width:none!important;width:100%;box-s
 /* The sidebar participates in page scrolling; only content is width-limited. */
 @media(min-width:821px){
 body.dg-site .dg-shell{max-width:none!important;width:100%;margin-inline:0;align-items:start;padding:14px;gap:20px;box-sizing:border-box}
-body.dg-site .dg-sidebar,body.dg-site.admin-bar .dg-sidebar{position:static!important;height:auto!important;min-height:calc(100dvh - 28px);overflow:visible!important;border-radius:18px;padding:22px 14px 18px;align-self:start}
+body.dg-site .dg-sidebar,body.dg-site.admin-bar .dg-sidebar{position:static!important;height:auto!important;min-height:calc(100dvh - 28px);overflow:visible!important;border-radius:18px!important;padding:22px 14px 18px;align-self:start}
 body.dg-site .dg-sidebar nav{overflow:visible!important;flex:0 0 auto;height:auto!important;max-height:none!important}
 body.dg-site .dg-sidebar-bottom{margin-top:20px}
 body.dg-site.dgs-role-portal .dg-page{width:100%;min-width:0;max-width:1240px;margin-inline:auto}

@@ -42,7 +42,7 @@ add_action('admin_post_dgs_staff_profile',function(){
 });
 // Rename stored page/menu headings without rewriting Elementor structures or URLs.
 add_filter('the_title',function($title){if(!is_string($title))return $title;return str_replace(array('آموزشگاه و کلاس‌های تقویتی','کلاس‌های تقویتی','کلاس تقویتی','آموزشگاه'),'کلاس کنکور - تقویتی',$title);},20);
-add_action('wp_enqueue_scripts',function(){wp_enqueue_style('dgs-panel-sizing',DGS_URL.'assets/panel-sizing.css',array(),DGS_VERSION);},90);
+add_action('wp_enqueue_scripts',function(){wp_register_style('dgs-panel-sizing',false,array(),DGS_VERSION);wp_enqueue_style('dgs-panel-sizing');wp_add_inline_style('dgs-panel-sizing',file_get_contents(DGS_PATH.'assets/panel-sizing.css'));},90);
 add_action('init',function(){
  $roles=wp_roles();$changed=false;foreach(array('dgs_student'=>'دانش‌آموز و اولیا','dgs_deputy'=>'مدیر و معاون') as $key=>$label)if(isset($roles->roles[$key])&&$roles->roles[$key]['name']!==$label){$roles->roles[$key]['name']=$label;$roles->role_names[$key]=$label;$changed=true;}if($changed)update_option($roles->role_key,$roles->roles);
 },21);
