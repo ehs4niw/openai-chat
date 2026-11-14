@@ -32,6 +32,7 @@ function dgs_grade_can_edit($class,$subject){
  return dgs_edu_role(get_current_user_id(),'dgs_teacher')&&(bool)$wpdb->get_var($wpdb->prepare("SELECT id FROM {$t['teaching']} WHERE class_id=%d AND subject_id=%d AND teacher_id=%d",$class->id,$subject,get_current_user_id()));
 }
 function dgs_grade_save($data){
+ if(function_exists('dgs_mg_write'))return dgs_edu_error('new_form','برای ثبت نمره از فرم جدید دفتر نمرات استفاده کنید.');
  global $wpdb;$t=dgs_edu_tables();$table=dgs_grade_table();
  foreach(array('class_id','subject_id','year','period') as $key)if(!isset($data[$key])||!is_scalar($data[$key]))return dgs_edu_error('input','اطلاعات درخواست معتبر نیست.');
  $year=dgs_edu_year((string)$data['year']);$class=dgs_edu_class($data['class_id']);$subject=absint($data['subject_id']);$period=$year?dgs_grade_period((string)$data['period'],$year):'';
@@ -71,6 +72,7 @@ function dgs_grade_pairs($year){
 }
 function dgs_edu_view_grades($year){return dgs_grade_panel($year);}
 function dgs_grade_panel($year){
+ if(function_exists('dgs_mg_panel')&&(current_user_can('dgs_manage_education')||dgs_edu_role(get_current_user_id(),'dgs_teacher')))return dgs_mg_panel($year);
  global $wpdb;$t=dgs_edu_tables();$table=dgs_grade_table();$manager=current_user_can('dgs_manage_education');$teacher=dgs_edu_role(get_current_user_id(),'dgs_teacher');$period=dgs_grade_context($year);
  $out='<section class="dge-box"><h3>نمرات و کارنامه ماهانه</h3><form method="get" action="'.esc_url(dgs_page_url('portal')).'" class="dge-filter"><input type="hidden" name="dg_tab" value="grades"><input type="hidden" name="dg_year" value="'.esc_attr($year).'"><label>ماه شمسی (مثلاً 1405-07)<input name="grade_period" dir="ltr" pattern="14[0-9]{2}-(0[1-9]|1[0-2])" value="'.esc_attr($period).'" required></label>';
  $pairs=array();$selected='';$pair=null;
@@ -87,7 +89,7 @@ function dgs_grade_panel($year){
  if($manager)$out.='<label><input type="checkbox" name="publish" value="1">تأیید و انتشار نمرات این فهرست</label>';
  $out.='<button class="dg-btn">ذخیره نمرات</button></form></section>';
  }elseif($manager||$teacher)$out.=dgs_empty('کلاس و درس تخصیص‌یافته انتخاب کنید.');
- return $out.dgs_grade_report($year,$period);
+ return $out.(function_exists('dgs_mg_reader')?dgs_mg_reader($year):'').dgs_grade_report($year,$period);
 }
 function dgs_grade_report($year,$period){
  global $wpdb;$t=dgs_edu_tables();$table=dgs_grade_table();$uid=get_current_user_id();$manager=current_user_can('dgs_manage_education');$args=array(dgs_grade_previous($period),$period,$year);
@@ -103,7 +105,7 @@ function dgs_grade_report($year,$period){
  if(!$rows)return $out.'<p>برای این ماه نمره قابل نمایشی وجود ندارد.</p></section>';
  if(count($rows)>500)$out.='<p>فقط ۵۰۰ ردیف نخست نمایش داده می‌شود.</p>';
  $out.=dgs_edu_table_start(array('دانش‌آموز','کلاس','درس','نمره','ماه قبل','تغییر','وضعیت'));$totals=array();
- foreach(array_slice($rows,0,500) as $r){$delta=$r->previous_score===null?'—':sprintf('%+.2f',(float)$r->score-(float)$r->previous_score);$out.='<tr><td>'.esc_html($r->display_name).'</td><td>'.esc_html($r->class_title).'</td><td>'.esc_html($r->subject).'</td><td>'.esc_html(dgs_fa_digits($r->score)).'</td><td>'.esc_html($r->previous_score===null?'—':dgs_fa_digits($r->previous_score)).'</td><td dir="ltr">'.esc_html($delta).'</td><td>'.($r->published?'منتشرشده':'پیش‌نویس').'</td></tr>';if($r->published){if(!isset($totals[$r->student_id]))$totals[$r->student_id]=array('name'=>$r->display_name,'sum'=>0,'count'=>0);$totals[$r->student_id]['sum']+=(float)$r->score;$totals[$r->student_id]['count']++;}}
+ foreach(array_slice($rows,0,500) as $r){$delta=$r->previous_score===null?'—':sprintf('%+.2f',(float)$r->score-(float)$r->previous_score);$out.='<tr><td>'.esc_html($r->display_name).'</td><td>'.esc_html($r->class_title).'</td><td>'.esc_html($r->subject).'</td><td>'.esc_html((function_exists('dgs_mg_fmt')?dgs_mg_fmt(dgs_mg_cents($r->score)):dgs_fa_digits($r->score))).'</td><td>'.esc_html($r->previous_score===null?'—':(function_exists('dgs_mg_fmt')?dgs_mg_fmt(dgs_mg_cents($r->previous_score)):dgs_fa_digits($r->previous_score))).'</td><td dir="ltr">'.esc_html($delta).'</td><td>'.($r->published?'منتشرشده':'پیش‌نویس').'</td></tr>';if($r->published){if(!isset($totals[$r->student_id]))$totals[$r->student_id]=array('name'=>$r->display_name,'sum'=>0,'count'=>0);$totals[$r->student_id]['sum']+=(float)$r->score;$totals[$r->student_id]['count']++;}}
  $out.='</tbody></table></div>';foreach($totals as $v)$out.='<p>'.esc_html($v['name']).': میانگین نمرات منتشرشدهٔ نمایش‌داده‌شده '.esc_html(dgs_fa_digits(number_format($v['sum']/$v['count'],2))).'</p>';
  return $out.'</section>';
 }

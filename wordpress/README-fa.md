@@ -1,3 +1,5 @@
+افزونه **۰.۲۰.۰**: [دانلود کامل](releases/daneshgaran-school-0.20.0.zip) · [راهنمای دفتر نمرات ماهانه](releases/UPDATE-0.20.0-fa.md). ثبت چندباره نمره و رویداد با خالی‌شدن فرم، خلاصه و میانگین زیر فرم، مهلت و نهایی‌سازی دبیر و انتشار مدیریت. نصب در `public_html/wp-content/plugins/`؛ قالب و لوگوها حفظ می‌شوند.
+
 افزونه **۰.۱۹.۶**: [دانلود کامل](releases/daneshgaran-school-0.19.6.zip) · [طرح۳ فقط برای لوگوی سایدبار؛ فوتر بدون تغییر](releases/UPDATE-0.19.6-fa.md). نصب در `public_html/wp-content/plugins/`؛ قالب۰.۱.۸ قبلی حفظ می‌شود.
 
 **لوگوی شفاف سایدبار و فوتر — افزونه۰.۱۹.۵ + قالب۰.۱.۸:** [بسته یک‌مرحله‌ای cPanel](releases/daneshgaran-branding-0.19.5-cpanel.zip) در `public_html/wp-content/` استخراج شود · [راهنما](releases/UPDATE-0.19.5-fa.md) · [PNG شفاف۵۱۲](branding/school-main-logo-transparent-512.png).

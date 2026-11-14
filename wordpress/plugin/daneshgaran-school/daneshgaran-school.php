@@ -2,7 +2,7 @@
 /**
  * Plugin Name: سامانه دانشگران
  * Description: سامانه مدرسه دانشگران؛ صفحات عمومی و درخواست‌ها، مدیریت کلاس‌ها، کاربران و تخصیص دانش‌آموز، دبیر و مشاور با دسترسی مبتنی بر نقش.
- * Version: 0.19.6
+ * Version: 0.20.0
  * Requires at least: 6.4
  * Requires PHP: 8.1
  * Author: Daneshgaran
@@ -10,7 +10,7 @@
  * License: GPL-2.0-or-later
  */
 if(!defined('ABSPATH'))exit;
-define('DGS_VERSION','0.19.6');define('DGS_PATH',plugin_dir_path(__FILE__));define('DGS_URL',plugin_dir_url(__FILE__));
+define('DGS_VERSION','0.20.0');define('DGS_PATH',plugin_dir_path(__FILE__));define('DGS_URL',plugin_dir_url(__FILE__));
 require_once DGS_PATH.'includes/content.php';
 require_once DGS_PATH.'includes/requests.php';
 require_once DGS_PATH.'includes/render.php';
@@ -37,7 +37,7 @@ function dgs_activate(){
 }
 register_activation_hook(__FILE__,'dgs_activate');
 // غیرفعال‌سازی و به‌روزرسانی اطلاعات کاربران و درخواست‌ها را حذف نمی‌کند.
-register_deactivation_hook(__FILE__,function(){flush_rewrite_rules(false);});
+register_deactivation_hook(__FILE__,function(){wp_clear_scheduled_hook('dgs_mg_hourly');flush_rewrite_rules(false);});
 function dgs_setting($name,$default=''){ $s=get_option('dgs_settings',array());return isset($s[$name])&&is_scalar($s[$name])?(string)$s[$name]:$default; }
 function dgs_page_url($key){$p=get_option('dgs_pages',array());return !empty($p[$key])&&get_post_status((int)$p[$key])==='publish'?get_permalink((int)$p[$key]):home_url('/');}
 function dgs_icon($name){return function_exists('dgs_portal_icon')?dgs_portal_icon($name):(function_exists('dgt_icon')?dgt_icon($name):'');}
@@ -66,3 +66,6 @@ require_once DGS_PATH.'includes/elementor-design.php';
 
 require_once DGS_PATH.'includes/gallery.php';
 require_once DGS_PATH.'includes/gallery-elementor.php';
+
+require_once DGS_PATH.'includes/monthly-grades-data.php';
+require_once DGS_PATH.'includes/monthly-grades-ui.php';
