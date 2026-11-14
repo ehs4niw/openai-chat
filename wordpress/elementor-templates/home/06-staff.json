@@ -1,0 +1,126 @@
+{
+    "version": "0.4",
+    "title": "صفحه اصلی — مدیریت و عوامل آموزشی",
+    "type": "section",
+    "content": [
+        {
+            "id": "ffda13a",
+            "elType": "section",
+            "settings": {
+                "content_width": {
+                    "unit": "px",
+                    "size": 1200
+                },
+                "layout": "full_width",
+                "gap": "no",
+                "column_position": "middle",
+                "css_classes": "dse-section det-section det-staff",
+                "margin": {
+                    "unit": "px",
+                    "top": "0",
+                    "right": "0",
+                    "bottom": "12",
+                    "left": "0",
+                    "isLinked": false
+                },
+                "padding": {
+                    "unit": "px",
+                    "top": "14",
+                    "right": "14",
+                    "bottom": "14",
+                    "left": "14",
+                    "isLinked": true
+                },
+                "background_background": "gradient",
+                "background_color": "#ffffff",
+                "background_color_b": "#f6efff",
+                "background_gradient_angle": {
+                    "unit": "deg",
+                    "size": 125
+                },
+                "border_border": "solid",
+                "border_width": {
+                    "unit": "px",
+                    "top": "1",
+                    "right": "1",
+                    "bottom": "1",
+                    "left": "1",
+                    "isLinked": true
+                },
+                "border_color": "#dac0ee",
+                "border_radius": {
+                    "unit": "px",
+                    "top": "15",
+                    "right": "15",
+                    "bottom": "15",
+                    "left": "15",
+                    "isLinked": true
+                },
+                "custom_css": "selector{direction:rtl;box-sizing:border-box;overflow:hidden;color:#45215e;font-family:DgsPortal,Estedad,Tahoma,sans-serif;min-width:0}\nselector>.elementor-container{display:grid!important;grid-template-columns:1fr;gap:14px;align-items:center;max-width:none!important}\nselector>.elementor-container>.elementor-column{width:auto!important;min-width:0}\nselector .elementor-widget-wrap{min-width:0;align-content:center;box-sizing:border-box}\nselector .elementor-widget:not(:last-child){margin-bottom:8px}\nselector p{margin:0;line-height:1.9}\nselector h1,selector h2,selector h3{margin:0;line-height:1.65;overflow-wrap:normal!important}\nselector a{text-decoration:none}\nselector svg{flex-shrink:0}\nselector .elementor-button{line-height:1.7;min-height:0;box-shadow:none}\nselector .elementor-widget-text-editor{font-size:13px;line-height:1.9}\nselector .dse-live,selector .dsh-carousel,selector .dsh-featured-main{min-width:0}\nselector .dg-empty-inline{font-size:12px;padding:16px;border-radius:10px}\n@media(max-width:767px){selector>.elementor-container{grid-template-columns:1fr!important;gap:14px}selector{padding:14px!important}selector .elementor-heading-title{overflow-wrap:normal!important}}\nselector .dse-live-grid{grid-template-columns:repeat(3,minmax(0,1fr))}selector .dsh-person{display:flex;align-items:center;gap:10px;text-align:right;border:1px solid #dbc1ed;border-radius:13px;padding:9px;background:#ffffff66}selector .dsh-person-photo{width:72px;height:80px;border-radius:17px;flex-shrink:0;margin:0}selector .dsh-person h3{font-size:13px!important}selector .dsh-person>div>span{background:none;padding:0;color:#b88719}selector .dsh-person p{font-size:11px}@media(max-width:1024px){selector .dse-live-grid{grid-template-columns:1fr}}"
+            },
+            "elements": [
+                {
+                    "id": "969aac1",
+                    "elType": "column",
+                    "settings": {
+                        "_column_size": 100,
+                        "padding": {
+                            "unit": "px",
+                            "top": "0",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": true
+                        },
+                        "_inline_size": 100,
+                        "css_classes": ""
+                    },
+                    "elements": [
+                        {
+                            "id": "3ebba28",
+                            "elType": "widget",
+                            "widgetType": "heading",
+                            "settings": {
+                                "title": "مدیریت و عوامل آموزشی",
+                                "header_size": "h2",
+                                "title_color": "#511c72",
+                                "align": "right",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 21,
+                                    "unit": "px"
+                                },
+                                "typography_font_size_mobile": {
+                                    "size": 19,
+                                    "unit": "px"
+                                },
+                                "typography_font_weight": "800",
+                                "typography_line_height": {
+                                    "size": 1.6,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "5c85a80",
+                            "elType": "widget",
+                            "widgetType": "dgs_live",
+                            "settings": {
+                                "kind": "staff",
+                                "count": 3,
+                                "columns": "3",
+                                "columns_tablet": "2",
+                                "columns_mobile": "1"
+                            },
+                            "elements": []
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "page_settings": {
+        "hide_title": "yes"
+    }
+}

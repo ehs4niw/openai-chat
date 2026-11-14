@@ -1,0 +1,325 @@
+{
+    "version": "0.4",
+    "title": "معرفی مدرسه — درباره مدرسه، رسالت و پایه‌ها",
+    "type": "section",
+    "content": [
+        {
+            "id": "9441c8a",
+            "elType": "section",
+            "settings": {
+                "content_width": {
+                    "unit": "px",
+                    "size": 1200
+                },
+                "layout": "full_width",
+                "gap": "no",
+                "column_position": "middle",
+                "css_classes": "dse-section det-section det-overview",
+                "margin": {
+                    "unit": "px",
+                    "top": "0",
+                    "right": "0",
+                    "bottom": "12",
+                    "left": "0",
+                    "isLinked": false
+                },
+                "padding": {
+                    "unit": "px",
+                    "top": "14",
+                    "right": "14",
+                    "bottom": "14",
+                    "left": "14",
+                    "isLinked": true
+                },
+                "background_background": "gradient",
+                "background_color": "#ffffff",
+                "background_color_b": "#f6efff",
+                "background_gradient_angle": {
+                    "unit": "deg",
+                    "size": 125
+                },
+                "border_border": "solid",
+                "border_width": {
+                    "unit": "px",
+                    "top": "1",
+                    "right": "1",
+                    "bottom": "1",
+                    "left": "1",
+                    "isLinked": true
+                },
+                "border_color": "#dac0ee",
+                "border_radius": {
+                    "unit": "px",
+                    "top": "15",
+                    "right": "15",
+                    "bottom": "15",
+                    "left": "15",
+                    "isLinked": true
+                },
+                "custom_css": "selector{direction:rtl;box-sizing:border-box;overflow:hidden;color:#45215e;font-family:DgsPortal,Estedad,Tahoma,sans-serif;min-width:0}\nselector>.elementor-container{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;align-items:center;max-width:none!important}\nselector>.elementor-container>.elementor-column{width:auto!important;min-width:0}\nselector .elementor-widget-wrap{min-width:0;align-content:center;box-sizing:border-box}\nselector .elementor-widget:not(:last-child){margin-bottom:8px}\nselector p{margin:0;line-height:1.9}\nselector h1,selector h2,selector h3{margin:0;line-height:1.65;overflow-wrap:normal!important}\nselector a{text-decoration:none}\nselector svg{flex-shrink:0}\nselector .elementor-button{line-height:1.7;min-height:0;box-shadow:none}\nselector .elementor-widget-text-editor{font-size:13px;line-height:1.9}\nselector .dse-live,selector .dsh-carousel,selector .dsh-featured-main{min-width:0}\nselector .dg-empty-inline{font-size:12px;padding:16px;border-radius:10px}\n@media(max-width:767px){selector>.elementor-container{grid-template-columns:1fr!important;gap:14px}selector{padding:14px!important}selector .elementor-heading-title{overflow-wrap:normal!important}}\nselector>.elementor-container{align-items:stretch}selector .det-overview-card>.elementor-widget-wrap{padding:14px;border:1px solid #dbc1ed;border-radius:14px;background:#f8f0fd}selector .elementor-heading-title{font-size:19px!important}"
+            },
+            "elements": [
+                {
+                    "id": "be0917f",
+                    "elType": "column",
+                    "settings": {
+                        "_column_size": 34,
+                        "padding": {
+                            "unit": "px",
+                            "top": "0",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": true
+                        },
+                        "_inline_size": 34,
+                        "css_classes": "det-overview-card"
+                    },
+                    "elements": [
+                        {
+                            "id": "a678839",
+                            "elType": "widget",
+                            "widgetType": "dgs_icon",
+                            "settings": {
+                                "icon_name": "building",
+                                "align": "right",
+                                "size": {
+                                    "size": 25,
+                                    "unit": "px"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "1f62e20",
+                            "elType": "widget",
+                            "widgetType": "heading",
+                            "settings": {
+                                "title": "درباره مدرسه دانشگران",
+                                "header_size": "h2",
+                                "title_color": "#511c72",
+                                "align": "right",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 21,
+                                    "unit": "px"
+                                },
+                                "typography_font_size_mobile": {
+                                    "size": 19,
+                                    "unit": "px"
+                                },
+                                "typography_font_weight": "800",
+                                "typography_line_height": {
+                                    "size": 1.6,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "d7f7af1",
+                            "elType": "widget",
+                            "widgetType": "text-editor",
+                            "settings": {
+                                "editor": "<p>مدرسه دانشگران یک دبیرستان دوره دوم (پایه‌های دهم، یازدهم و دوازدهم) با رویکرد علمی، مهارتی و تربیتی است که با همراهی کادر آموزشی و محیطی امن و پویا، مسیر رشد و موفقیت دانش‌آموزان را هموار می‌سازد.</p>\n",
+                                "align": "right",
+                                "text_color": "#654879",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 13,
+                                    "unit": "px"
+                                },
+                                "typography_line_height": {
+                                    "size": 1.9,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        }
+                    ]
+                },
+                {
+                    "id": "ed11729",
+                    "elType": "column",
+                    "settings": {
+                        "_column_size": 33,
+                        "padding": {
+                            "unit": "px",
+                            "top": "0",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": true
+                        },
+                        "_inline_size": 33,
+                        "css_classes": "det-overview-card"
+                    },
+                    "elements": [
+                        {
+                            "id": "c308da3",
+                            "elType": "widget",
+                            "widgetType": "dgs_icon",
+                            "settings": {
+                                "icon_name": "target",
+                                "align": "right",
+                                "size": {
+                                    "size": 25,
+                                    "unit": "px"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "ff306c1",
+                            "elType": "widget",
+                            "widgetType": "heading",
+                            "settings": {
+                                "title": "رسالت ما",
+                                "header_size": "h2",
+                                "title_color": "#511c72",
+                                "align": "right",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 21,
+                                    "unit": "px"
+                                },
+                                "typography_font_size_mobile": {
+                                    "size": 19,
+                                    "unit": "px"
+                                },
+                                "typography_font_weight": "800",
+                                "typography_line_height": {
+                                    "size": 1.6,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "2f8f612",
+                            "elType": "widget",
+                            "widgetType": "text-editor",
+                            "settings": {
+                                "editor": "<p>پرورش دانش‌آموزانی دانا، خلاق، مسئولیت‌پذیر و آماده برای موفقیت در دانشگاه و زندگی اجتماعی، با تکیه بر آموزش باکیفیت، تربیت اخلاقی و فضای آموزشی پویا و حمایتگر.</p>\n",
+                                "align": "right",
+                                "text_color": "#654879",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 13,
+                                    "unit": "px"
+                                },
+                                "typography_line_height": {
+                                    "size": 1.9,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        }
+                    ]
+                },
+                {
+                    "id": "1896466",
+                    "elType": "column",
+                    "settings": {
+                        "_column_size": 33,
+                        "padding": {
+                            "unit": "px",
+                            "top": "0",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": true
+                        },
+                        "_inline_size": 33,
+                        "css_classes": "det-overview-card"
+                    },
+                    "elements": [
+                        {
+                            "id": "a21d033",
+                            "elType": "widget",
+                            "widgetType": "dgs_icon",
+                            "settings": {
+                                "icon_name": "education",
+                                "align": "right",
+                                "size": {
+                                    "size": 25,
+                                    "unit": "px"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "123007f",
+                            "elType": "widget",
+                            "widgetType": "heading",
+                            "settings": {
+                                "title": "پایه‌های تحصیلی",
+                                "header_size": "h2",
+                                "title_color": "#511c72",
+                                "align": "right",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 21,
+                                    "unit": "px"
+                                },
+                                "typography_font_size_mobile": {
+                                    "size": 19,
+                                    "unit": "px"
+                                },
+                                "typography_font_weight": "800",
+                                "typography_line_height": {
+                                    "size": 1.6,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "37b4619",
+                            "elType": "widget",
+                            "widgetType": "text-editor",
+                            "settings": {
+                                "editor": "<p>متوسطه دوم (دوره دوم دبیرستان)</p>\n",
+                                "align": "center",
+                                "text_color": "#654879",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 13,
+                                    "unit": "px"
+                                },
+                                "typography_line_height": {
+                                    "size": 1.9,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "3af6de0",
+                            "elType": "widget",
+                            "widgetType": "text-editor",
+                            "settings": {
+                                "editor": "<p>پایه دهم     |     پایه یازدهم     |     پایه دوازدهم</p>\n",
+                                "align": "center",
+                                "text_color": "#654879",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 14,
+                                    "unit": "px"
+                                },
+                                "typography_line_height": {
+                                    "size": 1.9,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "page_settings": {
+        "hide_title": "yes"
+    }
+}
