@@ -1,0 +1,1002 @@
+/* فایل‌های چندگانه؛ سازگار با آزمون‌های تک‌فایلی قبلی */
+function bse_pdf_files( $id ) {
+    $files = get_post_meta( $id, 'pdfs', true );
+    if ( ! is_array( $files ) || ! $files ) {
+        $old = get_post_meta( $id, 'pdf', true );
+        $files = is_string( $old ) && $old !== '' ? array( $old ) : array();
+    }
+    return array_values( array_filter( $files, 'is_string' ) );
+}
+
+/* ===== آزمون‌ساز استادیار v2.2 =====
+   Code Snippets → Run snippet everywhere
+   شورت‌کد صفحه: [bs_exams]
+   فایل‌های لازم در public_html/wp-content/uploads/ : bs-exam.js و bs-exam.css
+   تغییرات نسخه ۲: نام برگزارکننده، تعداد شرکت‌کننده برای مدیر، درصد منفی مثل وبلایت،
+   فیلدهای بیشتر برای صفحه‌های کارنامه و تحلیل
+   تغییرات نسخه ۲.۱: ثبت خودکار کسانی که مهلتشان تمام شده، کارنامه‌ی تک‌تک شرکت‌کنندگان برای مدیر
+   تغییرات نسخه ۲.۲: تابع bse_sweep به bse_close_due تغییر نام داد (تعارض با اسنیپت اتصال به محصول).
+   این اسنیپت را کنار «افزونه‌ی اتصال به ووکامرس» (نسخه ۲.۲) فعال نگه دار. */
+
+/* زمان انتشار کارنامه: پایان مهلت عمومی یا پایان زمان شخصی؛ ثبت زودهنگام آن را جلو نمی‌اندازد. */
+function bse_early_results( $id ) {
+    return 1 === (int) get_post_meta( $id, 'bse_early_results', true );
+}
+function bse_release_at( $id, $attempt = null ) {
+    $end = (int) get_post_meta( $id, 'en', true );
+    if ( bse_early_results( $id ) && $attempt && (int) $attempt->deadline > 0 ) {
+        return $end > 0 ? min( $end, (int) $attempt->deadline ) : (int) $attempt->deadline;
+    }
+    return $end;
+}
+function bse_result_visible( $id, $attempt, $now = null ) {
+    $now = null === $now ? time() : (int) $now;
+    return $attempt && (int) $attempt->submitted > 0 && $now >= bse_release_at( $id, $attempt );
+}
+function bse_rank_is_temporary( $id, $now = null ) {
+    $now = null === $now ? time() : (int) $now;
+    return bse_early_results( $id ) && $now < (int) get_post_meta( $id, 'en', true );
+}
+/* در رتبه‌بندی موقت فقط تلاش‌هایی می‌آیند که زمان پاسخ‌گویی‌شان پایان یافته است. */
+function bse_rank_scope( $id, $now = null ) {
+    $now = null === $now ? time() : (int) $now;
+    return bse_rank_is_temporary( $id, $now ) ? ' AND deadline<=' . $now : '';
+}
+
+function bse_is_mgr() {
+	return current_user_can( 'manage_options' ) || current_user_can( 'manage_woocommerce' );
+}
+function bse_tbl() {
+	global $wpdb;
+	return $wpdb->prefix . 'bse_attempts';
+}
+function bse_install() {
+	global $wpdb;
+	if ( get_option( 'bse_db' ) !== '1' ) {
+		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+		$c = $wpdb->get_charset_collate();
+		dbDelta( 'CREATE TABLE ' . bse_tbl() . " (
+			id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+			exam_id bigint(20) unsigned NOT NULL,
+			user_id bigint(20) unsigned NOT NULL,
+			answers longtext,
+			started int(11) unsigned NOT NULL DEFAULT 0,
+			deadline int(11) unsigned NOT NULL DEFAULT 0,
+			submitted int(11) unsigned NOT NULL DEFAULT 0,
+			correct smallint(6) NOT NULL DEFAULT 0,
+			wrong smallint(6) NOT NULL DEFAULT 0,
+			blank smallint(6) NOT NULL DEFAULT 0,
+			pct float NOT NULL DEFAULT 0,
+			secs int(11) NOT NULL DEFAULT 0,
+			PRIMARY KEY  (id),
+			UNIQUE KEY ux (exam_id,user_id)
+		) $c;" );
+		update_option( 'bse_db', '1' );
+	}
+	/* یک‌بار: نتیجه‌های قبلی با قانون جدید (درصد منفی) دوباره حساب می‌شوند */
+	if ( get_option( 'bse_v' ) !== '2' ) {
+		foreach ( $wpdb->get_results( 'SELECT * FROM ' . bse_tbl() . ' WHERE submitted>0' ) as $a ) {
+			bse_finalize( $a, (int) $a->submitted );
+		}
+		update_option( 'bse_v', '2' );
+	}
+}
+add_action( 'init', function () {
+	register_post_type( 'bs_exam', array( 'public' => false, 'label' => 'آزمون' ) );
+	bse_install();
+} );
+
+function bse_name( $uid ) {
+	$u = get_userdata( $uid );
+	if ( ! $u ) {
+		return '—';
+	}
+	$f = get_user_meta( $uid, 'first_name', true );
+	$l = get_user_meta( $uid, 'last_name', true );
+	return trim( $f . ' ' . $l ) ? trim( $f . ' ' . $l ) : $u->display_name;
+}
+function bse_short( $uid ) {
+	$f = get_user_meta( $uid, 'first_name', true );
+	$l = get_user_meta( $uid, 'last_name', true );
+	if ( $f || $l ) {
+		return trim( $f . ' ' . ( $l ? mb_substr( $l, 0, 1 ) . '.' : '' ) );
+	}
+	return bse_name( $uid );
+}
+function bse_exam( $id ) {
+	$p = get_post( $id );
+	return ( $p && $p->post_type === 'bs_exam' && $p->post_status === 'publish' ) ? $p : null;
+}
+function bse_row( $e, $uid ) {
+	global $wpdb;
+	return $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM ' . bse_tbl() . ' WHERE exam_id=%d AND user_id=%d', $e, $uid ) );
+}
+/* فرصت کوتاه برای رسیدن بستهٔ نهایی؛ زمان پاسخ‌گویی افزایش نمی‌یابد. */
+function bse_delivery_grace() { return 15; }
+function bse_attempt_lock( $id ) {
+ global $wpdb;
+ return 1 === (int) $wpdb->get_var( $wpdb->prepare( 'SELECT GET_LOCK(%s, 5)', 'bse_' . md5( bse_tbl() . ':' . $id ) ) );
+}
+function bse_attempt_unlock( $id ) {
+ global $wpdb;
+ $wpdb->get_var( $wpdb->prepare( 'SELECT RELEASE_LOCK(%s)', 'bse_' . md5( bse_tbl() . ':' . $id ) ) );
+}
+function bse_finalize( $a, $t = 0, $locked = false ) {
+ global $wpdb;
+ $attempt_id = (int) $a->id;
+ if ( ! $locked && ! bse_attempt_lock( $attempt_id ) ) { return; }
+ try {
+ $a = $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM ' . bse_tbl() . ' WHERE id=%d', $attempt_id ) );
+ if ( ! $a || ( $a->submitted && ! $t ) ) { return; }
+	$id  = (int) $a->exam_id;
+	$key = json_decode( get_post_meta( $id, 'key', true ), true );
+	$key = is_array( $key ) ? $key : array();
+	$an  = json_decode( $a->answers, true );
+	$an  = is_array( $an ) ? $an : array();
+	$qn  = (int) get_post_meta( $id, 'qn', true );
+	$c   = 0;
+	$w   = 0;
+	for ( $i = 1; $i <= $qn; $i++ ) {
+		$v = isset( $an[ $i ] ) ? (int) $an[ $i ] : 0;
+		if ( ! $v ) {
+			continue;
+		}
+		if ( isset( $key[ $i - 1 ] ) && (int) $key[ $i - 1 ] === $v ) {
+			$c++;
+		} else {
+			$w++;
+		}
+	}
+	$neg = (int) get_post_meta( $id, 'neg', true );
+	/* نمره × ۳ (عدد صحیح) تا خطای اعشاری پیش نیاید؛ درصد منفی هم مجاز است و دو رقم اعشار بدون رُند می‌شود */
+	$s3  = $neg ? ( 3 * $c - $w ) : ( 3 * $c );
+	$raw = $qn ? $s3 * 10000 / ( 3 * $qn ) : 0;
+	$pct = ( $raw < 0 ? ceil( $raw ) : floor( $raw ) ) / 100;
+
+    if ( bsem_is( $id ) ) {
+        $multi = bsem_score( $id, $an );
+        $c = $multi['correct']; $w = $multi['wrong']; $pct = $multi['pct'];
+    }
+	$t   = $t ? $t : min( time(), (int) $a->deadline );
+	$wpdb->update( bse_tbl(), array(
+		'submitted' => $t,
+		'correct'   => $c,
+		'wrong'     => $w,
+		'blank'     => $qn - $c - $w,
+		'pct'       => $pct,
+		'secs'      => max( 0, $t - (int) $a->started ),
+	), array( 'id' => $a->id ) );
+ } finally { if ( ! $locked ) { bse_attempt_unlock( $attempt_id ); } }
+}
+function bse_my( $e, $uid ) {
+	$a = bse_row( $e, $uid );
+    if ( $a && bsem_is( $e ) ) { $a = bsem_touch( $a ); }
+	if ( $a && ! $a->submitted && time() >= $a->deadline + bse_delivery_grace() ) {
+		bse_finalize( $a );
+		$a = bse_row( $e, $uid );
+	}
+	return $a;
+}
+/* هر کس مهلتش تمام شده و ثبت نهایی نکرده، خودکار ثبت می‌شود تا در نتایج و رتبه‌ها بیاید */
+/* One nonblocking sweep worker across all exam read paths; small keyset batches. */
+function bse_close_due( $e = 0 ) {
+ global $wpdb;
+ $e=(int)$e;$table=bse_tbl();$lock='bse_sweep_'.md5($table);
+ if(1!==(int)$wpdb->get_var($wpdb->prepare('SELECT GET_LOCK(%s,0)',$lock)))return false;
+ $ready=true;$last=0;$began=microtime(true);$now=time();
+ try {
+  $multi=$e?(bsem_is($e)?array($e):array()):get_posts(array('post_type'=>'bs_exam','numberposts'=>-1,'fields'=>'ids','meta_key'=>'bsem_type','meta_value'=>'multi'));
+  $multi=array_map('intval',$multi);
+  do {
+   $scope=$e?' AND exam_id='.$e:'';
+   $eligible='deadline<='.($now-bse_delivery_grace());
+   if($multi)$eligible.=' OR exam_id IN ('.implode(',',$multi).')';
+   $rows=$wpdb->get_results($wpdb->prepare("SELECT id,exam_id,user_id,submitted,started,deadline FROM $table WHERE submitted=0 AND id>%d $scope AND ($eligible) ORDER BY id ASC LIMIT 25",$last));
+   if($wpdb->last_error){$ready=false;break;}
+   foreach($rows as $a){
+    $last=(int)$a->id;
+    if(bsem_is($a->exam_id)){
+     $fresh=bsem_touch($a,true);
+     if(!$fresh||(!$fresh->submitted && ((int)$fresh->deadline<=$now || (int)(bsem_state($fresh)['end']??PHP_INT_MAX)<=$now)))$ready=false;
+    }else{
+     // Never wait behind a student's active save while sweeping other attempts.
+     if(1!==(int)$wpdb->get_var($wpdb->prepare('SELECT GET_LOCK(%s,0)','bse_'.md5($table.':'.$a->id)))){$ready=false;continue;}
+     try{bse_finalize($a,0,true);}finally{bse_attempt_unlock($a->id);}
+    }
+    if(microtime(true)-$began>=1.5){$ready=false;break 2;}
+   }
+  }while(count($rows)===25);
+  // Also wait for late final packets inside the unchanged 15-second delivery grace.
+  $pending=$wpdb->get_var("SELECT COUNT(*) FROM $table WHERE submitted=0 AND deadline<=$now".($e?' AND exam_id='.$e:''));
+  if($wpdb->last_error || (int)$pending>0)$ready=false;
+ }finally{$wpdb->get_var($wpdb->prepare('SELECT RELEASE_LOCK(%s)',$lock));}
+ return $ready;
+}
+
+/* داده‌ی کارنامه‌ی یک تلاش (برای خود شرکت‌کننده و برای مدیر) */
+function bse_res( $p, $a ) {
+	global $wpdb;
+	$T     = bse_tbl();
+	$id    = $p->ID;
+    $scope = bse_rank_scope( $id );
+	$rank  = 1 + (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM $T WHERE exam_id=%d AND id<>%d AND submitted>0 $scope AND (pct>(SELECT pct FROM $T AS bse_self_score WHERE id=%d) OR (pct=(SELECT pct FROM $T AS bse_self_equal WHERE id=%d) AND secs<(SELECT secs FROM $T AS bse_self_time WHERE id=%d)))", $id, $a->id, $a->id, $a->id, $a->id ) );
+	$total = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM $T WHERE exam_id=%d AND submitted>0 $scope", $id ) );
+	$an    = json_decode( $a->answers, true );
+    $scaled=bsem_is($id)?bset_cohort($id):null;$score=$scaled?($scaled['scores'][(int)$a->id]??null):null;if($scaled){$total=count($scaled['rows']);$rank=$score?$score['rank']:null;}
+	return array(
+        'submitted'=>(int)$a->submitted,'score'=>$score?$score['score']:null,'score_summary'=>$scaled?$scaled['summary']:null,'taraz_model'=>$score?'booklet-mean-v1':null,
+		'multi' => bsem_is($id) ? 1 : 0,
+        'books' => $score?$score['books']:(bsem_is($id)?bsem_score($id,is_array($an)?$an:array())['books']:array()),
+        'explanation_pdf' => bsem_explanation($id),
+		'pct'     => $score?$score['pct']:(float)$a->pct,
+		'correct' => (int) $a->correct,
+		'wrong'   => (int) $a->wrong,
+		'blank'   => (int) $a->blank,
+		'secs'    => (int) $a->secs,
+		'rank'    => $rank,
+        'temporary' => bse_rank_is_temporary( $id ) ? 1 : 0,
+		'total'   => $total,
+		'qn'      => (int) get_post_meta( $id, 'qn', true ),
+		'title'   => $p->post_title,
+		'name'    => bse_name( (int) $a->user_id ),
+		'pdf'     => get_post_meta( $id, 'pdf', true ),
+        'pdfs' => bse_pdf_files( $id ),
+		'neg'     => (int) get_post_meta( $id, 'neg', true ),
+		'mine'    => $an ? $an : new stdClass(),
+		'key'     => json_decode( get_post_meta( $id, 'key', true ), true ),
+	);
+}
+function bse_card( $p, $uid ) {
+	global $wpdb;
+	$id = $p->ID;
+	$st = (int) get_post_meta( $id, 'st', true );
+	$en = (int) get_post_meta( $id, 'en', true );
+	$n  = time();
+	$a  = bse_my( $id, $uid );
+	$o  = array(
+		'id'     => $id,
+        'multi' => bsem_is($id) ? 1 : 0,
+        'book_count' => bsem_is($id) ? count(bsem_books($id)) : 0,
+        'practice_available' => bse_practice_available($id,$uid) ? 1 : 0,
+		'title'  => $p->post_title,
+		'by'     => bse_name( (int) $p->post_author ),
+		'qn'     => (int) get_post_meta( $id, 'qn', true ),
+		'dur'    => (int) get_post_meta( $id, 'dur', true ),
+		'neg'    => (int) get_post_meta( $id, 'neg', true ),
+		'st'     => $st,
+		'en'     => $en,
+		'now'    => $n,
+		'status' => $n < $st ? 'upcoming' : ( $n < $en ? 'running' : 'ended' ),
+		'me'     => $a ? ( $a->submitted ? 'done' : 'going' ) : 'none',
+        'early_results' => bse_early_results( $id ) ? 1 : 0,
+        'result_ready' => bse_result_visible( $id, $a, $n ) ? 1 : 0,
+	);
+	if ( bse_is_mgr() ) {
+		$o['n'] = (int) $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM ' . bse_tbl() . ' WHERE exam_id=%d AND submitted>0', $id ) );
+	}
+	return $o;
+}
+function bse_clean( $raw, $qn ) {
+	$a = json_decode( wp_unslash( $raw ), true );
+	$o = array();
+	if ( is_array( $a ) ) {
+		foreach ( $a as $k => $v ) {
+			$k = (int) $k;
+			$v = (int) $v;
+			if ( $k >= 1 && $k <= $qn && $v >= 1 && $v <= 4 ) {
+				$o[ $k ] = $v;
+			}
+		}
+	}
+	return wp_json_encode( (object) $o );
+}
+
+/* ---------- شورت‌کد ---------- */
+add_shortcode( 'bs_exams', function () {
+	$u = wp_upload_dir();
+	$v = '4.0-taraz-20261116';
+    wp_enqueue_script('bse-taraz', $u['baseurl'].'/bs-exam-taraz.js', array(), $v, true);
+	wp_enqueue_style( 'bse', $u['baseurl'] . '/bs-exam.css', array(), $v );
+	wp_enqueue_script( 'bse', $u['baseurl'] . '/bs-exam.js', array('bse-taraz'), $v, true );
+	wp_localize_script( 'bse', 'BSE', array(
+		'ajax'  => admin_url( 'admin-ajax.php' ),
+        'results_url' => wc_get_account_endpoint_url( 'bse-results' ),
+        'timezone' => wp_timezone_string(),
+		'login' => function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'myaccount' ) : wp_login_url(),
+	) );
+	return '<div id="bse-app" class="bse" dir="rtl"></div>';
+} );
+
+/* ---------- نانس تازه (برای جلوگیری از مشکل کش) ---------- */
+add_action( 'wp_ajax_bse_boot', 'bse_boot' );
+add_action( 'wp_ajax_nopriv_bse_boot', 'bse_boot' );
+function bse_boot() {
+	nocache_headers();
+	wp_send_json_success( array(
+		'in'    => is_user_logged_in() ? 1 : 0,
+		'mgr'   => bse_is_mgr() ? 1 : 0,
+        'admin' => current_user_can('manage_options') ? 1 : 0,
+        'upload_max' => (int)wp_max_upload_size(),
+        'uid' => get_current_user_id(),
+		'nonce' => wp_create_nonce( 'bse' ),
+		'now'   => time(),
+	) );
+}
+
+/* ---------- آپلود PDF (فقط مدیر) ---------- */
+add_action( 'wp_ajax_bse_up', 'bse_upload_pdf' );
+function bse_upload_pdf() {
+    check_ajax_referer('bse','n');
+    if(!bse_is_mgr())wp_send_json_error('دسترسی آپلود ندارید.',403);
+    $limit=(int)wp_max_upload_size();
+    $limit_text=size_format($limit,2);
+    $post_limit=wp_convert_hr_to_bytes(ini_get('post_max_size'));
+    if($post_limit>0 && (int)($_SERVER['CONTENT_LENGTH']??0)>$post_limit)wp_send_json_error('حجم درخواست از post_max_size هاست بیشتر است. سقف فعلی فایل: '.$limit_text.'. تنظیمات حجم آپلود هاست را افزایش دهید.',413);
+    if(empty($_FILES['f'])||!is_array($_FILES['f']))wp_send_json_error('فایل به وردپرس نرسید. سقف فعلی آپلود '.$limit_text.' است؛ محدودیت حجم درخواست هاست را بررسی کنید.');
+    $file=$_FILES['f'];$code=(int)($file['error']??UPLOAD_ERR_OK);
+    $errors=array(
+        UPLOAD_ERR_INI_SIZE=>'حجم فایل از upload_max_filesize هاست بیشتر است؛ سقف فعلی '.$limit_text.' است. تنظیمات حجم آپلود هاست را افزایش دهید.',
+        UPLOAD_ERR_FORM_SIZE=>'حجم فایل از محدودیت مجاز آپلود بیشتر است؛ سقف فعلی '.$limit_text.' است.',
+        UPLOAD_ERR_PARTIAL=>'فایل ناقص به سرور رسید؛ اتصال را بررسی و دوباره انتخاب کنید.',
+        UPLOAD_ERR_NO_FILE=>'فایلی انتخاب نشده است.',
+        UPLOAD_ERR_NO_TMP_DIR=>'پوشهٔ موقت آپلود در هاست در دسترس نیست؛ پشتیبانی هاست باید بررسی کند.',
+        UPLOAD_ERR_CANT_WRITE=>'سرور نتوانست فایل را روی دیسک ذخیره کند؛ فضا و دسترسی پوشه آپلود بررسی شود.',
+        UPLOAD_ERR_EXTENSION=>'یک افزونهٔ PHP در هاست آپلود را متوقف کرد؛ پشتیبانی هاست باید بررسی کند.',
+    );
+    if($code!==UPLOAD_ERR_OK)wp_send_json_error($errors[$code]??('خطای آپلود PHP: '.$code));
+    if($limit>0 && (int)($file['size']??0)>$limit)wp_send_json_error('فایل از سقف فعلی آپلود هاست '.$limit_text.' بزرگ‌تر است.');
+    require_once ABSPATH.'wp-admin/includes/file.php';
+    $r=wp_handle_upload($file,array('test_form'=>false,'mimes'=>array('pdf'=>'application/pdf')));
+    if(isset($r['error']))wp_send_json_error($r['error']);
+    wp_send_json_success(array('url'=>$r['url']));
+}
+
+/* ---------- API اصلی ---------- */
+add_action( 'wp_ajax_bse', 'bse_ajax' );
+function bse_ajax() {
+	check_ajax_referer( 'bse', 'n' );
+	global $wpdb;
+	$T   = bse_tbl();
+	$uid = get_current_user_id();
+	$now = time();
+	$op  = sanitize_key( isset( $_POST['op'] ) ? $_POST['op'] : '' );
+	$id  = isset( $_POST['id'] ) ? (int) $_POST['id'] : 0;
+
+	/* --- شرکت‌کننده --- */
+	if ( $op === 'list' ) {
+		if ( bse_is_mgr() ) {
+			bse_close_due();
+		}
+		$out = array();
+		foreach ( get_posts( array( 'post_type' => 'bs_exam', 'numberposts' => 100, 'orderby' => 'date', 'order' => 'DESC' ) ) as $p ) {
+			$out[] = bse_card( $p, $uid );
+		}
+		wp_send_json_success( $out );
+	}
+
+	if ( in_array( $op, array( 'get', 'start', 'save', 'submit', 'result', 'board' ), true ) ) {
+		$p = bse_exam( $id );
+		if ( ! $p ) {
+			wp_send_json_error( 'آزمون پیدا نشد' );
+		}
+		$st = (int) get_post_meta( $id, 'st', true );
+		$en = (int) get_post_meta( $id, 'en', true );
+		$qn = (int) get_post_meta( $id, 'qn', true );
+
+		if ( $op === 'get' ) {
+			wp_send_json_success( bse_card( $p, $uid ) );
+		}
+
+		if ( $op === 'start' ) {
+            $existing = bse_my( $id, $uid );
+            if ( $existing && ( $existing->submitted || $now >= $existing->deadline ) ) {
+                wp_send_json_success( array( 'over' => 1 ) );
+            }
+			if ( $now < $st ) {
+				wp_send_json_error( 'آزمون هنوز شروع نشده است' );
+			}
+			if ( $now >= $en ) {
+				wp_send_json_error( 'زمان آزمون تمام شده است' );
+			}
+			$a = bse_my( $id, $uid );
+			if ( ! $a ) {
+				$dl = min( $now + (int) get_post_meta( $id, 'dur', true ) * 60, $en );
+				$wpdb->insert( $T, array( 'exam_id' => $id, 'user_id' => $uid, 'answers' => '{}', 'started' => $now, 'deadline' => $dl ) );
+				$a = bse_row( $id, $uid );
+			}
+			if ( $a->submitted ) {
+				wp_send_json_error( 'شما قبلاً در این آزمون شرکت کرده‌اید' );
+			}
+			$an = json_decode( $a->answers, true );
+			wp_send_json_success( array(
+				'title'    => $p->post_title,
+				'pdf'      => get_post_meta( $id, 'pdf', true ),
+        'pdfs' => bse_pdf_files( $id ),
+				'qn'       => $qn,
+				'neg'      => (int) get_post_meta( $id, 'neg', true ),
+				'deadline' => (int) $a->deadline,
+				'now'      => $now,
+				'answers'  => $an ? $an : new stdClass(),
+			) );
+		}
+
+        if ( $op === 'save' || $op === 'submit' ) {
+            $a = bse_row( $id, $uid );
+            if ( ! $a ) { wp_send_json_error( 'آزمون شروع نشده است' ); }
+            if ( ! bse_attempt_lock( $a->id ) ) { wp_send_json_error( 'ذخیره انجام نشد؛ دوباره تلاش کنید.' ); }
+            $attempt_id = $a->id;
+            $failed = false;
+            try {
+                $a = bse_row( $id, $uid );
+                if ( ! $a->submitted ) {
+                    // Late requests may only finalize already saved answers beyond the delivery window.
+                    if ( $now <= (int) $a->deadline + bse_delivery_grace() ) {
+                        if ( ! isset( $_POST['answers'] ) || ! is_array( json_decode( wp_unslash( $_POST['answers'] ), true ) ) ) {
+                            $failed = true;
+                        } else {
+                            $js = bse_clean( $_POST['answers'], $qn );
+                            $failed = $js !== $a->answers && false === $wpdb->update( $T, array( 'answers' => $js ), array( 'id' => $a->id, 'submitted' => 0 ) );
+                        }
+                    }
+                    if ( ! $failed && ( $op === 'submit' || $now > $a->deadline + bse_delivery_grace() ) ) {
+                        bse_finalize( bse_row( $id, $uid ), 0, true );
+                    }
+                }
+                $a = bse_row( $id, $uid );
+            } finally { bse_attempt_unlock( $attempt_id ); }
+            if ( $failed || ( $op === 'submit' && ! $a->submitted ) ) { wp_send_json_error( 'ذخیره انجام نشد؛ دوباره تلاش کنید.' ); }
+            wp_send_json_success( array( 'over' => $a->submitted ? 1 : 0 ) );
+        }
+
+        if ( $op === 'result' ) {
+            $a = bse_my( $id, $uid );
+            if ( ! $a ) { wp_send_json_error( 'شما در این آزمون شرکت نکرده‌اید' ); }
+            $release = bse_release_at( $id, $a );
+            if ( ! $a->submitted && $now >= (int) $a->deadline ) {
+                wp_send_json_success( array(
+                    'wait' => 1, 'pending' => 1,
+                    'release' => max( $release, (int) $a->deadline + bse_delivery_grace(), $now + 3 ),
+                    'now' => $now,
+                ) );
+            }
+            if ( ! $a->submitted ) { wp_send_json_error( 'پاسخ‌های آزمون هنوز ثبت نهایی نشده است' ); }
+            if ( ! bse_result_visible( $id, $a, $now ) ) {
+                wp_send_json_success( array( 'wait' => 1, 'release' => $release, 'now' => $now ) );
+            }
+            if(!bse_close_due($id))wp_send_json_success(array('wait'=>1,'pending'=>1,'release'=>$now+3+mt_rand(0,3),'now'=>$now));
+            wp_send_json_success( bse_res( $p, $a ) );
+        }
+
+        if ( $op === 'board' ) {
+            if ( $now < $en ) {
+                $a = bse_my( $id, $uid );
+                if ( ! bse_early_results( $id ) || ( ! bse_is_mgr() && ! bse_result_visible( $id, $a, $now ) ) ) {
+                    wp_send_json_error( 'نفرات برتر هنوز برای شما قابل مشاهده نیست' );
+                }
+            }
+            if(!bse_close_due($id))wp_send_json_error('نتایج در حال نهایی‌سازی است؛ چند ثانیه بعد دوباره تلاش کنید.');
+            $scope = bse_rank_scope( $id, $now );
+            $rows = $wpdb->get_results( $wpdb->prepare( "SELECT user_id,pct,secs FROM $T WHERE exam_id=%d AND submitted>0 $scope ORDER BY pct DESC, secs ASC LIMIT 10", $id ) );
+            $scaled=bsem_is($id)?bset_cohort($id):null;if($scaled)$rows=array_slice($scaled['rows'],0,10);
+            $out = array();
+            foreach ( $rows as $r ) {
+                $out[] = array( 'name' => bse_short( $r->user_id ), 'pct' => (float) $r->pct, 'secs' => (int) $r->secs, 'me' => (int) $r->user_id === $uid, 'score'=>$scaled?$scaled['scores'][(int)$r->id]['score']:null, 'rank'=>$scaled?$scaled['scores'][(int)$r->id]['rank']:null );
+            }
+            wp_send_json_success( array( 'multi'=>bsem_is($id)?1:0,'taraz_model'=>$scaled?'booklet-mean-v1':null,'title' => $p->post_title, 'rows' => $out, 'temporary' => bse_rank_is_temporary( $id, $now ) ? 1 : 0 ) );
+        }
+
+	}
+
+	/* --- مدیر --- */
+	if ( ! bse_is_mgr() ) {
+		wp_send_json_error( 'دسترسی ندارید' );
+	}
+
+	if ( $op === 'mget' ) {
+		$p = bse_exam( $id );
+		if ( ! $p ) {
+			wp_send_json_error( 'آزمون پیدا نشد' );
+		}
+		wp_send_json_success( array(
+			'multi' => bsem_is($id) ? 1 : 0,
+            'books' => bsem_books($id),
+            'explanation_pdf' => bsem_explanation($id),
+            'multi_locked' => bsem_is($id) ? (int)$wpdb->get_var($wpdb->prepare('SELECT COUNT(*) FROM '.bse_tbl().' WHERE exam_id=%d',$id)) : 0,
+            'early_results' => bse_early_results( $id ) ? 1 : 0,
+            'title' => $p->post_title,
+			'pdf'   => get_post_meta( $id, 'pdf', true ),
+        'pdfs' => bse_pdf_files( $id ),
+			'qn'    => (int) get_post_meta( $id, 'qn', true ),
+			'dur'   => (int) get_post_meta( $id, 'dur', true ),
+			'st'    => (int) get_post_meta( $id, 'st', true ),
+			'en'    => (int) get_post_meta( $id, 'en', true ),
+			'neg'   => (int) get_post_meta( $id, 'neg', true ),
+			'key'   => json_decode( get_post_meta( $id, 'key', true ), true ),
+		) );
+	}
+
+	if ( $op === 'msave' ) {
+        $explanation = $id ? bsem_explanation($id) : '';
+        if(isset($_POST['explanation_pdf'])){
+            if(!is_string($_POST['explanation_pdf']))wp_send_json_error('فایل پاسخ‌نامهٔ تشریحی معتبر نیست.');
+            $raw=trim(wp_unslash($_POST['explanation_pdf']));$explanation='';
+            if($raw!==''){
+                $explanation=esc_url_raw($raw,array('http','https'));$path=wp_parse_url($explanation,PHP_URL_PATH);
+                if(!$explanation||!wp_parse_url($explanation,PHP_URL_HOST)||!is_string($path)||strtolower(pathinfo($path,PATHINFO_EXTENSION))!=='pdf')wp_send_json_error('پاسخ‌نامهٔ تشریحی باید PDF معتبر باشد.');
+            }
+        }
+		$title = sanitize_text_field( wp_unslash( isset( $_POST['title'] ) ? $_POST['title'] : '' ) );
+		$qn    = max( 1, min( 300, (int) $_POST['qn'] ) );
+		$dur   = max( 1, (int) $_POST['dur'] );
+		$st    = (int) $_POST['st'];
+		$en    = (int) $_POST['en'];
+		$pdf   = esc_url_raw( wp_unslash( isset( $_POST['pdf'] ) ? $_POST['pdf'] : '' ) );
+		$key   = json_decode( wp_unslash( isset( $_POST['key'] ) ? $_POST['key'] : '[]' ), true );
+        $pdfs = array();
+        if ( isset( $_POST['pdfs'] ) ) {
+            if ( ! is_string( $_POST['pdfs'] ) ) {
+                wp_send_json_error( 'فهرست فایل‌ها معتبر نیست' );
+            }
+            $raw_files = json_decode( wp_unslash( $_POST['pdfs'] ), true );
+            if ( ! is_array( $raw_files ) || array_values( $raw_files ) !== $raw_files ) {
+                wp_send_json_error( 'فهرست فایل‌ها معتبر نیست' );
+            }
+            foreach ( $raw_files as $file_url ) {
+                if ( ! is_string( $file_url ) ) {
+                    wp_send_json_error( 'نشانی فایل معتبر نیست' );
+                }
+                $clean_url = esc_url_raw( $file_url, array( 'http', 'https' ) );
+                $path = wp_parse_url( $clean_url, PHP_URL_PATH );
+                if ( ! $clean_url || ! wp_parse_url( $clean_url, PHP_URL_HOST ) || ! is_string( $path ) || strtolower( pathinfo( $path, PATHINFO_EXTENSION ) ) !== 'pdf' ) {
+                    wp_send_json_error( 'فقط فایل PDF مجاز است' );
+                }
+                if ( ! in_array( $clean_url, $pdfs, true ) ) {
+                    $pdfs[] = $clean_url;
+                }
+            }
+        } elseif ( $pdf ) {
+            /* کلاینت قدیمی، فایل‌های اضافی آزمون را حذف نمی‌کند. */
+            $pdfs = $id ? bse_pdf_files( $id ) : array();
+            if ( ! $pdfs || $pdfs[0] !== $pdf ) {
+                $pdfs = array( $pdf );
+            }
+        }
+        $pdf = $pdfs ? $pdfs[0] : '';
+
+		if ( ! $title || ! $pdf || $st <= 0 || $en <= $st || ! is_array( $key ) || count( $key ) !== $qn ) {
+			wp_send_json_error( 'اطلاعات آزمون کامل یا درست نیست' );
+		}
+		$key = array_map( 'intval', $key );
+		if ( $id ) {
+			if ( ! bse_exam( $id ) ) {
+				wp_send_json_error( 'آزمون پیدا نشد' );
+			}
+			wp_update_post( array( 'ID' => $id, 'post_title' => $title ) );
+		} else {
+			$id = wp_insert_post( array( 'post_type' => 'bs_exam', 'post_status' => 'publish', 'post_title' => $title ) );
+		}
+		update_post_meta( $id, 'pdf', $pdf );
+        update_post_meta( $id, 'pdfs', $pdfs );
+		update_post_meta( $id, 'qn', $qn );
+		update_post_meta( $id, 'dur', $dur );
+		update_post_meta( $id, 'st', $st );
+		update_post_meta( $id, 'en', $en );
+		update_post_meta( $id, 'neg', empty( $_POST['neg'] ) ? 0 : 1 );
+        // Older clients do not erase a saved setting when the field is missing.
+        if ( isset( $_POST['early_results'] ) ) {
+            update_post_meta( $id, 'bse_early_results', (string) $_POST['early_results'] === '1' ? 1 : 0 );
+        }
+		update_post_meta( $id, 'key', wp_json_encode( $key ) );
+        update_post_meta($id,'bsem_explanation',$explanation);
+		/* اگر کلید عوض شده، نتیجه‌های ثبت‌شده دوباره محاسبه می‌شود */
+		foreach ( $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $T WHERE exam_id=%d AND submitted>0", $id ) ) as $a ) {
+			bse_finalize( $a, (int) $a->submitted );
+		}
+		wp_send_json_success( array( 'id' => $id ) );
+	}
+
+	if ( $op === 'mres' ) {
+		$p = bse_exam( $id );
+		if ( ! $p ) {
+			wp_send_json_error( 'آزمون پیدا نشد' );
+		}
+		if(!bse_close_due($id))wp_send_json_error('نتایج در حال نهایی‌سازی است؛ چند ثانیه بعد دوباره تلاش کنید.');
+		$a = bse_row( $id, isset( $_POST['uid'] ) ? (int) $_POST['uid'] : 0 );
+		if ( ! $a || ! $a->submitted ) {
+			wp_send_json_error( 'نتیجه‌ای برای این کاربر ثبت نشده است' );
+		}
+		wp_send_json_success( bse_res( $p, $a ) );
+	}
+
+	if ( $op === 'mdel' ) {
+		if ( bse_exam( $id ) ) {
+			wp_delete_post( $id, true );
+			$wpdb->delete( $T, array( 'exam_id' => $id ) );
+		}
+		wp_send_json_success( 1 );
+	}
+
+	if ( $op === 'mstats' ) {
+		$p = bse_exam( $id );
+		if ( ! $p ) {
+			wp_send_json_error( 'آزمون پیدا نشد' );
+		}
+		if(!bse_close_due($id))wp_send_json_error('نتایج در حال نهایی‌سازی است؛ چند ثانیه بعد دوباره تلاش کنید.');
+		$qn   = (int) get_post_meta( $id, 'qn', true );
+		$key  = json_decode( get_post_meta( $id, 'key', true ), true );
+		$rows = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $T WHERE exam_id=%d AND submitted>0 ORDER BY pct DESC, secs ASC", $id ) );
+        $scaled=bsem_is($id)?bset_cohort($id):null;if($scaled)$rows=$scaled['rows'];
+		$going = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM $T WHERE exam_id=%d AND submitted=0", $id ) );
+		$dist = array_fill( 0, 10, 0 );
+		$qs   = array_fill( 0, $qn, 0 );
+		$list = array();
+		$sum  = 0;
+		$r    = 0;
+		foreach ( $rows as $x ) {
+			$r++;
+			$sum += $x->pct;
+			$dist[ max( 0, min( 9, (int) floor( $x->pct / 10 ) ) ) ]++;
+			$an = json_decode( $x->answers, true );
+			$an = is_array( $an ) ? $an : array();
+			for ( $i = 1; $i <= $qn; $i++ ) {
+				if ( isset( $an[ $i ], $key[ $i - 1 ] ) && (int) $an[ $i ] === (int) $key[ $i - 1 ] ) {
+					$qs[ $i - 1 ]++;
+				}
+			}
+			$u      = get_userdata( $x->user_id );
+			$mobile = get_user_meta( $x->user_id, 'billing_phone', true );
+			$list[] = array(
+				'rank'   => $scaled?$scaled['scores'][(int)$x->id]['rank']:$r,
+                'score'=>$scaled?$scaled['scores'][(int)$x->id]['score']:null,
+                'books'=>$scaled?$scaled['scores'][(int)$x->id]['books']:array(),
+				'uid'    => (int) $x->user_id,
+				'name'   => bse_name( $x->user_id ),
+				'mobile' => $mobile ? $mobile : ( $u ? $u->user_login : '' ),
+				'pct'    => (float) $x->pct,
+				'c'      => (int) $x->correct,
+				'w'      => (int) $x->wrong,
+				'b'      => (int) $x->blank,
+				'secs'   => (int) $x->secs,
+			);
+		}
+		$n = count( $rows );
+		foreach ( $qs as $i => $v ) {
+			$qs[ $i ] = $n ? round( $v / $n * 100 ) : 0;
+		}
+		wp_send_json_success( array(
+			'title' => $p->post_title,
+			'pdf'   => get_post_meta( $id, 'pdf', true ),
+        'pdfs' => bse_pdf_files( $id ),
+			'qn'    => $qn,
+			'dur'   => (int) get_post_meta( $id, 'dur', true ),
+			'st'    => (int) get_post_meta( $id, 'st', true ),
+			'en'    => (int) get_post_meta( $id, 'en', true ),
+			'neg'   => (int) get_post_meta( $id, 'neg', true ),
+			'now'   => $now,
+			'n'     => $n,
+			'multi' => bsem_is($id) ? 1 : 0,
+            'books' => bsem_is($id) ? bsem_stats($id,$rows) : array(),
+			'taraz_model'=>$scaled?'booklet-mean-v1':null,
+            'score_summary'=>$scaled?$scaled['summary']:null,
+            'temporary'=>bse_rank_is_temporary($id)?1:0,
+			'going' => $going,
+			'avg'   => $n ? round( $sum / $n, 2 ) : 0,
+			'dist'  => $dist,
+			'qs'    => $qs,
+			'rows'  => $list,
+		) );
+	}
+
+	wp_send_json_error( 'درخواست نامعتبر' );
+}
+/* ===== چنددرس / چنددفترچه — مسیر مستقل از آزمون تک‌درس ===== */
+function bsem_books($id) { $v=get_post_meta($id,'bsem_books',true); return is_array($v)?$v:array(); }
+function bsem_is($id) { return 'multi'===get_post_meta($id,'bsem_type',true); }
+function bsem_table() { global $wpdb; return $wpdb->prefix.'bse_booklets'; }
+add_action('init',function(){
+ if(get_option('bsem_db')==='1')return;
+ global $wpdb; require_once ABSPATH.'wp-admin/includes/upgrade.php';
+ dbDelta('CREATE TABLE '.bsem_table()." (
+ attempt_id bigint(20) unsigned NOT NULL,
+ state longtext NOT NULL,
+ PRIMARY KEY  (attempt_id)
+ ) ".$wpdb->get_charset_collate().';'); if($wpdb->get_var($wpdb->prepare('SHOW TABLES LIKE %s',$wpdb->esc_like(bsem_table())))===bsem_table())update_option('bsem_db','1');
+},20);
+function bsem_trunc($v) { $v=round($v*100,9); return ($v<0?ceil($v):floor($v))/100; }
+function bsem_score($id,$answers) {
+ $key=json_decode(get_post_meta($id,'key',true),true); $key=is_array($key)?$key:array();
+ $neg=(int)get_post_meta($id,'neg',true); $q=1;$total=0;$total_weights=0;$c=0;$w=0;$n=0;$out=array();
+ foreach(bsem_books($id) as $b) {
+  $subs=array();$sum=0;$weights=0;$bc=0;$bw=0;$bn=0;$from=$q;
+  foreach($b['subjects'] as $s) {
+   $sc=0;$sw=0;$sn=(int)$s['count'];$first=$q;
+   for($j=0;$j<$sn;$j++,$q++) { $v=isset($answers[$q])?(int)$answers[$q]:0; if(!$v)continue; if(isset($key[$q-1])&&$v===(int)$key[$q-1])$sc++;else $sw++; }
+   $pct=$sn?100*(3*$sc-($neg?$sw:0))/(3*$sn):0;
+   $sum+=$pct*$s['weight'];$weights+=$s['weight'];$bc+=$sc;$bw+=$sw;$bn+=$sn;
+   $subs[]=array_merge($s,array('from'=>$first,'to'=>$q-1,'pct'=>bsem_trunc($pct),'pct_raw'=>$pct,'correct'=>$sc,'wrong'=>$sw,'blank'=>$sn-$sc-$sw));
+  }
+  $bp=$weights?$sum/$weights:0;$total+=$bp;$total_weights++;$c+=$bc;$w+=$bw;$n+=$bn;
+  $out[]=array('title'=>$b['title'],'duration'=>$b['duration'],'pdfs'=>$b['pdfs'],'from'=>$from,'to'=>$q-1,'pct'=>bsem_trunc($bp),'pct_raw'=>$bp,'correct'=>$bc,'wrong'=>$bw,'blank'=>$bn-$bc-$bw,'subjects'=>$subs);
+ }
+ return array('pct'=>bsem_trunc($total_weights?$total/$total_weights:0),'correct'=>$c,'wrong'=>$w,'blank'=>$n-$c-$w,'books'=>$out);
+}
+function bsem_state($a) {
+ global $wpdb; $raw=$wpdb->get_var($wpdb->prepare('SELECT state FROM '.bsem_table().' WHERE attempt_id=%d',$a->id));
+ $s=json_decode((string)$raw,true); if(is_array($s))return $s;
+ $b=bsem_books($a->exam_id);return array('index'=>0,'started'=>(int)$a->started,'end'=>min((int)$a->started+$b[0]['duration']*60,(int)$a->deadline),'revision'=>0);
+}
+function bsem_put($a,$s) { global $wpdb; return false!==$wpdb->replace(bsem_table(),array('attempt_id'=>$a->id,'state'=>wp_json_encode($s))); }
+/* Timeout consumes elapsed booklets even when the browser was closed. Caller holds attempt lock. */
+function bsem_sync($a,$s,$now) {
+ $books=bsem_books($a->exam_id);
+ if (!$a->submitted && $s['index']>=count($books)) {
+  bse_finalize($a,(int)($s['completed']??$s['end']),true);
+  $a=bse_row($a->exam_id,$a->user_id);
+  if(!$a->submitted)throw new RuntimeException('finalize');
+ }
+ while(!$a->submitted && $s['index']<count($books) && $now>=$s['end']) {
+  $end=$s['end'];$s['index']++;$s['revision']++;
+  if($s['index']>=count($books)) { $s['completed']=$end; if(!bsem_put($a,$s))throw new RuntimeException('state'); bse_finalize($a,$end,true);$a=bse_row($a->exam_id,$a->user_id);if(!$a->submitted)throw new RuntimeException('finalize');break; }
+  $s['started']=$end;$s['end']=min($end+$books[$s['index']]['duration']*60,(int)$a->deadline);
+  if(!bsem_put($a,$s))throw new RuntimeException('state');
+ }
+ return array($a,$s);
+}
+function bsem_touch($a,$background=false) {
+ if(!$a||$a->submitted||!bsem_is($a->exam_id))return $a;
+ $state=bsem_state($a);$books=bsem_books($a->exam_id);$now=time();
+ if(isset($state['index'],$state['end']) && $state['index']<count($books) && $now<(int)$state['end'] && $now<(int)$a->deadline)return $a;
+ if($background){global $wpdb;if(1!==(int)$wpdb->get_var($wpdb->prepare('SELECT GET_LOCK(%s,0)','bse_'.md5(bse_tbl().':'.$a->id))))return $a;}
+ else if(!bse_attempt_lock($a->id))return $a;
+ try { $a=bse_row($a->exam_id,$a->user_id); list($a,$s)=bsem_sync($a,bsem_state($a),time()); }
+ catch(RuntimeException $e) { /* Leave the saved attempt available for retry. */ }
+ finally { bse_attempt_unlock($a->id); }
+ return $a;
+}
+function bsem_payload($a,$s) {
+ $books=bsem_books($a->exam_id);$i=$s['index'];if($a->submitted||!isset($books[$i]))return array('over'=>1);
+ $from=1;for($j=0;$j<$i;$j++)foreach($books[$j]['subjects'] as $sub)$from+=$sub['count'];
+ $b=$books[$i];$qn=0;foreach($b['subjects'] as &$sub){$sub['from']=$from+$qn;$qn+=$sub['count'];$sub['to']=$from+$qn-1;}unset($sub);
+ $all=json_decode($a->answers,true);$answers=array();for($q=$from;$q<$from+$qn;$q++)if(isset($all[$q]))$answers[$q]=$all[$q];
+ return array('multi'=>1,'title'=>get_the_title($a->exam_id),'book'=>$b,'index'=>$i,'book_count'=>count($books),'revision'=>$s['revision'],'from'=>$from,'qn'=>$qn,'deadline'=>$s['end'],'now'=>time(),'answers'=>(object)$answers);
+}
+function bsem_validate($raw) {
+ if(!is_array($raw)||!$raw||count($raw)>20)throw new InvalidArgumentException('بین ۱ تا ۲۰ دفترچه تعریف کنید.');
+ $out=array();$qn=0;$dur=0;
+ foreach($raw as $b) {
+  if(!is_array($b)||!is_string($b['title']??null)||!is_array($b['pdfs']??null))throw new InvalidArgumentException('دفترچه معتبر نیست.');
+  $title=sanitize_text_field($b['title']??'');$duration=filter_var($b['duration']??0,FILTER_VALIDATE_INT);
+  if(!$title||!$duration||$duration<1||$duration>1440)throw new InvalidArgumentException('عنوان و مدت دفترچه را کامل کنید.');
+  $pdfs=array();foreach(($b['pdfs']??array()) as $url) { if(!is_string($url))throw new InvalidArgumentException('فایل معتبر نیست.');$url=esc_url_raw($url,array('http','https'));$path=wp_parse_url($url,PHP_URL_PATH);if(!wp_parse_url($url,PHP_URL_HOST)||!is_string($path)||strtolower(pathinfo($path,PATHINFO_EXTENSION))!=='pdf')throw new InvalidArgumentException('فقط PDF معتبر مجاز است.');$pdfs[]=$url; }
+  if(!$pdfs||count($pdfs)>20)throw new InvalidArgumentException('برای هر دفترچه حداقل یک PDF انتخاب کنید.');
+  $subjects=array();if(empty($b['subjects'])||!is_array($b['subjects'])||count($b['subjects'])>50)throw new InvalidArgumentException('درس‌های دفترچه را تعریف کنید.');
+  foreach($b['subjects'] as $s) {
+   if(!is_array($s)||!is_string($s['title']??null))throw new InvalidArgumentException('درس معتبر نیست.');
+   $name=sanitize_text_field($s['title']??'');$count=filter_var($s['count']??0,FILTER_VALIDATE_INT);$weight=$s['weight']??0;
+   if(!$name||!$count||$count<1||$count>1000||!is_numeric($weight)||!is_finite((float)$weight)||(float)$weight<=0||(float)$weight>1000)throw new InvalidArgumentException('نام درس، تعداد سؤال صحیح و ضریب مثبت تا ۱۰۰۰ لازم است.');
+   $subjects[]=array('title'=>$name,'count'=>$count,'weight'=>(float)$weight);$qn+=$count;
+  }
+  $dur+=$duration;$out[]=array('title'=>$title,'duration'=>$duration,'pdfs'=>array_values(array_unique($pdfs)),'subjects'=>$subjects);
+ }
+ if($qn>1000||$dur>1440)throw new InvalidArgumentException('حداکثر مجموع آزمون ۱۰۰۰ سؤال و ۱۴۴۰ دقیقه است.');
+ return array($out,$qn,$dur);
+}
+add_action('wp_ajax_bse','bsem_api',5);
+function bsem_api() {
+ global $wpdb; $op=sanitize_key($_POST['op']??'');$id=(int)($_POST['id']??0);
+ if($op==='mm_save') {
+  check_ajax_referer('bse','n');if(!bse_is_mgr())wp_send_json_error('دسترسی ندارید');
+  try { list($books,$qn,$dur)=bsem_validate(json_decode(wp_unslash($_POST['books']??'[]'),true)); }
+  catch(InvalidArgumentException $e){wp_send_json_error($e->getMessage());}
+  $explanation = $id ? bsem_explanation($id) : '';
+  if(isset($_POST['explanation_pdf'])){
+   if(!is_string($_POST['explanation_pdf']))wp_send_json_error('فایل پاسخ‌نامهٔ تشریحی معتبر نیست.');
+   $raw=trim(wp_unslash($_POST['explanation_pdf']));$explanation='';
+   if($raw!==''){
+    $explanation=esc_url_raw($raw,array('http','https'));$path=wp_parse_url($explanation,PHP_URL_PATH);
+    if(!$explanation||!wp_parse_url($explanation,PHP_URL_HOST)||!is_string($path)||strtolower(pathinfo($path,PATHINFO_EXTENSION))!=='pdf')wp_send_json_error('پاسخ‌نامهٔ تشریحی باید فایل PDF معتبر باشد.');
+   }
+  }
+  $title=sanitize_text_field(wp_unslash($_POST['title']??''));$st=(int)($_POST['st']??0);$en=(int)($_POST['en']??0);$key=json_decode(wp_unslash($_POST['key']??'[]'),true);
+  if(!$title||$st<=0||$en<=$st||!is_array($key)||array_values($key)!==$key||count($key)!==$qn)wp_send_json_error('عنوان، زمان‌بندی و کلید کامل لازم است.');
+  foreach($key as $v)if(!in_array($v,array(1,2,3,4),true))wp_send_json_error('تمام گزینه‌های کلید باید بین ۱ تا ۴ باشند.');
+  if($id) {
+   if(!bse_exam($id)||!bsem_is($id))wp_send_json_error('تغییر نوع آزمون موجود مجاز نیست.');
+   if($wpdb->get_var($wpdb->prepare('SELECT COUNT(*) FROM '.bse_tbl().' WHERE exam_id=%d',$id)) && (wp_json_encode($books)!==wp_json_encode(bsem_books($id))||$st!==(int)get_post_meta($id,'st',true)||$en!==(int)get_post_meta($id,'en',true)))wp_send_json_error('پس از شروع اولین شرکت‌کننده، ساختار دفترچه‌ها و زمان‌بندی قفل است؛ آزمون جدید بسازید.');
+   $saved=wp_update_post(array('ID'=>$id,'post_title'=>$title),true);
+  }else { $saved=wp_insert_post(array('post_type'=>'bs_exam','post_status'=>'publish','post_title'=>$title),true); }
+  if(is_wp_error($saved)||!$saved)wp_send_json_error('ذخیره آزمون انجام نشد.');$id=(int)$saved;
+  $pdfs=array();foreach($books as $b)$pdfs=array_merge($pdfs,$b['pdfs']);
+  foreach(array('bsem_type'=>'multi','bsem_books'=>$books,'qn'=>$qn,'dur'=>$dur,'pdf'=>$pdfs[0],'pdfs'=>$pdfs,'st'=>$st,'en'=>$en,'neg'=>empty($_POST['neg'])?0:1,'bse_early_results'=>empty($_POST['early_results'])?0:1,'key'=>wp_json_encode($key)) as $k=>$v)update_post_meta($id,$k,$v);
+  update_post_meta($id,'bsem_explanation',$explanation);
+  foreach($wpdb->get_results($wpdb->prepare('SELECT * FROM '.bse_tbl().' WHERE exam_id=%d AND submitted>0',$id)) as $a)bse_finalize($a,(int)$a->submitted);
+  wp_send_json_success(array('id'=>$id));
+ }
+ if(!bsem_is($id))return;
+ if($op==='msave'){check_ajax_referer('bse','n');wp_send_json_error('برای این آزمون از ویرایشگر چنددرس استفاده کنید.');}
+ if(!in_array($op,array('start','save','submit'),true))return;
+ check_ajax_referer('bse','n');$uid=get_current_user_id();if(!$uid)wp_send_json_error('ابتدا وارد حساب شوید.');
+ if(!bse_exam($id))wp_send_json_error('آزمون پیدا نشد.');
+ $a=bse_row($id,$uid);
+ if(!$a&&!bse_is_mgr()&&function_exists('bse_can')&&!bse_can($id,$uid))wp_send_json_error(bse_deny($id,$uid));
+ $now=time();$en=(int)get_post_meta($id,'en',true);
+ if(!$a) {
+  if($op!=='start'||$now<(int)get_post_meta($id,'st',true)||$now>=$en)wp_send_json_error('آزمون در بازه شرکت نیست.');
+  $wpdb->query($wpdb->prepare('INSERT IGNORE INTO '.bse_tbl().' (exam_id,user_id,answers,started,deadline) VALUES (%d,%d,%s,%d,%d)',$id,$uid,'{}',$now,min($now+(int)get_post_meta($id,'dur',true)*60,$en)));
+  $a=bse_row($id,$uid);if(!$a)wp_send_json_error('شروع آزمون انجام نشد.');
+ }
+ if(!bse_attempt_lock($a->id))wp_send_json_error('در حال ذخیره؛ دوباره تلاش کنید.');
+ $error='';$payload=null;
+ try {
+  $a=bse_row($id,$uid);$s=bsem_state($a);$requested=(int)($_POST['book']??-1);
+  /* Expired booklet is sealed before accepting any new answers. */
+  list($a,$s)=bsem_sync($a,$s,$now);
+  if(!$a->submitted&&$op!=='start'&&$requested===$s['index']) {
+   if(!isset($_POST['answers'])||!is_string($_POST['answers']))throw new RuntimeException('answers');
+   $raw=json_decode(wp_unslash($_POST['answers']),true);
+   if(!is_array($raw))throw new RuntimeException('پاسخ‌ها معتبر نیستند.');
+   $payload=bsem_payload($a,$s);$answers=json_decode($a->answers,true);if(!is_array($answers))$answers=array();
+   for($q=$payload['from'];$q<$payload['from']+$payload['qn'];$q++){unset($answers[$q]);$v=$raw[$q]??0;if(in_array($v,array(1,2,3,4),true))$answers[$q]=$v;}
+   $encoded=wp_json_encode((object)$answers);
+   if($encoded!==$a->answers && false===$wpdb->update(bse_tbl(),array('answers'=>$encoded),array('id'=>$a->id,'submitted'=>0)))throw new RuntimeException('ذخیره پاسخ‌ها انجام نشد.');
+   $a=bse_row($id,$uid);
+   if($op==='submit') {
+    $s['index']++;$s['revision']++;
+    if($s['index']>=count(bsem_books($id))) { $s['completed']=$now; if(!bsem_put($a,$s))throw new RuntimeException('ذخیره انجام نشد.'); bse_finalize($a,$now,true);$a=bse_row($id,$uid);if(!$a->submitted)throw new RuntimeException('finalize');}
+    else { $books=bsem_books($id);$s['started']=$now;$s['end']=min($now+$books[$s['index']]['duration']*60,(int)$a->deadline);if(!bsem_put($a,$s))throw new RuntimeException('ذخیره انجام نشد.'); }
+   }
+  }
+  $payload=bsem_payload($a,$s);
+ }catch(RuntimeException $e){$error='ذخیره انجام نشد؛ دوباره تلاش کنید.';}
+ finally {bse_attempt_unlock($a->id);}
+ if($error)wp_send_json_error($error);wp_send_json_success($payload);
+}
+/* میانگین درس‌ها برای تحلیل مدیر؛ شمارش پاسخ‌ها مجموع شرکت‌کنندگان است. */
+function bsem_stats($id,$rows) {
+ $books=bsem_score($id,array())['books'];$n=count($rows);
+ foreach($books as &$b){$b['pct']=0;foreach($b['subjects'] as &$s){$s['pct']=0;$s['correct']=0;$s['wrong']=0;$s['blank']=0;}unset($s);}unset($b);
+ foreach($rows as $a){$an=json_decode($a->answers,true);$sc=bsem_score($id,is_array($an)?$an:array());foreach($sc['books'] as $i=>$b){$books[$i]['pct']+=$b['pct'];foreach($b['subjects'] as $j=>$s){foreach(array('pct','correct','wrong','blank') as $k)$books[$i]['subjects'][$j][$k]+=$s[$k];}}}
+ foreach($books as &$b){$b['pct']=bsem_trunc($n?$b['pct']/$n:0);foreach($b['subjects'] as &$s)$s['pct']=bsem_trunc($n?$s['pct']/$n:0);unset($s);}unset($b);return $books;
+}
+add_action('before_delete_post',function($id){
+ if(!bsem_is($id))return;global $wpdb;
+ $wpdb->query($wpdb->prepare('DELETE FROM '.bsem_table().' WHERE attempt_id IN (SELECT id FROM '.bse_tbl().' WHERE exam_id=%d)',$id));
+});
+
+/* پیش‌نمایش مستقل مدیر؛ هیچ رکوردی در جدول شرکت‌کنندگان ساخته نمی‌شود. */
+function bsep_key($id,$uid,$token,$practice=false) { return ($practice?'bset_':'bsep_').md5($id.':'.$uid.':'.$token); }
+function bsep_store($key,$state) {
+ if(!set_transient($key,$state,DAY_IN_SECONDS) && get_transient($key)!==$state)throw new RuntimeException('ذخیره پیش‌نمایش انجام نشد.');
+}
+function bsep_advance($s,$now) {
+ if($s['submitted'])return $s;
+ if($s['multi']) {
+  while($s['index']<count($s['books']) && $now>=$s['book_end']) {
+   $end=$s['book_end'];$s['index']++;
+   if($s['index']>=count($s['books'])){$s['submitted']=$end;break;}
+   $s['book_end']=$end+$s['books'][$s['index']]['duration']*60;
+  }
+ }elseif($now>=$s['deadline'])$s['submitted']=$s['deadline'];
+ return $s;
+}
+function bsep_score($s) {
+ $c=0;$w=0;$q=1;$books=array();$total=0;$total_weights=0;
+ if(!$s['multi']) {
+  for($q=1;$q<=$s['qn'];$q++){$v=$s['answers'][$q]??0;if(!$v)continue;if($v===(int)($s['key'][$q-1]??0))$c++;else $w++;}
+  $s3=$s['neg']?3*$c-$w:3*$c;$raw=$s['qn']?$s3*10000/(3*$s['qn']):0;$pct=($raw<0?ceil($raw):floor($raw))/100;
+ }else{
+  foreach($s['books'] as $b){$from=$q;$subs=array();$sum=0;$weights=0;$bc=0;$bw=0;$bn=0;
+   foreach($b['subjects'] as $sub){$sc=0;$sw=0;$sn=$sub['count'];$first=$q;
+    for($j=0;$j<$sn;$j++,$q++){$v=$s['answers'][$q]??0;if(!$v)continue;if($v===(int)($s['key'][$q-1]??0))$sc++;else $sw++;}
+    $p=$sn?100*(3*$sc-($s['neg']?$sw:0))/(3*$sn):0;$sum+=$p*$sub['weight'];$weights+=$sub['weight'];$bc+=$sc;$bw+=$sw;$bn+=$sn;
+    $subs[]=array_merge($sub,array('from'=>$first,'to'=>$q-1,'pct'=>bsem_trunc($p),'correct'=>$sc,'wrong'=>$sw,'blank'=>$sn-$sc-$sw));
+   }
+   $bp=$weights?$sum/$weights:0;$total+=$bp;$total_weights++;$c+=$bc;$w+=$bw;
+   $books[]=array_merge($b,array('from'=>$from,'to'=>$q-1,'pct'=>bsem_trunc($bp),'pct_raw'=>$bp,'correct'=>$bc,'wrong'=>$bw,'blank'=>$bn-$bc-$bw,'subjects'=>$subs));
+  }
+  $pct=bsem_trunc($total_weights?$total/$total_weights:0);
+ }
+ return array('explanation_pdf'=>$s['explanation_pdf']??'','practice'=>!empty($s['practice'])?1:0,'preview'=>empty($s['practice'])?1:0,'multi'=>$s['multi'],'title'=>$s['title'],'name'=>bse_name($s['uid']),'qn'=>$s['qn'],'pct'=>$pct,'correct'=>$c,'wrong'=>$w,'blank'=>$s['qn']-$c-$w,'secs'=>max(0,$s['submitted']-$s['started']),'rank'=>null,'total'=>0,'temporary'=>0,'pdf'=>$s['pdfs'][0]??'','pdfs'=>$s['pdfs'],'neg'=>$s['neg'],'mine'=>(object)$s['answers'],'key'=>$s['key'],'books'=>$books,'now'=>time());
+}
+function bsep_payload($s) {
+ if($s['submitted'])return array('over'=>1,'practice'=>!empty($s['practice'])?1:0,'preview'=>empty($s['practice'])?1:0);
+ if(!$s['multi'])return array('practice'=>!empty($s['practice'])?1:0,'preview'=>empty($s['practice'])?1:0,'title'=>$s['title'],'pdf'=>$s['pdfs'][0]??'','pdfs'=>$s['pdfs'],'qn'=>$s['qn'],'neg'=>$s['neg'],'deadline'=>$s['deadline'],'now'=>time(),'answers'=>(object)$s['answers']);
+ $b=$s['books'][$s['index']];$from=1;for($i=0;$i<$s['index'];$i++)foreach($s['books'][$i]['subjects'] as $sub)$from+=$sub['count'];
+ $qn=0;foreach($b['subjects'] as &$sub){$sub['from']=$from+$qn;$qn+=$sub['count'];$sub['to']=$from+$qn-1;}unset($sub);
+ $an=array();for($q=$from;$q<$from+$qn;$q++)if(isset($s['answers'][$q]))$an[$q]=$s['answers'][$q];
+ return array('practice'=>!empty($s['practice'])?1:0,'preview'=>empty($s['practice'])?1:0,'multi'=>1,'title'=>$s['title'],'book'=>$b,'index'=>$s['index'],'book_count'=>count($s['books']),'from'=>$from,'qn'=>$qn,'deadline'=>$s['book_end'],'now'=>time(),'answers'=>(object)$an);
+}
+add_action('wp_ajax_bse_preview','bsep_api');
+function bsep_api($practice=false) {
+ check_ajax_referer('bse','n');if(!$practice&&!bse_is_mgr())wp_send_json_error('پیش‌نمایش فقط برای مدیر آزمون در دسترس است.');
+ $id=(int)($_POST['id']??0);$uid=get_current_user_id();$p=bse_exam($id);if(!$p)wp_send_json_error('آزمون پیدا نشد.');
+ if($practice&&!bse_practice_available($id,$uid))wp_send_json_error('تمرین پس از پایان مهلت رسمی و با دسترسی فعال آزمون در دسترس است.');
+ $op=sanitize_key($_POST['op']??'');$now=time();
+ if($op==='get')wp_send_json_success(array('id'=>$id,'practice'=>$practice?1:0,'preview'=>$practice?0:1,'title'=>$p->post_title,'qn'=>(int)get_post_meta($id,'qn',true),'dur'=>(int)get_post_meta($id,'dur',true),'multi'=>bsem_is($id)?1:0,'book_count'=>count(bsem_books($id)),'neg'=>(int)get_post_meta($id,'neg',true)));
+ if($op==='reset') {
+  $token=wp_generate_uuid4();$key=bsep_key($id,$uid,$token,$practice);$books=bsem_books($id);$dur=(int)get_post_meta($id,'dur',true);
+  $s=array('practice'=>$practice?1:0,'uid'=>$uid,'id'=>$id,'title'=>$p->post_title,'qn'=>(int)get_post_meta($id,'qn',true),'dur'=>$dur,'multi'=>bsem_is($id)?1:0,'neg'=>(int)get_post_meta($id,'neg',true),'pdfs'=>bse_pdf_files($id),'key'=>json_decode(get_post_meta($id,'key',true),true),'books'=>$books,'explanation_pdf'=>bsem_explanation($id),'started'=>$now,'deadline'=>$now+$dur*60,'book_end'=>$now+($books?$books[0]['duration']:$dur)*60,'index'=>0,'submitted'=>0,'answers'=>array());
+  if(!$s['qn']||$dur<1||!is_array($s['key'])||($s['multi']&&!$books))wp_send_json_error('اطلاعات آزمون برای پیش‌نمایش کامل نیست.');
+  try{bsep_store($key,$s);}catch(RuntimeException $e){wp_send_json_error($e->getMessage());}
+  wp_send_json_success(array('token'=>$token));
+ }
+ if(!in_array($op,array('start','save','submit','result'),true))wp_send_json_error('درخواست پیش‌نمایش معتبر نیست.');
+ $token=$_POST['token']??'';if(!is_string($token)||!preg_match('/^[a-f0-9-]{36}$/D',$token))wp_send_json_error('پیش‌نمایش را دوباره شروع کنید.');
+ $key=bsep_key($id,$uid,$token,$practice);global $wpdb;$lock='bsep_'.md5($key);
+ if(1!==(int)$wpdb->get_var($wpdb->prepare('SELECT GET_LOCK(%s,5)',$lock)))wp_send_json_error('در حال ذخیره؛ دوباره تلاش کنید.');
+ $error='';$out=null;
+ try{
+  $s=get_transient($key);if(!is_array($s)||$s['uid']!==$uid||$s['id']!==$id)throw new RuntimeException('پیش‌نمایش منقضی شده است؛ یک پیش‌نمایش تازه شروع کنید.');
+  $s=bsep_advance($s,$now);
+  if(!$s['submitted']&&($op==='save'||$op==='submit')) {
+   if(!isset($_POST['answers'])||!is_string($_POST['answers']))throw new RuntimeException('پاسخ‌ها معتبر نیستند.');
+   $an=json_decode(wp_unslash($_POST['answers']),true);if(!is_array($an))throw new RuntimeException('پاسخ‌ها معتبر نیستند.');
+   $current=!$s['multi']||(int)($_POST['book']??-1)===$s['index'];
+   if($current){$pl=bsep_payload($s);$from=$s['multi']?$pl['from']:1;$qn=$pl['qn'];
+    for($q=$from;$q<$from+$qn;$q++){unset($s['answers'][$q]);$v=$an[$q]??0;if(in_array($v,array(1,2,3,4),true))$s['answers'][$q]=$v;}
+    if($op==='submit'){
+     if(!$s['multi'])$s['submitted']=$now;
+     else{$s['index']++;if($s['index']>=count($s['books']))$s['submitted']=$now;else $s['book_end']=$now+$s['books'][$s['index']]['duration']*60;}
+    }
+   }
+  }
+  bsep_store($key,$s);
+  if($op==='result'){if(!$s['submitted'])throw new RuntimeException('پیش‌نمایش هنوز تمام نشده است.');$out=bsep_score($s);}else $out=bsep_payload($s);
+ }catch(RuntimeException $e){$error=$e->getMessage();}
+ finally{$wpdb->get_var($wpdb->prepare('SELECT RELEASE_LOCK(%s)',$lock));}
+ if($error)wp_send_json_error($error);wp_send_json_success($out);
+}
+
+function bsem_explanation($id) { $v=get_post_meta($id,'bsem_explanation',true);return is_string($v)?$v:''; }
+
+function bse_practice_available($id,$uid) {
+    return $uid>0 && bse_exam($id) && (int)get_post_meta($id,'en',true)>0 && time()>=(int)get_post_meta($id,'en',true) && function_exists('bse_can') && bse_can($id,$uid);
+}
+add_action('wp_ajax_bse_practice',function(){ bsep_api(true); });
+
+/* PDF ranking data: administrator only; generated on demand, after official close. */
+add_action('wp_ajax_bse', 'bse_pdf_report_api', 2);
+function bse_pdf_report_api() {
+ if (($_POST['op'] ?? '') !== 'mrank_pdf') return;
+ check_ajax_referer('bse','n');
+ if (!current_user_can('manage_options')) wp_send_json_error('فقط مدیر کل اجازه دریافت این گزارش را دارد');
+ nocache_headers();
+ $id=absint($_POST['id'] ?? 0); $p=bse_exam($id);
+ if (!$p) wp_send_json_error('آزمون پیدا نشد');
+ $en=(int)get_post_meta($id,'en',true);$now=time();
+ if (!$en || $now<$en+15) wp_send_json_error('گزارش پس از پایان مهلت رسمی آزمون و مهلت ثبت نهایی فعال می‌شود');
+ if(!bse_close_due($id))wp_send_json_error('نتایج در حال نهایی‌سازی است؛ چند ثانیه بعد دوباره تلاش کنید.');
+ global $wpdb;$t=bse_tbl();
+ if ((int)$wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM $t WHERE exam_id=%d AND submitted=0",$id))) wp_send_json_error('نهایی‌سازی پاسخ‌ها هنوز کامل نشده؛ کمی بعد دوباره تلاش کنید');
+ $multi=bsem_is($id);$books=$multi?bsem_books($id):array();$subjects=array();
+ foreach($books as $bi=>$book) foreach($book['subjects'] as $si=>$sub) $subjects[]=array('book'=>$book['title'],'title'=>$sub['title']);
+ $rows=$wpdb->get_results($wpdb->prepare("SELECT id,user_id,pct,secs,answers FROM $t WHERE exam_id=%d AND submitted>0 ORDER BY pct DESC, secs ASC, id ASC",$id));
+ $scaled=$multi?bset_cohort($id):null;if($scaled)$rows=$scaled['rows'];
+ $out=array();$previous=null;$rank=0;
+ foreach($rows as $i=>$r) {
+  // Competition ranks exactly match the existing percentage/time ranking, including ties.
+  if ($previous===null || (float)$previous->pct!==(float)$r->pct || (int)$previous->secs!==(int)$r->secs) $rank=$i+1;
+  $scores=array();
+  if($multi){$an=json_decode($r->answers,true);$score=bsem_score($id,is_array($an)?$an:array());foreach($score['books'] as $book)foreach($book['subjects'] as $sub)$scores[]=$sub['pct'];}
+  $cs=$scaled?($scaled['scores'][(int)$r->id]??null):null;$out[]=array('name'=>bse_name((int)$r->user_id),'rank'=>$cs?$cs['rank']:$rank,'score'=>$cs?$cs['score']:null,'books'=>$cs?$cs['books']:array(),'pct'=>(float)$r->pct,'subjects'=>$scores);$previous=$r;
+ }
+ wp_send_json_success(array('title'=>$p->post_title,'st'=>(int)get_post_meta($id,'st',true),'issued'=>$now,'multi'=>$multi?1:0,'subjects'=>$subjects,'rows'=>$out,'n'=>count($out)));
+}
+
+/* Relative multi-subject scores: official final attempts only, no stored grade migration. */
+function bset_calculate($id,$rows){
+ $scores=array();$moments=array();$values=array();$n=count($rows);
+ foreach($rows as $a){$an=json_decode($a->answers,true);$sc=bsem_score($id,is_array($an)?$an:array());$scores[(int)$a->id]=$sc;foreach($sc['books'] as $bi=>$b)foreach($b['subjects'] as $si=>$s){$k=$bi.':'.$si;$v=(float)($s['pct_raw']??$s['pct']);if(!isset($moments[$k]))$moments[$k]=array(0,0.0,0.0);$m=&$moments[$k];$m[0]++;$delta=$v-$m[1];$m[1]+=$delta/$m[0];$m[2]+=$delta*($v-$m[1]);$values[$k][]=$v;unset($m);}}
+ $subjectRanks=array();foreach($values as $k=>&$v){rsort($v,SORT_NUMERIC);$last=null;$rank=0;foreach($v as $i=>$percent){if($last===null||abs($last-$percent)>1e-9)$rank=$i+1;$subjectRanks[$k][sprintf('%.9F',$percent)]=$rank;$last=$percent;}}unset($v);
+ foreach($scores as &$sc){$total=0;$bp=0;$bc=0;foreach($sc['books'] as $bi=>&$b){$sum=0;$weights=0;foreach($b['subjects'] as $si=>&$s){$k=$bi.':'.$si;$v=(float)($s['pct_raw']??$s['pct']);$m=$moments[$k];$sd=sqrt(max(0,$m[2]/$m[0]));$t=$sd>1e-9?5000+1000*($v-$m[1])/$sd:5000;$t=max(3000,min(9000,$t));$s['score']=(int)round($t);$s['rank']=$subjectRanks[$k][sprintf('%.9F',$v)];$sum+=$t*(float)$s['weight'];$weights+=(float)$s['weight'];}unset($s);$b['score_raw']=$weights?$sum/$weights:5000;$b['score']=(int)round($b['score_raw']);$total+=$b['score_raw'];$bp+=(float)($b['pct_raw']??$b['pct']);$bc++;}unset($b);$sc['score_raw']=round($bc?$total/$bc:5000,6);$sc['score']=(int)round($sc['score_raw']);$sc['pct']=bsem_trunc($bc?$bp/$bc:0);}unset($sc);
+ $ordered=array();foreach($rows as $a){$r=clone $a;$r->pct=$scores[(int)$r->id]['pct'];$ordered[]=$r;}
+ usort($ordered,function($a,$b)use($scores){$delta=$scores[(int)$b->id]['score_raw']<=>$scores[(int)$a->id]['score_raw'];return $delta?:((int)$a->secs<=>(int)$b->secs)?:((int)$a->id<=>(int)$b->id);});
+ $last=null;$rank=0;foreach($ordered as $i=>$a){$t=$scores[(int)$a->id]['score_raw'];if($last===null||$t!==$last)$rank=$i+1;$scores[(int)$a->id]['rank']=$rank;$last=$t;}
+ // Sort each booklet once rather than rescanning the cohort for every person.
+ $bookRanks=array();if($scores){$first=reset($scores);foreach($first['books'] as $bi=>$ignored){$values=array();foreach($scores as $sc)$values[]=round($sc['books'][$bi]['score_raw'],6);rsort($values,SORT_NUMERIC);$last=null;$rank=0;foreach($values as $i=>$v){if($last===null||$v!==$last)$rank=$i+1;$bookRanks[$bi][sprintf('%.6F',$v)]=$rank;$last=$v;}}}
+ foreach($scores as &$sc)foreach($sc['books'] as $bi=>&$b)$b['rank']=$bookRanks[$bi][sprintf('%.6F',$b['score_raw'])];unset($sc,$b);
+ $pcts=array_map(function($r){return (float)$r->pct;},$ordered);return array('scores'=>$scores,'rows'=>$ordered,'summary'=>array('n'=>$n,'avg'=>$n?array_sum($pcts)/$n:0,'max'=>$n?max($pcts):0,'min'=>$n?min($pcts):0));
+}
+function bset_cohort($id){
+ static $cache=array();$scope=bse_rank_scope($id);$key=$id.'|'.$scope;if(isset($cache[$key]))return $cache[$key];global $wpdb;$rows=$wpdb->get_results($wpdb->prepare('SELECT * FROM '.bse_tbl()." WHERE exam_id=%d AND submitted>0 $scope ORDER BY id ASC",$id));if($wpdb->last_error)throw new RuntimeException('محاسبه تراز فعلاً ممکن نیست؛ دوباره تلاش کنید.');return $cache[$key]=bset_calculate($id,$rows);
+}
