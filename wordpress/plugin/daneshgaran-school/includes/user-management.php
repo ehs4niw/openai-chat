@@ -61,13 +61,13 @@ function dgs_um_create_simple($d){
  if(!current_user_can('dgs_manage_education'))return dgs_edu_error('access','اجازه ساخت حساب ندارید.');foreach($d as $v)if(!is_scalar($v))return dgs_edu_error('input','اطلاعات معتبر نیست.');
  $role=$d['role']??'';if(!in_array($role,array('dgs_counselor','dgs_deputy'),true))return dgs_edu_error('role','از فرم جداگانه استاد یا دانش‌آموز استفاده کنید.');
  if($role==='dgs_deputy'&&!dgs_um_root())return dgs_edu_error('access','ساخت حساب مدیر و معاون فقط برای مدیر کل مجاز است.');
- $name=sanitize_text_field($d['name']??'');$national=dgs_edu_digits($d['national_id']??'');$phone=dgs_normalize_phone($d['phone']??'');
- if(!$name||dgs_edu_length($name)>100||!dgs_edu_national_id($national)||!$phone)return dgs_edu_error('fields','نام، کد ملی معتبر و شماره همراه را بررسی کنید.');
+ $name=sanitize_text_field($d['name']??'');$national=preg_replace('/[\s\x{200c}\x{200d}\x{200e}\x{200f}\x{202a}-\x{202e}\x{2066}-\x{2069}]+/u','',dgs_edu_digits($d['national_id']??''));$phone=dgs_normalize_phone($d['phone']??'');
+ if(!$name||dgs_edu_length($name)>100)return dgs_edu_error('name','نام و نام خانوادگی را کامل وارد کنید (حداکثر۱۰۰ نویسه).');if(!dgs_edu_national_id($national))return dgs_edu_error('national','کد ملی معتبر نیست؛ هر۱۰ رقم، شامل صفرهای ابتدایی، را دقیق وارد کنید.');if(!$phone)return dgs_edu_error('phone','شماره موبایل معتبر نیست؛ شماره همراه۱۱رقمی مانند 09123456789 وارد کنید. شماره تلفن ثابت پذیرفته نیست.');
  if(!get_role($role))return dgs_edu_error('role','نقش حساب در سامانه آماده نیست.');
  if(username_exists($national))return dgs_edu_error('exists','این کد ملی قبلاً حساب دارد.');
  $validatedProfile=$role==='dgs_deputy'?dgs_staff_validate($d):null;if(is_wp_error($validatedProfile))return $validatedProfile;
  $id=wp_insert_user(array('user_login'=>$national,'user_pass'=>$national,'display_name'=>$name,'nickname'=>$name,'role'=>$role,'user_email'=>''));if(is_wp_error($id))return dgs_edu_error('create','حساب ساخته نشد.');
- if($role==='dgs_deputy'){$profile=$validatedProfile;$saved=dgs_staff_save($id,$profile);if(is_wp_error($saved))return $saved;}
+ if($role==='dgs_deputy'){$profile=$validatedProfile;$saved=dgs_staff_save($id,$profile);if(is_wp_error($saved)){require_once ABSPATH.'wp-admin/includes/user.php';wp_delete_user($id);return $saved;}}
  update_user_meta($id,'_dgs_contact_phone',$phone);update_user_meta($id,'_dgs_created_by',get_current_user_id());dgs_edu_audit('account_create_'.$role,$id);return 'حساب '.dgs_um_roles()[$role].' ساخته شد؛ نام کاربری و رمز اولیه کد ملی است.';
 }
 function dgs_um_set_status($d){
@@ -81,7 +81,7 @@ function dgs_um_set_status($d){
  if(is_wp_error($r))wp_cache_delete($id,'user_meta');if(!is_wp_error($r)&&$disabled==='1')WP_Session_Tokens::get_instance($id)->destroy_all();return $r;
 }
 add_action('admin_post_dgs_user_management',function(){
- if(($_SERVER['REQUEST_METHOD']??'')!=='POST'||!current_user_can('dgs_manage_education'))wp_die('دسترسی ندارید.','',array('response'=>403));check_admin_referer('dgs_user_management','um_nonce');$d=wp_unslash($_POST);$photo=0;if(($d['role']??'')==='dgs_deputy'&&($d['operation']??'')==='create'){if(!dgs_um_root())wp_die('ساخت حساب مدیر و معاون فقط برای مدیر کل مجاز است.','',array('response'=>403));$photo=dgs_staff_upload();if(is_wp_error($photo))wp_die(esc_html($photo->get_error_message()),'',array('response'=>400));if($photo)$d['portrait_id']=$photo;}$r=($d['operation']??'')==='status'?dgs_um_set_status($d):dgs_um_create_simple($d);$token=wp_generate_password(24,false,false);set_transient('dgs_edu_flash_'.get_current_user_id().'_'.$token,array('error'=>is_wp_error($r),'text'=>is_wp_error($r)?$r->get_error_message():$r),300);$year=is_string($d['year']??null)?dgs_edu_year($d['year']):'';wp_safe_redirect(dgs_um_users_url($year?:dgs_edu_current_year(),array('dg_notice'=>$token,'school_role'=>is_string($d['role']??null)?sanitize_key($d['role']):'dgs_student')),303);exit;
+ if(($_SERVER['REQUEST_METHOD']??'')!=='POST'||!current_user_can('dgs_manage_education'))wp_die('دسترسی ندارید.','',array('response'=>403));check_admin_referer('dgs_user_management','um_nonce');$d=wp_unslash($_POST);$photo=0;if(($d['role']??'')==='dgs_deputy'&&($d['operation']??'')==='create'){if(!dgs_um_root())wp_die('ساخت حساب مدیر و معاون فقط برای مدیر کل مجاز است.','',array('response'=>403));$photo=dgs_staff_upload();if(is_wp_error($photo))wp_die(esc_html($photo->get_error_message()),'',array('response'=>400));if($photo)$d['portrait_id']=$photo;}$r=($d['operation']??'')==='status'?dgs_um_set_status($d):dgs_um_create_simple($d);if(is_wp_error($r)&&is_int($photo)&&$photo)wp_delete_attachment($photo,true);$token=wp_generate_password(24,false,false);set_transient('dgs_edu_flash_'.get_current_user_id().'_'.$token,array('error'=>is_wp_error($r),'text'=>is_wp_error($r)?$r->get_error_message():$r),300);$year=is_string($d['year']??null)?dgs_edu_year($d['year']):'';wp_safe_redirect(dgs_um_users_url($year?:dgs_edu_current_year(),array('dg_notice'=>$token,'school_role'=>is_string($d['role']??null)?sanitize_key($d['role']):'dgs_student')),303);exit;
 });
 
 function dgs_um_form($op,$year,$extra=array()){
