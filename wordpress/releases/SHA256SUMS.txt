@@ -68,3 +68,4 @@ c64b5b16fe05192e9a876946a4933126000fce7e03ae2c84324da3cd44bdaacd  daneshgaran-sc
 274f610a1ba62848c5c7f28acb78c58a3fa38b01a195e6867be5499450a19fcb  daneshgaran-test-reset-1.0.1.zip
 ce8034accad80caf73c4ffadb1e356ec55cda8efe791a3006dbacf951866f082  daneshgaran-school-0.24.4.zip
 5c4719ebd559858d8d93d6da189deefb7c27821bdd2104279d601ab33fddabfd  daneshgaran-school-0.24.5.zip
+4248682379ef1eb1603c7a8573329ab5500dff71483475bbf8818b0431d07649  daneshgaran-school-0.24.6.zip

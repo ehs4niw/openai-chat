@@ -156,7 +156,7 @@ add_action('admin_post_dgs_education',function(){
 });
 
 function dgs_edu_digits($value){return strtr(trim($value),array('۰'=>'0','۱'=>'1','۲'=>'2','۳'=>'3','۴'=>'4','۵'=>'5','۶'=>'6','۷'=>'7','۸'=>'8','۹'=>'9','٠'=>'0','١'=>'1','٢'=>'2','٣'=>'3','٤'=>'4','٥'=>'5','٦'=>'6','٧'=>'7','٨'=>'8','٩'=>'9'));}
-function dgs_edu_national_id($id){if(!preg_match('/^[0-9]{10}$/D',$id)||preg_match('/^(.)\1{9}$/D',$id))return false;$sum=0;for($i=0;$i<9;$i++)$sum+=(int)$id[$i]*(10-$i);$r=$sum%11;return (int)$id[9]===($r<2?$r:11-$r);}
+function dgs_edu_national_id($id){return is_scalar($id)&&preg_match('/^[0-9]{10}$/D',(string)$id)===1&&!preg_match('/^(.)\1{9}$/D',(string)$id);}
 function dgs_edu_change_password($data){
     $u=wp_get_current_user();if(!$u->exists()||!(current_user_can('dgs_manage_education')||dgs_edu_role($u,'dgs_student')||dgs_edu_role($u,'dgs_teacher')||dgs_edu_role($u,'dgs_counselor')))return dgs_edu_error('access','دسترسی مجاز نیست.');
     foreach(array('current_password','new_password','confirm_password') as $key)if(!isset($data[$key])||!is_string($data[$key]))return dgs_edu_error('input','اطلاعات رمز معتبر نیست.');

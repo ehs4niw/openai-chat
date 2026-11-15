@@ -62,7 +62,7 @@ function dgs_um_create_simple($d){
  $role=$d['role']??'';if(!in_array($role,array('dgs_counselor','dgs_deputy'),true))return dgs_edu_error('role','از فرم جداگانه استاد یا دانش‌آموز استفاده کنید.');
  if($role==='dgs_deputy'&&!dgs_um_root())return dgs_edu_error('access','ساخت حساب مدیر و معاون فقط برای مدیر کل مجاز است.');
  $name=sanitize_text_field($d['name']??'');$national=preg_replace('/[\s\x{200c}\x{200d}\x{200e}\x{200f}\x{202a}-\x{202e}\x{2066}-\x{2069}]+/u','',dgs_edu_digits($d['national_id']??''));$phone=dgs_normalize_phone($d['phone']??'');
- if(!$name||dgs_edu_length($name)>100)return dgs_edu_error('name','نام و نام خانوادگی را کامل وارد کنید (حداکثر۱۰۰ نویسه).');if(!dgs_edu_national_id($national))return dgs_edu_error('national','کد ملی معتبر نیست؛ هر۱۰ رقم، شامل صفرهای ابتدایی، را دقیق وارد کنید.');if(!$phone)return dgs_edu_error('phone','شماره موبایل معتبر نیست؛ شماره همراه۱۱رقمی مانند 09123456789 وارد کنید. شماره تلفن ثابت پذیرفته نیست.');
+ if(!$name||dgs_edu_length($name)>100)return dgs_edu_error('name','نام و نام خانوادگی را کامل وارد کنید (حداکثر۱۰۰ نویسه).');if(!dgs_edu_national_id($national))return dgs_edu_error('national','کد ملی باید۱۰رقمی باشد و همه رقم‌ها یکسان نباشند؛ صفر ابتدایی فقط اگر در کد وجود دارد حفظ شود.');if(!$phone)return dgs_edu_error('phone','شماره موبایل معتبر نیست؛ شماره همراه۱۱رقمی مانند 09123456789 وارد کنید. شماره تلفن ثابت پذیرفته نیست.');
  if(!get_role($role))return dgs_edu_error('role','نقش حساب در سامانه آماده نیست.');
  if(username_exists($national))return dgs_edu_error('exists','این کد ملی قبلاً حساب دارد.');
  $validatedProfile=$role==='dgs_deputy'?dgs_staff_validate($d):null;if(is_wp_error($validatedProfile))return $validatedProfile;
