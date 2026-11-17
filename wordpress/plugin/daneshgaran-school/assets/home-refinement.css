@@ -105,3 +105,19 @@
 .dgs-home-refined .dhr-teachers-more{display:flex;width:fit-content;margin:10px auto 0 0;font-size:13px;min-height:34px;gap:7px;padding:5px 15px;border-radius:20px}
 .dgs-home-refined .dhr-teachers-more svg{width:20px;height:20px}
 .dgs-home-refined .dse-section:has(.dse-kind-teachers) .elementor-heading-title:before{content:'';display:inline-block;width:25px;height:25px;background:currentColor;vertical-align:middle;margin-left:8px;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 3a3 3 0 1 0 0 6 3 3 0 0 0 0-6M5 5a2 2 0 1 0 0 4M19 5a2 2 0 1 1 0 4M6 21v-4c0-6 12-6 12 0v4M2 19v-4c0-2 2-3 4-3M22 19v-4c0-2-2-3-4-3' fill='none' stroke='black' stroke-width='1.8'/%3E%3C/svg%3E") center/contain no-repeat}
+
+/* Five reserved slots: never grow cards to fill unused slots, never shrink extras. */
+body.dg-site .dsh-carousel .dsh-people-scroll,body.dg-site .dgg-preview .dgg-track{display:grid!important;grid-template-columns:none!important;grid-auto-flow:column!important;grid-auto-columns:calc((100% - 48px)/5)!important;gap:12px!important;overflow-x:auto!important;scroll-snap-type:x mandatory;min-width:0;direction:rtl;align-items:start}
+body.dg-site .dsh-carousel .dsh-people-scroll>.dsh-person,body.dg-site .dgg-preview .dgg-track>.dgg-item{width:auto!important;min-width:0!important;max-width:none!important;margin:0!important;scroll-snap-align:start;box-sizing:border-box}
+body.dg-site .dgg-preview .dgg-open{height:auto!important;aspect-ratio:1.12;max-height:145px;border-radius:11px}
+body.dg-site .dgg-preview .dgg-open img{height:100%!important;width:100%!important;object-fit:cover!important;display:block}
+body.dg-site .dgg-empty-slot>div{aspect-ratio:1.12;border:1px dashed #dfccec;border-radius:11px;background:#fbf8fd;box-sizing:border-box;max-height:145px}
+body.dg-site .dsh-carousel .dsh-person-photo{width:80px!important;height:80px!important;max-width:100%;margin:0 auto 6px;border-radius:50%}
+body.dg-site .dsh-carousel .dsh-person h3{font-size:13px!important;line-height:1.65;margin:5px 0;overflow-wrap:anywhere}
+body.dg-site .dsh-carousel .dsh-person>div>span{font-size:11px;line-height:1.6;padding:2px 9px;background:#ecdcfa;border-radius:14px}
+body.dg-site .dsh-carousel .dhr-teachers-more{margin:10px auto 0 0!important;display:flex!important;width:fit-content;font-size:12px;min-height:30px;padding:5px 14px;border-radius:16px}
+body.dg-site .dsh-teachers-strip .dsh-strip-copy>.dg-btn{display:none!important}
+body.dg-site .dgg-controls button:disabled,body.dg-site .dsh-carousel-controls button:disabled{opacity:.35;cursor:default}
+@media(max-width:820px){body.dg-site .dsh-carousel .dsh-people-scroll,body.dg-site .dgg-preview .dgg-track{grid-auto-columns:calc((100% - 24px)/3)!important}}
+@media(max-width:560px){body.dg-site .dsh-carousel .dsh-people-scroll,body.dg-site .dgg-preview .dgg-track{grid-auto-columns:calc((100% - 12px)/2)!important}}
+body.dg-site .dgg-preview .dgg-item figcaption{display:none}

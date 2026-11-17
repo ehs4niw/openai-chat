@@ -2,10 +2,20 @@
   document.querySelectorAll('.dsh-carousel').forEach(function (wrap) {
     var track = wrap.querySelector('.dsh-people-scroll');
     if (!track) return;
+    function arrows() {
+      var offset = Math.abs(track.scrollLeft), end = track.scrollWidth - track.clientWidth;
+      wrap.querySelectorAll('[data-dsh-scroll]').forEach(function (button) {
+        button.disabled = button.dataset.dshScroll === 'next' ? offset >= end - 2 : offset <= 2;
+      });
+    }
+    track.addEventListener('scroll', arrows, {passive:true});
+    window.addEventListener('resize', arrows);
+    if (window.ResizeObserver) new ResizeObserver(arrows).observe(track);
+    requestAnimationFrame(arrows);
     wrap.querySelectorAll('[data-dsh-scroll]').forEach(function (button) {
       button.addEventListener('click', function () {
         track.scrollBy({
-          left: (button.dataset.dshScroll === 'next' ? -1 : 1) * Math.max(140, track.clientWidth * 0.65),
+          left: (button.dataset.dshScroll === 'next' ? -1 : 1) * (track.clientWidth + 12),
           behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'
         });
       });

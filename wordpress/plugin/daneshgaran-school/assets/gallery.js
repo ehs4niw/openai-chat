@@ -2,10 +2,20 @@
   document.querySelectorAll('.dgg-preview-body').forEach(function (wrapper) {
     var track = wrapper.querySelector('.dgg-track');
     if (!track) return;
+    function arrows() {
+      var offset = Math.abs(track.scrollLeft), end = track.scrollWidth - track.clientWidth;
+      wrapper.querySelectorAll('[data-dgg-scroll]').forEach(function (button) {
+        button.disabled = button.dataset.dggScroll === 'next' ? offset >= end - 2 : offset <= 2;
+      });
+    }
+    track.addEventListener('scroll', arrows, {passive:true});
+    window.addEventListener('resize', arrows);
+    if (window.ResizeObserver) new ResizeObserver(arrows).observe(track);
+    requestAnimationFrame(arrows);
     wrapper.querySelectorAll('[data-dgg-scroll]').forEach(function (button) {
       button.addEventListener('click', function () {
         track.scrollBy({
-          left: (button.dataset.dggScroll === 'next' ? -1 : 1) * Math.max(160, track.clientWidth * 0.7),
+          left: (button.dataset.dggScroll === 'next' ? -1 : 1) * (track.clientWidth + 12),
           behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'
         });
       });
