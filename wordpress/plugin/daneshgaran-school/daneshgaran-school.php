@@ -2,7 +2,7 @@
 /**
  * Plugin Name: سامانه دانشگران
  * Description: سامانه موسسه آموزشی دانشگران؛ صفحات عمومی و درخواست‌ها، مدیریت کلاس‌ها، کاربران و تخصیص دانش‌آموز، دبیر و مشاور با دسترسی مبتنی بر نقش.
- * Version: 0.25.14
+ * Version: 0.25.15
  * Requires at least: 6.4
  * Requires PHP: 8.1
  * Author: Daneshgaran
@@ -10,7 +10,7 @@
  * License: GPL-2.0-or-later
  */
 if(!defined('ABSPATH'))exit;
-define('DGS_VERSION','0.25.14');define('DGS_PATH',plugin_dir_path(__FILE__));define('DGS_URL',plugin_dir_url(__FILE__));
+define('DGS_VERSION','0.25.15');define('DGS_PATH',plugin_dir_path(__FILE__));define('DGS_URL',plugin_dir_url(__FILE__));
 require_once DGS_PATH.'includes/content.php';
 require_once DGS_PATH.'includes/teacher-routing.php';
 require_once DGS_PATH.'includes/teacher-video.php';
@@ -47,6 +47,7 @@ function dgs_icon($name){return function_exists('dgs_portal_icon')?dgs_portal_ic
 add_action('admin_notices',function(){if(current_user_can('manage_options')&&!get_option('dgs_pages'))echo '<div class="notice notice-info"><p>سامانه دانشگران فعال شد. برای ساخت صفحات، <a href="'.esc_url(admin_url('admin.php?page=dgs-setup')).'">راه‌انداز اولیه</a> را باز کنید.</p></div>';});
 
 require_once DGS_PATH.'includes/student-record.php';
+require_once DGS_PATH.'includes/student-delete.php';
 require_once DGS_PATH.'includes/student-admission.php';
 require_once DGS_PATH.'includes/study-data.php';
 require_once DGS_PATH.'includes/study-ui.php';
