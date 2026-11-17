@@ -34,14 +34,14 @@ class DGS_Elementor_Live_Widget extends \Elementor\Widget_Base{
 class DGS_Elementor_Picture_Widget extends \Elementor\Widget_Base{
  public function get_name(){return 'dgs_picture';}
  public function get_style_depends(){return array('dgs-showcase','dgs-elementor-design');}
- public function get_title(){return 'تصویر مدرسه دانشگران';}
+ public function get_title(){return 'تصویر موسسه آموزشی دانشگران';}
  public function get_icon(){return 'eicon-image';}
  public function get_categories(){return array('general');}
  protected function register_controls(){
   $this->start_controls_section('content',array('label'=>'تصویر'));
   $this->add_control('image',array('label'=>'انتخاب عکس واقعی از رسانه','type'=>\Elementor\Controls_Manager::MEDIA,'default'=>array('url'=>'')));
   $this->add_control('reference',array('label'=>'تصویر طرح در نبود عکس انتخابی','type'=>\Elementor\Controls_Manager::SELECT,'default'=>'hero','options'=>array('hero'=>'نمای مدرسه','gallery0'=>'کلاس درس','gallery1'=>'آزمایشگاه','gallery2'=>'کتابخانه','gallery3'=>'حیاط')));
-  $this->add_control('alt',array('label'=>'متن جایگزین عکس (برای دسترس‌پذیری و سئو)','type'=>\Elementor\Controls_Manager::TEXT,'default'=>'تصویر مدرسه دانشگران'));
+  $this->add_control('alt',array('label'=>'متن جایگزین عکس (برای دسترس‌پذیری و سئو)','type'=>\Elementor\Controls_Manager::TEXT,'default'=>'تصویر موسسه آموزشی دانشگران'));
   $this->add_control('caption',array('label'=>'عنوان عکس (اختیاری)','type'=>\Elementor\Controls_Manager::TEXT));
   $this->add_control('priority',array('label'=>'تصویر اصلی بالای صفحه','type'=>\Elementor\Controls_Manager::SWITCHER,'return_value'=>'yes','default'=>''));
   $this->end_controls_section();

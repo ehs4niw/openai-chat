@@ -1,3 +1,5 @@
+نسخه ۰.۲۵.۴: اصلاح محتوای صفحه اصلی مطابق طرح، حفظ فوتر/منو/لوگو، نام موسسه آموزشی دانشگران و میانگین/موفقیت‌های برگزیده. راهنما: releases/UPDATE-0.25.4-fa.md
+
 نسخه ۰.۲۵.۳: مدیریت برگزیدگان و گالری برای مدیر و معاون در امور مدرسه؛ راهنما: releases/UPDATE-0.25.3-fa.md
 
 ۰.۲۵.۲: user corrected parent requirements:10fields each including full name,national,age,certificate number+serial,education,birth,mobile,workaddress+phone. Preserve father key for fatherfullname and mother_phone; append9keys total35record41Excel. Shared groups for create+edit, no duplicate input names; housing last with blank/owned/rented Persian choices, privatecards+print. Optional all profile/contact, studentname+national only required. Parent IDs no uniqueness, preserve zeros/serialletters. Separate guardianSMSphone untouched. Old32input rows accepted along with6/22,new41; XLSXmappingheaders retains compatibility.46+84+18backend and7browser passed, independent41colAO validation. No live changes.

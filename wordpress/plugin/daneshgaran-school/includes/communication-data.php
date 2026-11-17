@@ -74,7 +74,7 @@ function dgs_cm_request($path,$body=null){
 }
 function dgs_cm_context($student,$year,$extra=array()){
  $u=get_userdata($student);global $wpdb;$e=dgs_edu_tables();$class=$wpdb->get_row($wpdb->prepare("SELECT c.* FROM {$e['enrollments']} en JOIN {$e['classes']} c ON c.id=en.class_id WHERE en.student_id=%d AND en.school_year=%s",$student,$year));
- return array_merge(array('student'=>$u?$u->display_name:'','class'=>$class?dgs_edu_class_label($class):'','date'=>dgs_att_jdate(dgs_mg_now()->format('Y-m-d')),'month'=>'','school'=>dgs_setting('school_name','مدرسه دانشگران'),'message'=>'','score'=>'','student_id'=>(int)$student,'class_id'=>$class?(int)$class->id:0,'year'=>$year),$extra);
+ return array_merge(array('student'=>$u?$u->display_name:'','class'=>$class?dgs_edu_class_label($class):'','date'=>dgs_att_jdate(dgs_mg_now()->format('Y-m-d')),'month'=>'','school'=>dgs_setting('school_name','موسسه آموزشی دانشگران'),'message'=>'','score'=>'','student_id'=>(int)$student,'class_id'=>$class?(int)$class->id:0,'year'=>$year),$extra);
 }
 function dgs_cm_payload($purpose,$ctx){
  $s=dgs_cm_config();$p=$s['patterns'][$purpose]??array();if(empty($s['sender'])||empty($p['code'])||empty($p['text']))return dgs_edu_error('pattern','خط، کد و متن پیش‌نمایش پترن را در تنظیمات تکمیل کنید.');$params=array();$replacements=array();foreach(($p['map']??array()) as $name=>$source){$v=(string)($ctx[$source]??'');if($v==='')return dgs_edu_error('variable','مقدار متغیر «'.$name.'» خالی است.');$params[$name]=$v;$replacements['{'.$name.'}']=$v;}

@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name: سامانه دانشگران
- * Description: سامانه مدرسه دانشگران؛ صفحات عمومی و درخواست‌ها، مدیریت کلاس‌ها، کاربران و تخصیص دانش‌آموز، دبیر و مشاور با دسترسی مبتنی بر نقش.
- * Version: 0.25.3
+ * Description: سامانه موسسه آموزشی دانشگران؛ صفحات عمومی و درخواست‌ها، مدیریت کلاس‌ها، کاربران و تخصیص دانش‌آموز، دبیر و مشاور با دسترسی مبتنی بر نقش.
+ * Version: 0.25.4
  * Requires at least: 6.4
  * Requires PHP: 8.1
  * Author: Daneshgaran
@@ -10,7 +10,7 @@
  * License: GPL-2.0-or-later
  */
 if(!defined('ABSPATH'))exit;
-define('DGS_VERSION','0.25.3');define('DGS_PATH',plugin_dir_path(__FILE__));define('DGS_URL',plugin_dir_url(__FILE__));
+define('DGS_VERSION','0.25.4');define('DGS_PATH',plugin_dir_path(__FILE__));define('DGS_URL',plugin_dir_url(__FILE__));
 require_once DGS_PATH.'includes/content.php';
 require_once DGS_PATH.'includes/requests.php';
 require_once DGS_PATH.'includes/render.php';
@@ -38,7 +38,7 @@ function dgs_activate(){
 register_activation_hook(__FILE__,'dgs_activate');
 // غیرفعال‌سازی و به‌روزرسانی اطلاعات کاربران و درخواست‌ها را حذف نمی‌کند.
 register_deactivation_hook(__FILE__,function(){wp_clear_scheduled_hook('dgs_mg_hourly');wp_clear_scheduled_hook('dgs_sms_tick');flush_rewrite_rules(false);});
-function dgs_setting($name,$default=''){ $s=get_option('dgs_settings',array());return isset($s[$name])&&is_scalar($s[$name])?(string)$s[$name]:$default; }
+function dgs_setting($name,$default=''){ $s=get_option('dgs_settings',array());return isset($s[$name])&&is_scalar($s[$name])?dgs_brand_text((string)$s[$name]):dgs_brand_text($default); }
 function dgs_page_url($key){$p=get_option('dgs_pages',array());return !empty($p[$key])&&get_post_status((int)$p[$key])==='publish'?get_permalink((int)$p[$key]):home_url('/');}
 function dgs_icon($name){return function_exists('dgs_portal_icon')?dgs_portal_icon($name):(function_exists('dgt_icon')?dgt_icon($name):'');}
 add_action('admin_notices',function(){if(current_user_can('manage_options')&&!get_option('dgs_pages'))echo '<div class="notice notice-info"><p>سامانه دانشگران فعال شد. برای ساخت صفحات، <a href="'.esc_url(admin_url('admin.php?page=dgs-setup')).'">راه‌انداز اولیه</a> را باز کنید.</p></div>';});
@@ -82,3 +82,4 @@ require_once DGS_PATH.'includes/staff-profiles.php';
 
 require_once DGS_PATH.'includes/panel-news.php';
 require_once DGS_PATH.'includes/panel-showcase.php';
+require_once DGS_PATH.'includes/home-refinement.php';
