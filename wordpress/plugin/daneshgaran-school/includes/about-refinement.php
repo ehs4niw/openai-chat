@@ -22,4 +22,4 @@ add_filter('elementor/widget/render_content',function($html,$widget){
  return $html;
 },120,2);
 add_filter('body_class',function($classes){if(dgs_about_refined_active())$classes[]='dgs-about-refined';return $classes;});
-add_action('wp_enqueue_scripts',function(){if(!dgs_about_refined_active())return;wp_register_style('dgs-about-refinement',false,array('dgs-showcase','dgs-elementor-design','dgs-gallery'),DGS_VERSION);wp_enqueue_style('dgs-about-refinement');wp_add_inline_style('dgs-about-refinement',file_get_contents(DGS_PATH.'assets/about-refinement.css'));},100);
+add_action('wp_enqueue_scripts',function(){if(!dgs_about_refined_active())return;wp_register_style('dgs-about-refinement',false,array('dgs-showcase','dgs-elementor-design','dgs-gallery'),DGS_VERSION);wp_enqueue_style('dgs-about-refinement');wp_add_inline_style('dgs-about-refinement',file_get_contents(DGS_PATH.'assets/about-refinement.css'));wp_register_script('dgs-about-refinement',false,array(),DGS_VERSION,true);wp_enqueue_script('dgs-about-refinement');wp_add_inline_script('dgs-about-refinement',file_get_contents(DGS_PATH.'assets/about-refinement.js'));},100);

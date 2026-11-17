@@ -53,3 +53,13 @@
 @media(max-width:1000px){.dgs-about-refined .abr-bottom>.elementor-container>.elementor-column:first-child>.elementor-widget-wrap{grid-template-columns:1fr}.dgs-about-refined .abr-bottom>.elementor-container>.elementor-column:first-child .elementor-widget-button{grid-column:1;grid-row:auto}.dgs-about-refined .abr-facilities>.elementor-container{flex-wrap:wrap}.dgs-about-refined .abr-facilities>.elementor-container>.elementor-column{width:33.333%!important}}
 @media(max-width:767px){.dgs-about-refined .abr-hero>.elementor-container>.elementor-column{width:100%!important}.dgs-about-refined .abr-hero .dse-picture-frame{height:230px!important}.dgs-about-refined .dsh-director-row{grid-template-columns:145px minmax(0,1fr);gap:15px}.dgs-about-refined .dsh-director-photo{width:145px;height:170px}.dgs-about-refined .dgg-track{grid-auto-columns:calc((100% - 12px)/2)}.dgs-about-refined .dsh-facilities{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:560px){.dgs-about-refined .dsh-director-row{grid-template-columns:1fr}.dgs-about-refined .dsh-director-photo{width:100%;height:210px}.dgs-about-refined .dgg-preview-intro{flex-wrap:wrap}.dgs-about-refined .abr-facilities>.elementor-container>.elementor-column{width:50%!important}.dgs-about-refined .dsh-facilities{grid-template-columns:repeat(2,minmax(0,1fr))}}
+/* Old Elementor widget HTML can remain cached independently of heading HTML. */
+.dgs-about-refined .dse-document .elementor-widget-dgs_icon{display:none!important}
+.dgs-about-refined .dse-kind-staff .dsh-people{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(165px,1fr))!important;width:100%;gap:12px}
+.dgs-about-refined .dse-kind-staff .dsh-person{display:flex;flex-direction:column;text-align:center;align-items:center;padding:14px;gap:8px}
+.dgs-about-refined .dse-kind-staff .dsh-person-photo{width:84px;height:84px;border-radius:50%;margin:0 auto}
+.dgs-about-refined .dse-kind-staff .dsh-person>div{width:100%;text-align:center}
+.dgs-about-refined .dsh-director-row>div:last-child{width:100%;max-width:820px;justify-self:center;text-align:center}
+.dgs-about-refined .dsh-director-row>div:last-child p{text-align:center}
+.dgs-about-refined .dse-document .dsh-grade-chips{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.dgs-about-refined .dse-document .dsh-grade-chips span{text-align:center;font-size:13px;padding:8px 6px;white-space:normal}
