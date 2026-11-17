@@ -2,7 +2,7 @@
 /**
  * Plugin Name: سامانه دانشگران
  * Description: سامانه موسسه آموزشی دانشگران؛ صفحات عمومی و درخواست‌ها، مدیریت کلاس‌ها، کاربران و تخصیص دانش‌آموز، دبیر و مشاور با دسترسی مبتنی بر نقش.
- * Version: 0.25.8
+ * Version: 0.25.9
  * Requires at least: 6.4
  * Requires PHP: 8.1
  * Author: Daneshgaran
@@ -10,7 +10,7 @@
  * License: GPL-2.0-or-later
  */
 if(!defined('ABSPATH'))exit;
-define('DGS_VERSION','0.25.8');define('DGS_PATH',plugin_dir_path(__FILE__));define('DGS_URL',plugin_dir_url(__FILE__));
+define('DGS_VERSION','0.25.9');define('DGS_PATH',plugin_dir_path(__FILE__));define('DGS_URL',plugin_dir_url(__FILE__));
 require_once DGS_PATH.'includes/content.php';
 require_once DGS_PATH.'includes/teacher-routing.php';
 require_once DGS_PATH.'includes/teacher-video.php';
@@ -86,3 +86,4 @@ require_once DGS_PATH.'includes/staff-resume.php';
 require_once DGS_PATH.'includes/panel-news.php';
 require_once DGS_PATH.'includes/panel-showcase.php';
 require_once DGS_PATH.'includes/home-refinement.php';
+require_once DGS_PATH.'includes/about-refinement.php';
