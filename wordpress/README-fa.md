@@ -1,3 +1,5 @@
+نسخه ۰.۲۵.۳: مدیریت برگزیدگان و گالری برای مدیر و معاون در امور مدرسه؛ راهنما: releases/UPDATE-0.25.3-fa.md
+
 افزونه **۰.۲۵.۲**: [دانلود کامل](releases/daneshgaran-school-0.25.2.zip) · [الگوی اکسل جدید](releases/daneshgaran-students-template-0.25.2.xlsx) · [راهنما](releases/UPDATE-0.25.2-fa.md). مشخصات کامل پدر/مادر و وضعیت مسکن؛ تمام پرونده اختیاری، نام و کد ملی دانش‌آموز الزامی.
 
 افزونه **۰.۲۵.۱**: [دانلود کامل](releases/daneshgaran-school-0.25.1.zip) · [راهنما](releases/UPDATE-0.25.1-fa.md) · [الگوی دانش‌آموزان](releases/daneshgaran-students-template-0.25.1.xlsx). اطلاعات مستقل پدر/مادر در فرم و اکسل؛ تمام پرونده و تماس اختیاری، فقط نام و کد ملی لازم.
