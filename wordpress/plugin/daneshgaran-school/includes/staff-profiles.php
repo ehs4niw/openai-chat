@@ -3,15 +3,16 @@ if(!defined('ABSPATH'))exit;
 function dgs_staff_validate($d){
  foreach(array('staff_position','public_title','public_bio','portrait_id','public_profile') as $key)if(!is_scalar($d[$key]??''))return dgs_edu_error('profile','اطلاعات معرفی معتبر نیست.');
  $position=$d['staff_position']??'deputy';$title=sanitize_text_field($d['public_title']??'');$bio=sanitize_textarea_field($d['public_bio']??'');$photo=absint($d['portrait_id']??0);
- if(!in_array($position,array('director','deputy'),true)||dgs_edu_length($title)>100||dgs_edu_length($bio)>2000||($photo&&!wp_attachment_is_image($photo)))return dgs_edu_error('profile','سمت، تصویر یا طول توضیحات معرفی معتبر نیست.');
- return array('position'=>$position,'title'=>$title,'bio'=>$bio,'photo'=>$photo,'published'=>($d['public_profile']??'')==='1');
+ if(!in_array($position,array('director','deputy'),true)||dgs_edu_length($title)>100||dgs_edu_length($bio)>5000||($photo&&!wp_attachment_is_image($photo)))return dgs_edu_error('profile','سمت، تصویر یا طول توضیحات معرفی معتبر نیست.');
+ $extra=dgs_staff_resume_validate($d);if(is_wp_error($extra))return $extra;
+ return array('extra'=>$extra,'position'=>$position,'title'=>$title,'bio'=>$bio,'photo'=>$photo,'published'=>($d['public_profile']??'')==='1');
 }
 function dgs_staff_fields($id=0){
  $postId=$id?(int)get_user_meta($id,'_dgs_staff_post',true):0;$post=$postId?get_post($postId):null;$position=$id?get_user_meta($id,'_dgs_staff_position',true):'deputy';$position=$position?:'deputy';
  $h='<fieldset class="um-staff-fields"><legend>سمت و معرفی عمومی (اختیاری)</legend>';
  if(dgs_um_root())$h.=dgs_edu_select('staff_position','سمت',array('director'=>'مدیر مدرسه','deputy'=>'معاون مدرسه'),$position);
  else $h.='<input type="hidden" name="staff_position" value="'.esc_attr($position).'">';
- return $h.'<label>عنوان تکمیلی سمت<input name="public_title" maxlength="100" value="'.esc_attr($id?get_user_meta($id,'_dgs_staff_title',true):'').'" placeholder="مثلاً معاون آموزشی"></label><label>توضیح کوتاه<textarea name="public_bio" maxlength="2000" rows="4">'.esc_textarea($post?$post->post_content:'').'</textarea></label><label>تصویر از رسانه (شناسه، اختیاری)<input name="portrait_id" type="number" min="0" value="'.esc_attr($postId?(int)get_post_thumbnail_id($postId):0).'"></label><label>یا بارگذاری عکس (تا۳ مگابایت)<input name="staff_photo" type="file" accept="image/jpeg,image/png,image/webp"></label><label><input name="public_profile" type="checkbox" value="1" '.checked($post&&$post->post_status==='publish',true,false).'> معرفی این شخص در صفحه اصلی و معرفی مدرسه نمایش داده شود</label></fieldset>';
+ return $h.dgs_staff_resume_fields($id).'<label>عنوان تکمیلی سمت<input name="public_title" maxlength="100" value="'.esc_attr($id?get_user_meta($id,'_dgs_staff_title',true):'').'" placeholder="مثلاً معاون آموزشی"></label><label>توضیح کوتاه<textarea name="public_bio" maxlength="5000" rows="4">'.esc_textarea($post?$post->post_content:'').'</textarea></label><label>تصویر از رسانه (شناسه، اختیاری)<input name="portrait_id" type="number" min="0" value="'.esc_attr($postId?(int)get_post_thumbnail_id($postId):0).'"></label><label>یا بارگذاری عکس (تا۳ مگابایت)<input name="staff_photo" type="file" accept="image/jpeg,image/png,image/webp"></label><label><input name="public_profile" type="checkbox" value="1" '.checked($post&&$post->post_status==='publish',true,false).'> معرفی این شخص در صفحه اصلی و معرفی مدرسه نمایش داده شود</label></fieldset>';
 }
 function dgs_staff_save($id,$profile){
  $user=get_userdata($id);if(!current_user_can('dgs_manage_education')||!$user||!in_array('dgs_deputy',(array)$user->roles,true)||(!dgs_um_root()&&get_current_user_id()!==$id))return dgs_edu_error('access','اجازه ویرایش این معرفی را ندارید.');
@@ -21,15 +22,16 @@ function dgs_staff_save($id,$profile){
   $others=get_posts(array('post_type'=>'dgs_teacher','post_status'=>'publish','numberposts'=>1,'post__not_in'=>$postId?array($postId):array(),'meta_key'=>'_dgs_staff_position','meta_value'=>'director'));
   if($others)return dgs_edu_error('director','ابتدا معرفی مدیر قبلی را از انتشار خارج کنید؛ فقط یک مدیر فعال نمایش داده می‌شود.');
  }
- $row=array('post_type'=>'dgs_teacher','post_title'=>$user->display_name,'post_content'=>$profile['bio'],'post_excerpt'=>$profile['bio'],'post_status'=>$profile['published']?'publish':'draft');if($postId)$row['ID']=$postId;
+ $row=array('post_type'=>'dgs_teacher','post_title'=>!empty($profile['extra']['full_name'])?$profile['extra']['full_name']:$user->display_name,'post_content'=>$profile['bio'],'post_excerpt'=>$profile['bio'],'post_status'=>$profile['published']?'publish':'draft');if($postId)$row['ID']=$postId;
  $postId=wp_insert_post(wp_slash($row),true);if(is_wp_error($postId)||!$postId)return dgs_edu_error('write','معرفی ذخیره نشد؛ حساب و سوابق قبلی حفظ هستند.');
+ if(isset($profile['extra']))dgs_staff_resume_store($id,$postId,$profile['extra']);
  $label=$profile['position']==='director'?'مدیر مدرسه':'معاون مدرسه';update_post_meta($postId,'_dgs_group','staff');update_post_meta($postId,'_dgs_staff_user',$id);update_post_meta($postId,'_dgs_staff_position',$profile['position']);update_post_meta($postId,'_dgs_specialty',wp_slash($label.($profile['title']?' · '.$profile['title']:'')));
  if($profile['photo'])set_post_thumbnail($postId,$profile['photo']);else delete_post_thumbnail($postId);
  update_user_meta($id,'_dgs_staff_post',$postId);update_user_meta($id,'_dgs_staff_position',$profile['position']);update_user_meta($id,'_dgs_staff_title',$profile['title']);if(function_exists('dgs_catalog_invalidate'))dgs_catalog_invalidate($postId);dgs_edu_audit('staff_profile',$id);return true;
 }
 function dgs_staff_editor($id,$year){
  if(!current_user_can('dgs_manage_education')||(!dgs_um_root()&&$id!==get_current_user_id())||!in_array('dgs_deputy',(array)(get_userdata($id)->roles??array()),true))return '<p class="um-card">اجازه ویرایش این معرفی را ندارید.</p>';
- return '<section class="um-card"><h3>معرفی عمومی '.esc_html(get_userdata($id)->display_name).'</h3><form class="um-form" method="post" enctype="multipart/form-data" action="'.esc_url(admin_url('admin-post.php')).'">'.wp_nonce_field('dgs_staff_profile','staff_nonce',true,false).'<input type="hidden" name="action" value="dgs_staff_profile"><input type="hidden" name="user_id" value="'.$id.'">'.dgs_staff_fields($id).'<button class="dg-btn">ذخیره معرفی عمومی</button></form></section>';
+ return '<section class="um-card"><h3>پرونده و رزومه '.esc_html(get_userdata($id)->display_name).'</h3><form class="um-form" method="post" enctype="multipart/form-data" action="'.esc_url(admin_url('admin-post.php')).'">'.wp_nonce_field('dgs_staff_profile','staff_nonce',true,false).'<input type="hidden" name="action" value="dgs_staff_profile"><input type="hidden" name="user_id" value="'.$id.'">'.dgs_staff_fields($id).'<button class="dg-btn">ذخیره پرونده و رزومه</button></form></section>';
 }
 function dgs_staff_upload(){
  $file=$_FILES['staff_photo']??null;if(!$file||($file['error']??UPLOAD_ERR_NO_FILE)===UPLOAD_ERR_NO_FILE)return 0;
