@@ -83,7 +83,7 @@ function dgs_edu_error($code,$message){return new WP_Error($code,$message);}
 function dgs_edu_execute($op,$data){
     if(!current_user_can('dgs_manage_education'))return dgs_edu_error('forbidden','اجازه مدیریت آموزشی ندارید.');
     if(get_option('dgs_edu_schema')!=='1')return dgs_edu_error('schema','ساخت جدول‌های مدرسه انجام نشده است؛ با پشتیبانی هاست بررسی شود.');
-    foreach($data as $key=>$value)if(!is_scalar($value)&&$key!=='students')return dgs_edu_error('input','اطلاعات درخواست معتبر نیست.');
+    foreach($data as $key=>$value)if(!is_scalar($value)&&!in_array($key,array('students','class_ids'),true))return dgs_edu_error('input','اطلاعات درخواست معتبر نیست.');
     global $wpdb;$t=dgs_edu_tables();$year=dgs_edu_year((string)($data['year']??''));
     if(!$year)return dgs_edu_error('year','سال تحصیلی معتبر وارد کنید؛ مانند 1405-1406.');
     switch($op){
@@ -126,12 +126,16 @@ function dgs_edu_execute($op,$data){
         // در این مرحله هنوز نمره یا حضور ثبت نمی‌شود؛ در نسخه‌های بعد انتقال با حفظ سوابق توسعه می‌یابد.
         if(!$wpdb->delete($t['enrollments'],array('id'=>$id),array('%d')))return dgs_edu_error('write','حذف تخصیص انجام نشد.');dgs_edu_audit('unenroll',$row->student_id);return 'تخصیص کلاس برداشته شد؛ حساب کاربر حذف نشده است.';
       case 'teach':
-        $class=dgs_edu_class($data['class_id']??0);$subject=absint($data['subject_id']??0);$teacher=absint($data['teacher_id']??0);
-        if(!$class||$class->school_year!==$year||!$wpdb->get_var($wpdb->prepare("SELECT id FROM {$t['subjects']} WHERE id=%d AND active=1",$subject))||!dgs_edu_role($teacher,'dgs_teacher'))return dgs_edu_error('assignment','کلاس، درس و معلم معتبر انتخاب کنید.');
-        $old=$wpdb->get_row($wpdb->prepare("SELECT * FROM {$t['teaching']} WHERE class_id=%d AND subject_id=%d",$class->id,$subject));
-        if($old&&(int)$old->teacher_id!==$teacher&&($data['replace']??'')!=='1')return dgs_edu_error('replace','این درس در کلاس دبیر دارد؛ برای تغییر، گزینه جایگزینی دبیر را تأیید کنید.');
-        $ok=$old?$wpdb->update($t['teaching'],array('teacher_id'=>$teacher),array('id'=>$old->id),array('%d'),array('%d')):$wpdb->insert($t['teaching'],array('class_id'=>$class->id,'subject_id'=>$subject,'teacher_id'=>$teacher),array('%d','%d','%d'));
-        if($ok===false)return dgs_edu_error('write','تخصیص دبیر ذخیره نشد.');dgs_edu_audit('teach',$class->id);return 'تخصیص دبیر ذخیره شد.';
+        $subject=absint($data['subject_id']??0);$teacher=absint($data['teacher_id']??0);
+        $raw=isset($data['class_ids'])?$data['class_ids']:(isset($data['class_id'])?array($data['class_id']):array());
+        if(!is_array($raw)||!$raw||count($raw)>200)return dgs_edu_error('assignment','حداقل یک کلاس انتخاب کنید.');
+        $class_ids=array();foreach($raw as $v){if(!is_scalar($v)||!ctype_digit((string)$v)||(int)$v<1)return dgs_edu_error('assignment','کلاس انتخاب‌شده معتبر نیست.');$class_ids[]=(int)$v;}$class_ids=array_values(array_unique($class_ids));
+        if(!$wpdb->get_var($wpdb->prepare("SELECT id FROM {$t['subjects']} WHERE id=%d AND active=1",$subject))||!dgs_edu_role($teacher,'dgs_teacher'))return dgs_edu_error('assignment','کلاس، درس و معلم معتبر انتخاب کنید.');
+        $rows=array();foreach($class_ids as $cid){$class=dgs_edu_class($cid);if(!$class||$class->school_year!==$year)return dgs_edu_error('assignment','کلاس، درس و معلم معتبر انتخاب کنید.');$old=$wpdb->get_row($wpdb->prepare("SELECT * FROM {$t['teaching']} WHERE class_id=%d AND subject_id=%d",$class->id,$subject));if($old&&(int)$old->teacher_id!==$teacher&&($data['replace']??'')!=='1')return dgs_edu_error('replace','این درس در یکی از کلاس‌های انتخاب‌شده دبیر دارد؛ برای تغییر، گزینه جایگزینی دبیر را تأیید کنید. هنوز تغییری ثبت نشده است.');$rows[]=array($class,$old);}
+        if($wpdb->query('START TRANSACTION')===false)return dgs_edu_error('write','تخصیص دبیر شروع نشد.');
+        foreach($rows as $row){list($class,$old)=$row;$ok=$old?$wpdb->update($t['teaching'],array('teacher_id'=>$teacher),array('id'=>$old->id),array('%d'),array('%d')):$wpdb->insert($t['teaching'],array('class_id'=>$class->id,'subject_id'=>$subject,'teacher_id'=>$teacher),array('%d','%d','%d'));if($ok===false){$wpdb->query('ROLLBACK');return dgs_edu_error('write','تخصیص دبیر ذخیره نشد.');}}
+        if($wpdb->query('COMMIT')===false){$wpdb->query('ROLLBACK');return dgs_edu_error('write','تخصیص دبیر ذخیره نشد.');}
+        foreach($rows as $row)dgs_edu_audit('teach',$row[0]->id);return count($rows)>1?dgs_fa_digits(count($rows)).' کلاس برای این دبیر و درس ذخیره شد.':'تخصیص دبیر ذخیره شد.';
       case 'unteach':
         $id=absint($data['teaching_id']??0);$old=$wpdb->get_row($wpdb->prepare("SELECT a.* FROM {$t['teaching']} a JOIN {$t['classes']} c ON c.id=a.class_id WHERE a.id=%d AND c.school_year=%s",$id,$year));if(!$old)return dgs_edu_error('missing','تخصیص دبیر پیدا نشد.');$wpdb->delete($t['teaching'],array('id'=>$id),array('%d'));dgs_edu_audit('unteach',$old->class_id);return 'تخصیص دبیر برداشته شد.';
       case 'counsel':
