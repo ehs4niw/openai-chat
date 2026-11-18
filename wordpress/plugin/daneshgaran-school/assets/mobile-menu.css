@@ -23,3 +23,11 @@ html body.dg-site #dg-sidebar :focus-visible{outline:2px solid #ffda5a;outline-o
 html body.dg-site.dg-menu-open{overscroll-behavior:none}
 }
 @media(prefers-reduced-motion:reduce){body.dg-site #dg-sidebar{transition:none!important}}
+
+/* A translated, fixed drawer still expands the browser's scrollable viewport.
+   Keep its closed box in the viewport and reveal it without translation. */
+@media(max-width:820px){
+html body.dg-site #dg-sidebar{transform:none!important;visibility:hidden!important;opacity:0;pointer-events:none;transition:opacity .18s ease,visibility .18s!important}
+html body.dg-site.dg-menu-open #dg-sidebar{transform:none!important;visibility:visible!important;opacity:1;pointer-events:auto}
+}
+@media(prefers-reduced-motion:reduce){html body.dg-site #dg-sidebar{transition:none!important}}

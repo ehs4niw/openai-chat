@@ -17,3 +17,6 @@ body.dg-site .dsp-education .dge-table{font-size:14px;min-width:960px}body.dg-si
 
 /* Compact icon actions with native hover titles and accessible labels. */
 body.dg-site .dsp-education .dsp-row-actions{display:flex;gap:5px;min-width:0;white-space:nowrap}body.dg-site .dsp-education .dsp-row-actions .dsp-operation{width:30px;height:30px;min-height:30px;padding:5px;flex:0 0 30px;border-radius:6px}body.dg-site .dsp-education .dsp-row-actions .dsp-operation span{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}body.dg-site .dsp-education .dsp-row-actions .dsp-operation svg{width:16px;height:16px}body.dg-site .dsp-education .dge-table{min-width:790px}.dgs-class-actions{display:flex;align-items:center;gap:8px}.dgs-class-actions form{margin:0!important}.dgs-class-actions .dgs-delete-class{margin:0;padding:6px 12px}.dgs-class-actions a{padding:6px 12px;border:1px solid #d4b5ec;border-radius:6px;text-decoration:none;color:#6e318f}
+
+/* Anchor clipped action labels to their buttons inside the scrolling table. */
+body.dg-site .dsp-education .dsp-row-actions .dsp-operation{position:relative}
