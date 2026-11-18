@@ -20,7 +20,8 @@ add_filter('show_admin_bar',function($show){return dgs_um_root()&&!dgs_um_passwo
 add_filter('rest_authentication_errors',function($result){if(is_user_logged_in()&&dgs_um_password_required())return new WP_Error('dgs_password_required','ابتدا رمز اولیه را در پنل مدرسه تغییر دهید.',array('status'=>403));return $result;},100);
 
 function dgs_um_account_url(){return dgs_school_url('account',dgs_edu_current_year());}
-function dgs_um_users_url($year,$extra=array()){return dgs_school_url('communication',$year,array_merge(array('cm_section'=>'users'),$extra));}
+function dgs_um_creation_context(){return dgs_att_get('cm_section')==='create'||(in_array(dgs_att_get('cm_section'),array('users','create'),true)&&!absint(dgs_att_get('um_user'))&&in_array(dgs_att_get('um_form'),array('teacher','student','counselor','deputy'),true));}
+function dgs_um_users_url($year,$extra=array()){$section=!empty($extra['um_form'])&&empty($extra['um_user'])&&in_array($extra['um_form'],array('teacher','student','counselor','deputy'),true)?'create':'users';return dgs_school_url('communication',$year,array_merge(array('cm_section'=>$section),$extra));}
 function dgs_um_admin_endpoint_allowed($script,$action){return ($script==='admin-post.php'&&str_starts_with($action,'dgs_'))||($script==='admin-ajax.php'&&(str_starts_with($action,'dgs_')||$action==='heartbeat'));}
 add_action('init',function(){
  if(!is_user_logged_in()||!dgs_um_password_required()||($_SERVER['REQUEST_METHOD']??'GET')!=='POST')return;
@@ -89,13 +90,14 @@ function dgs_um_simple_form($role,$year){
 }
 function dgs_um_users_page($year){
  if(!current_user_can('dgs_manage_education'))return '';
- $form=dgs_att_get('um_form');$h='<div class="um-users"><header class="um-title"><h2>'.dgs_portal_icon('users').' کاربران و دسترسی</h2><p>ساخت حساب‌ها، مشاهده نقش و مدیریت وضعیت ورود</p></header><nav class="um-create-grid">';
+ $form=dgs_att_get('um_form');$creating=dgs_um_creation_context();
+ $h='<div class="um-users'.($creating?' um-create-page':'').'"><header class="um-title"><h2>'.dgs_portal_icon('users').($creating?' ساخت حساب':' کاربران و دسترسی').'</h2><p>'.($creating?'نوع حساب موردنظر را انتخاب کنید؛ سپس اطلاعات پرونده را تکمیل کنید.':'مشاهده نقش، ویرایش پرونده و مدیریت وضعیت ورود').'</p></header>';
+ if($creating&&!$form){$h.='<nav class="um-create-grid" aria-label="انتخاب نوع حساب">';
  foreach(array('teacher'=>array('افزودن استاد','پرونده کامل و رزومه','education'),'student'=>array('افزودن دانش‌آموز و اولیا','حساب مشترک؛ پرونده دانش‌آموز','users'),'counselor'=>array('افزودن مشاور','حساب مستقل مشاور','message'),'deputy'=>array('افزودن مدیر و معاون','دو شخص مستقل؛ پنل مدیریتی یکسان','users')) as $key=>$info){
   if($key==='deputy'&&!dgs_um_root())continue;
-  $h.='<a class="um-create-card" '.($form===$key?'aria-current="page"':'').' href="'.esc_url(dgs_um_users_url($year,array('um_form'=>$key))).'">'.dgs_portal_icon($info[2]).'<strong>'.esc_html($info[0]).'</strong><small>'.esc_html($info[1]).'</small></a>';
- }
- $h.='</nav>';
- if($form){$h.='<a class="um-back" href="'.esc_url(dgs_um_users_url($year)).'">بازگشت به فهرست کاربران</a>';if($form==='teacher')$h.=dgs_teacher_editor(absint(dgs_att_get('um_user')));elseif($form==='student')$h.=dgs_admission_page($year);elseif($form==='management_profile')$h.=dgs_staff_editor(absint(dgs_att_get('um_user')),$year);elseif(in_array($form,array('counselor','deputy'),true))$h.=dgs_um_simple_form('dgs_'.$form,$year);else $h.='<p>فرم انتخاب‌شده معتبر نیست.</p>';return $h.'</div>';}
+  $h.='<a class="um-create-card" href="'.esc_url(dgs_um_users_url($year,array('um_form'=>$key))).'">'.dgs_portal_icon($info[2]).'<span class="um-create-copy"><strong>'.esc_html($info[0]).'</strong><small>'.esc_html($info[1]).'</small></span><span class="um-create-arrow" aria-hidden="true">‹</span></a>';
+ }return $h.'</nav></div>';}
+ if($form){$h.='<a class="um-back" href="'.esc_url($creating?dgs_cm_link($year,'create'):dgs_um_users_url($year)).'">'.($creating?'بازگشت به ساخت حساب':'بازگشت به فهرست کاربران').'</a>';if($form==='teacher')$h.=dgs_teacher_editor(absint(dgs_att_get('um_user')));elseif($form==='student')$h.=dgs_admission_page($year);elseif($form==='management_profile')$h.=dgs_staff_editor(absint(dgs_att_get('um_user')),$year);elseif(in_array($form,array('counselor','deputy'),true))$h.=dgs_um_simple_form('dgs_'.$form,$year);else $h.='<p>فرم انتخاب‌شده معتبر نیست.</p>';return $h.'</div>';}
  $roles=dgs_um_roles();$role=dgs_att_get('school_role','dgs_student');if(!isset($roles[$role]))$role='dgs_student';$state=dgs_att_get('um_state','all');if(!in_array($state,array('all','active','disabled'),true))$state='all';$page=max(1,min(10000,absint(dgs_att_get('users_page','1'))));$search=sanitize_text_field(dgs_att_get('student_search'));
  $args=array('role'=>$role,'number'=>20,'paged'=>$page,'orderby'=>'display_name','order'=>'ASC','count_total'=>true);
  if($search!==''){$args['search']='*'.$search.'*';$args['search_columns']=array('user_login','display_name');}
@@ -115,4 +117,4 @@ function dgs_edu_view_account($year){
  $h=(dgs_att_get('password_saved')==='1'?'<p class="dg-alert dg-success">رمز با موفقیت تغییر کرد.</p>':'').'<section class="um-card um-account"><h2>'.dgs_portal_icon('users').' مشخصات حساب و تغییر رمز</h2>'.($forced?'<p class="um-required" role="alert">رمز این حساب هنوز کد ملی است؛ یک رمز شخصی حداقل۸ نویسه تعیین کنید.</p>':'').'<dl><dt>نام و نام خانوادگی</dt><dd>'.esc_html($u->display_name).'</dd><dt>نام کاربری</dt><dd><bdi>'.esc_html(dgs_fa_digits($u->user_login)).'</bdi></dd><dt>نقش</dt><dd>'.esc_html(implode('، ',$names)).'</dd></dl>';
  $pw=dgs_edu_password_form();if($forced)$pw=str_replace('<details class="dge-box">','<details class="dge-box" open>',$pw);if(in_array('dgs_deputy',(array)$u->roles,true))$h.='<a href="'.esc_url(dgs_um_users_url($year,array('um_form'=>'management_profile','um_user'=>$u->ID))).'">ویرایش معرفی عمومی مدرسه</a>' ;return $h.$pw.'<a href="'.esc_url(wp_logout_url(dgs_page_url('portal'))).'">خروج از حساب</a></section>';
 }
-add_action('wp_enqueue_scripts',function(){if(!dgs_is_role_portal())return;if(dgs_portal_tab()==='account'||(dgs_portal_tab()==='communication'&&dgs_att_get('cm_section')==='users')){wp_enqueue_style('dgs-user-management',DGS_URL.'assets/user-management.css',array(),DGS_VERSION);wp_enqueue_script('dgs-user-management',DGS_URL.'assets/user-management.js',array(),DGS_VERSION,true);}},66);
+add_action('wp_enqueue_scripts',function(){if(!dgs_is_role_portal())return;if(dgs_portal_tab()==='account'||(dgs_portal_tab()==='communication'&&in_array(dgs_att_get('cm_section'),array('users','create'),true))){wp_enqueue_style('dgs-user-management',DGS_URL.'assets/user-management.css',array(),DGS_VERSION);wp_enqueue_script('dgs-user-management',DGS_URL.'assets/user-management.js',array(),DGS_VERSION,true);}},66);
