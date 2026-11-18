@@ -54,11 +54,17 @@ function dgs_att_roster($class,$day=''){
 }
 function dgs_att_roster_hash($class,$day,$roster){return wp_hash($class.'|'.$day.'|'.implode(',',array_map(function($u){return $u->ID;},$roster)));}
 function dgs_att_session($class,$day){global $wpdb;$t=dgs_att_tables();return $wpdb->get_row($wpdb->prepare("SELECT * FROM {$t['sessions']} WHERE class_id=%d AND school_day=%s",$class,$day));}
+function dgs_att_teacher_class($class_id,$user_id=0){
+ global $wpdb;$t=dgs_edu_tables();$user_id=$user_id?:get_current_user_id();
+ if(!dgs_edu_role($user_id,'dgs_teacher'))return false;
+ return (bool)$wpdb->get_var($wpdb->prepare("SELECT 1 FROM {$t['teaching']} WHERE class_id=%d AND teacher_id=%d LIMIT 1",$class_id,$user_id));
+}
 function dgs_att_save($data){
-    if(!current_user_can('dgs_manage_education'))return dgs_edu_error('access','ثبت و ویرایش حضور و غیاب فقط برای مدیر و معاون مجاز است.');
+    if(!current_user_can('dgs_manage_education')&&!dgs_edu_role(get_current_user_id(),'dgs_teacher'))return dgs_edu_error('access','دسترسی مجاز نیست.');
     foreach(array('year','day','class_id','revision','roster_hash','closed','closure_note') as $key)if(isset($data[$key])&&!is_scalar($data[$key]))return dgs_edu_error('input','درخواست معتبر نیست.');
     $year=dgs_edu_year((string)($data['year']??''));$day=dgs_att_parse_day($data['day']??null,$year);$class=dgs_edu_class($data['class_id']??0);
     if(!$day||!$class||$class->school_year!==$year)return dgs_edu_error('day','تاریخ شمسی و کلاس فعال در همان سال تحصیلی را انتخاب کنید.');
+    if(!current_user_can('dgs_manage_education')&&!dgs_att_teacher_class($class->id))return dgs_edu_error('access','این کلاس به شما اختصاص ندارد.');
     if($day>dgs_att_today())return dgs_edu_error('future','ثبت حضور و غیاب برای روز آینده مجاز نیست.');
     if(get_option('dgs_att_schema')!=='1')return dgs_edu_error('schema','جدول حضور و غیاب آماده نشده است.');
     $roster=dgs_att_roster($class->id,$day);$hash=dgs_att_roster_hash($class->id,$day,$roster);
@@ -87,7 +93,7 @@ function dgs_att_save($data){
     $wpdb->query('COMMIT');dgs_edu_audit($closed?'attendance_closed':'attendance_save',$sid);do_action('dgs_attendance_saved',$year,$day,$valid);return $closed?'تعطیلی این کلاس برای روز انتخاب‌شده ثبت شد.':'حضور و غیاب ذخیره شد.';
 }
 add_action('admin_post_dgs_attendance',function(){
-    if(($_SERVER['REQUEST_METHOD']??'')!=='POST'||!current_user_can('dgs_manage_education'))wp_die('دسترسی مجاز نیست.','',array('response'=>403));
+    if(($_SERVER['REQUEST_METHOD']??'')!=='POST'||!(current_user_can('dgs_manage_education')||dgs_edu_role(get_current_user_id(),'dgs_teacher')))wp_die('دسترسی مجاز نیست.','',array('response'=>403));
     check_admin_referer('dgs_attendance','dgs_att_nonce');$data=wp_unslash($_POST);$r=dgs_att_save($data);$token=wp_generate_password(24,false,false);set_transient('dgs_edu_flash_'.get_current_user_id().'_'.$token,array('error'=>is_wp_error($r),'text'=>is_wp_error($r)?$r->get_error_message():$r),300);
     $year=is_string($data['year']??null)?dgs_edu_year($data['year']):'';$day=is_string($data['day']??null)?sanitize_text_field($data['day']):'';
     wp_safe_redirect(add_query_arg(array('dg_tab'=>'attendance','dg_year'=>$year,'att_day'=>$day,'att_class'=>is_scalar($data['class_id']??null)?absint($data['class_id']):0,'dg_notice'=>$token),dgs_page_url('portal')),303);exit;

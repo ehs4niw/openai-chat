@@ -7,12 +7,7 @@ function dgs_um_root($user=null){
 }
 function dgs_um_disabled($id){return get_user_meta((int)$id,'_dgs_disabled',true)==='1';}
 function dgs_um_staff($user){$u=is_numeric($user)?get_userdata((int)$user):$user;return $u instanceof WP_User&&(dgs_um_root($u)||count(array_intersect(array('dgs_deputy','dgs_teacher'),(array)$u->roles))>0);}
-function dgs_um_password_required($user=null){
- $u=$user===null?wp_get_current_user():(is_numeric($user)?get_userdata((int)$user):$user);
- if(!$u instanceof WP_User||!$u->exists()||dgs_um_root($u)||!array_intersect(array('dgs_deputy','dgs_teacher'),(array)$u->roles))return false;
- // Only the actual initial national-ID password creates a requirement; old policy flags cannot lock personal passwords.
- $fresh=get_userdata($u->ID);if(!$fresh||!dgs_edu_national_id($fresh->user_login))return false;static $checks=array();$key=$fresh->ID.'|'.$fresh->user_pass;if(!array_key_exists($key,$checks))$checks[$key]=wp_check_password($fresh->user_login,$fresh->user_pass,$fresh->ID);return $checks[$key];
-}
+function dgs_um_password_required($user=null){return false;}
 function dgs_um_password_ready($id){update_user_meta($id,'_dgs_password_policy','1');delete_user_meta($id,'_dgs_force_password');}
 add_action('user_register',function($id){if(dgs_um_staff($id))update_user_meta($id,'_dgs_force_password','1');});
 add_action('set_user_role',function($id,$role,$old_roles){if(in_array($role,array('administrator','dgs_deputy','dgs_teacher'),true)&&!in_array($role,(array)$old_roles,true)){update_user_meta($id,'_dgs_force_password','1');delete_user_meta($id,'_dgs_password_policy');}},10,3);
@@ -90,7 +85,7 @@ function dgs_um_form($op,$year,$extra=array()){
 }
 function dgs_um_simple_form($role,$year){
  if($role==='dgs_deputy'&&!dgs_um_root())return '<p class="um-card">ساخت حساب مدیر و معاون فقط برای مدیر کل مجاز است.</p>';
- return '<section class="um-card"><h3>'.dgs_portal_icon('users').' افزودن '.esc_html(dgs_um_roles()[$role]).'</h3>'.dgs_um_form('create',$year,array('role'=>$role)).'<div class="um-fields"><label>نام و نام خانوادگی<input name="name" maxlength="100" required></label><label>کد ملی<input name="national_id" minlength="10" maxlength="10" inputmode="numeric" dir="ltr" required></label><label>شماره موبایل<input name="phone" inputmode="tel" dir="ltr" required></label></div>'.($role==='dgs_deputy'?dgs_staff_fields():'').'<p>نام کاربری و رمز اولیه کد ملی است.'.($role==='dgs_deputy'?' مدیر و معاون در اولین ورود باید رمز را تغییر دهند؛ بخش رزومه با انتخاب انتشار عمومی نمایش داده می‌شود.':'').'</p><button class="dg-btn">ساخت حساب '.esc_html(dgs_um_roles()[$role]).'</button></form></section>';
+ return '<section class="um-card"><h3>'.dgs_portal_icon('users').' افزودن '.esc_html(dgs_um_roles()[$role]).'</h3>'.dgs_um_form('create',$year,array('role'=>$role)).'<div class="um-fields"><label>نام و نام خانوادگی<input name="name" maxlength="100" required></label><label>کد ملی<input name="national_id" minlength="10" maxlength="10" inputmode="numeric" dir="ltr" required></label><label>شماره موبایل<input name="phone" inputmode="tel" dir="ltr" required></label></div>'.($role==='dgs_deputy'?dgs_staff_fields():'').'<p>نام کاربری و رمز اولیه کد ملی است.'.($role==='dgs_deputy'?' بخش رزومه با انتخاب انتشار عمومی نمایش داده می‌شود.':'').'</p><button class="dg-btn">ساخت حساب '.esc_html(dgs_um_roles()[$role]).'</button></form></section>';
 }
 function dgs_um_users_page($year){
  if(!current_user_can('dgs_manage_education'))return '';

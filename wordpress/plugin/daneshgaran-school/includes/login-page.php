@@ -30,10 +30,10 @@ function dgs_portal_login_submit(){
  $fail=function()use($role){wp_safe_redirect(add_query_arg(array('login_error'=>'1','login_role'=>isset(dgs_login_roles()[$role])?$role:'student'),dgs_page_url('portal')),303);exit;};
  if(!isset($_POST['dgs_login_nonce'])||!is_string($_POST['dgs_login_nonce'])||!wp_verify_nonce(wp_unslash($_POST['dgs_login_nonce']),'dgs_portal_login')||!isset(dgs_login_roles()[$role]))$fail();
  if(!isset($_POST['log'],$_POST['pwd'])||!is_string($_POST['log'])||!is_string($_POST['pwd']))$fail();
- $login=dgs_edu_digits(trim(wp_unslash($_POST['log'])));$password=wp_unslash($_POST['pwd']);if($login===''||strlen($login)>400||$password===''||strlen($password)>4096)$fail();
+ $login=dgs_edu_digits(trim(wp_unslash($_POST['log'])));$password=dgs_edu_digits(wp_unslash($_POST['pwd']));if($login===''||strlen($login)>400||$password===''||strlen($password)>4096)$fail();
  $ip=(string)($_SERVER['REMOTE_ADDR']??'');$ipkey='dgs_login_ip_'.hash_hmac('sha256',$ip,wp_salt());$userkey='dgs_login_user_'.hash_hmac('sha256',strtolower(dgs_edu_digits($login)),wp_salt());
  if((int)get_transient($ipkey)>=15||(int)get_transient($userkey)>=10)$fail();
- $phone=dgs_normalize_phone($login);if($phone){$users=get_users(array('meta_key'=>'_dgs_contact_phone','meta_value'=>$phone,'number'=>2,'fields'=>'all'));if(count($users)===1)$login=$users[0]->user_login;elseif(count($users)>1){set_transient($ipkey,(int)get_transient($ipkey)+1,15*MINUTE_IN_SECONDS);$fail();}}
+ $phone=dgs_normalize_phone($login);if($phone&&!username_exists($login)){$users=get_users(array('meta_key'=>'_dgs_contact_phone','meta_value'=>$phone,'number'=>2,'fields'=>'all'));if(count($users)===1)$login=$users[0]->user_login;elseif(count($users)>1){set_transient($ipkey,(int)get_transient($ipkey)+1,15*MINUTE_IN_SECONDS);$fail();}}
  else $login=dgs_edu_digits($login);
  $gate=function($user)use($role){return $user instanceof WP_User&&!dgs_login_role_matches($user,$role)?new WP_Error('dgs_role','ورود انجام نشد.'):$user;};add_filter('authenticate',$gate,99);
  $user=wp_signon(array('user_login'=>$login,'user_password'=>$password,'remember'=>isset($_POST['rememberme'])&&$_POST['rememberme']==='forever'),is_ssl());remove_filter('authenticate',$gate,99);
