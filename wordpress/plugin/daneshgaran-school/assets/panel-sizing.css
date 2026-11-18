@@ -19,3 +19,16 @@ body.dg-site.dgs-role-portal .dg-sidebar:after{display:none}
 
 /* Match the home page's 14px top inset on desktop portal pages. */
 @media(min-width:821px){body.dg-site.dgs-role-portal .dg-shell{padding-top:14px!important;margin-top:0!important}body.dg-site.dgs-role-portal .dg-shell>.dg-sidebar,body.dg-site.dgs-role-portal.admin-bar .dg-shell>.dg-sidebar{margin-top:0!important;top:auto!important;transform:none!important;align-self:start}}
+
+/* Keep wide school tables inside their own scroll area on phones. */
+@media(max-width:820px){
+body.dg-site.dgs-role-portal .dg-shell{display:block!important;min-width:0;max-width:100%!important;width:100%!important;margin:0!important}
+body.dg-site.dgs-role-portal :is(.dg-page,.dg-main,.dg-content-page,.dge-portal,.dsp-school,.dsp-education){width:100%;max-width:100%;min-width:0;box-sizing:border-box}
+body.dg-site.dgs-role-portal :is(.dsp-card,.dge-box,.dge-table-wrap){min-width:0;max-width:100%;box-sizing:border-box}
+body.dg-site.dgs-role-portal .dge-table-wrap{width:100%;overflow-x:auto;overscroll-behavior-x:contain}
+body.dg-site.dgs-role-portal .dge-two{grid-template-columns:minmax(0,1fr)}
+body.dg-site.dgs-role-portal .dsp-education-tabs{min-width:0;max-width:100%;gap:3px}
+body.dg-site.dgs-role-portal .dsp-education-tabs a{min-width:0;white-space:normal;font-size:12px;line-height:1.8;padding:10px 4px}
+body.dg-site.dgs-role-portal .dsp-education .dge-filter{display:grid;grid-template-columns:minmax(0,1fr);gap:10px}
+body.dg-site.dgs-role-portal .dsp-education .dge-filter>*{width:100%;min-width:0;max-width:100%;box-sizing:border-box}
+}
