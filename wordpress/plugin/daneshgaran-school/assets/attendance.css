@@ -5,3 +5,15 @@
 
 /* چیدمان اختصاصی این دو صفحه؛ صفحات عمومی سایت تغییر نمی‌کنند. */
 .dgs-attendance-page .dg-content-page{padding:0;background:transparent;border:0;box-shadow:none}.dgs-attendance-page .dg-content-page>h1,.dgs-attendance-page .dge-heading,.dgs-attendance-page .dge-year-filter,.dgs-attendance-page.dga-nav-ready .dge-portal>.dge-tabs,.dgs-attendance-page .dg-footer{display:none}.dgs-attendance-page .dga-heading{margin-top:8px}.dgs-attendance-page .dg-sidebar{background:linear-gradient(155deg,#7d359e,#58217e 65%,#662f94);overflow:hidden}.dgs-attendance-page .dg-sidebar:after{content:"";position:absolute;width:180%;height:50px;bottom:25px;right:-50%;border-radius:50%;border-top:15px solid #ffc628;transform:rotate(-26deg);pointer-events:none;opacity:.85}.dgs-attendance-page .dg-sidebar nav{position:relative;z-index:1}.dga-filters .dge-filter>.dga-year-label{flex:.65;min-width:125px}.dgs-attendance-page .dg-sidebar-bottom{visibility:hidden}
+/* Attendance needs the full card width, rather than the general 780px form cap. */
+body.dg-site.dgs-role-portal .dga-attendance form.dga-editor{width:100%;max-width:none;min-width:0;box-sizing:border-box;margin-inline:0}
+body.dg-site.dgs-role-portal .dga-editor .dge-table-wrap{width:100%;max-width:100%;box-sizing:border-box;overflow-x:auto}
+body.dg-site.dgs-role-portal .dga-editor .dga-register{width:100%;min-width:760px;table-layout:auto}
+body.dg-site.dgs-role-portal .dga-editor .dga-register th,body.dg-site.dgs-role-portal .dga-editor .dga-register td{padding:12px 9px;font-size:13px}
+body.dg-site.dgs-role-portal .dga-editor .dga-choices{gap:6px;justify-content:center}
+body.dg-site.dgs-role-portal .dga-editor .dga-choices span{font-size:12px;padding:7px 11px;min-height:34px;box-sizing:border-box}
+body.dg-site.dgs-role-portal .dga-editor .dga-register input:not([type=radio]){font-size:13px!important;min-height:39px!important}
+body.dg-site.dgs-role-portal .dga-editor .dga-register input[data-att-minutes]{width:76px!important}
+body.dg-site.dgs-role-portal .dga-editor .dga-closure{width:100%;box-sizing:border-box}
+@media(max-width:650px){body.dg-site.dgs-role-portal .dga-editor .dga-closure{gap:10px}body.dg-site.dgs-role-portal .dga-editor .dga-register th,body.dg-site.dgs-role-portal .dga-editor .dga-register td{padding:10px 7px}}
+@media print{body.dg-site.dgs-role-portal .dga-editor .dga-register{min-width:0}body.dg-site.dgs-role-portal .dga-editor .dga-choices span{min-height:0;font-size:9px;padding:3px}}
