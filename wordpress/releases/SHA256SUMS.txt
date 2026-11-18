@@ -91,3 +91,4 @@ d442f0deac00680d2bbcc73710f4d45530c962a27367a7b861e0ded5d6eb5c1f  daneshgaran-sc
 39867b7c620b6cdc7e5a508f8160da7827e138623dfadc698afb10d7f8da2a39  daneshgaran-school-0.25.15.zip
 6dd9270c028cf0fba5b195311388a7302fa97f8e9f0c2a0bda1083625f52735f  daneshgaran-school-0.25.22.zip
 1e69dacc917f56fd0dcebb7ea274f9b9bf0c82ebf24a24950aff23d1bf443f11  daneshgaran-school-0.25.23.zip
+af139f88a067c2d247468a809b216d6b9cdbb36f1ce489f96e8b5b441b1cba21  daneshgaran-school-0.25.24.zip
