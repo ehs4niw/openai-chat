@@ -14,7 +14,7 @@ function dgs_edu_portal(){
     $role=$manager?(dgs_um_root()?'مدیر کل':'مدیر و معاون'):(dgs_edu_role($u,'dgs_teacher')?'معلم':(dgs_edu_role($u,'dgs_counselor')?'مشاور':(dgs_edu_role($u,'dgs_student')?'دانش‌آموز':'حساب کاربری')));
     $out='<div class="dge-portal"><header class="dge-heading"><div><span class="dg-kicker">سامانه موسسه آموزشی دانشگران · '.esc_html($role).'</span><h2>سلام '.esc_html($u->display_name).'، خوش آمدید</h2></div><a class="dg-btn dg-btn-outline" href="'.esc_url(wp_logout_url(home_url('/'))).'">خروج</a></header>';
     $tab=dgs_portal_tab();$tabs=dgs_portal_links();
-    if($tabs){$out.='<nav class="dge-tabs" aria-label="منوی پنل">';foreach($tabs as $key=>$item)$out.='<a '.($tab===$key?'aria-current="page"':'').' href="'.esc_url(dgs_edu_url($key,$year)).'">'.esc_html($item[0]).'</a>';$out.='</nav>';}
+    if($tabs&&!dgs_portal_has_sidebar_navigation()){$out.='<nav class="dge-tabs" aria-label="منوی پنل">';foreach($tabs as $key=>$item)$out.='<a '.($tab===$key?'aria-current="page"':'').' href="'.esc_url(dgs_edu_url($key,$year)).'">'.esc_html($item[0]).'</a>';$out.='</nav>';}
     $out.=dgs_edu_flash();
     if($manager){if($tab==='overview')$out.=dgs_school_manager_dashboard($year);else{$callback='dgs_edu_view_'.$tab;$out.=$callback($year);}}
     elseif($tabs){
