@@ -17,3 +17,4 @@ body.dg-site.dgs-role-portal .dga-editor .dga-register input[data-att-minutes]{w
 body.dg-site.dgs-role-portal .dga-editor .dga-closure{width:100%;box-sizing:border-box}
 @media(max-width:650px){body.dg-site.dgs-role-portal .dga-editor .dga-closure{gap:10px}body.dg-site.dgs-role-portal .dga-editor .dga-register th,body.dg-site.dgs-role-portal .dga-editor .dga-register td{padding:10px 7px}}
 @media print{body.dg-site.dgs-role-portal .dga-editor .dga-register{min-width:0}body.dg-site.dgs-role-portal .dga-editor .dga-choices span{min-height:0;font-size:9px;padding:3px}}
+.dga-attendance [hidden]{display:none!important}
