@@ -62,7 +62,7 @@ function dgs_att_insights($classes,$grade,$day,$year){
     $daily=$wpdb->get_results($wpdb->prepare("SELECT s.class_id,s.closed,COUNT(r.id) AS n,SUM(CASE WHEN r.status IN ('present','late') THEN 1 ELSE 0 END) AS attended FROM {$t['sessions']} s LEFT JOIN {$t['records']} r ON r.session_id=s.id WHERE s.school_day=%s GROUP BY s.id,s.class_id,s.closed",$day),OBJECT_K);
     $out.='</section><section class="dga-card dga-comparison"><h3>▥ مقایسه وضعیت حضور کلاس‌ها</h3><p class="dga-help">روز انتخاب‌شده؛ حاضر و تأخیر از مجموع وضعیت‌های ثبت‌شده. کلاس بدون ثبت نرخ صفر ندارد.</p><div class="dga-bars">';$missing=array();$shown=0;
     foreach($classes as $c){$s=$daily[$c->id]??null;$count=$s?(int)$s->n:0;$att=$s?(int)$s->attended:0;
-        if(!$s||(!$s->closed&&$count<(int)$c->students_count))$missing[]=$c;
+        if(!$s||(!$s->closed&&$count<count(dgs_att_roster($c->id,$day))))$missing[]=$c;
         {$rate=$count?(int)round($att/$count*100):null;$out.='<div class="dga-bar-col"><strong>'.($s&&$s->closed?'تعطیل':($rate===null?'—':esc_html(dgs_fa_digits($rate)).'٪')).'</strong><div class="dga-bar-track"><i style="height:'.($rate===null?0:$rate).'%"></i></div><span>'.esc_html(dgs_edu_grade_label($c->grade).' '.$c->title).'</span></div>';}
     }
     $out.='</div><p class="dga-help">نمودار همه کلاس‌های فعال تمام پایه‌ها در سال و روز انتخاب‌شده را نشان می‌دهد.</p></section><section class="dga-card"><h3>◷ کلاس‌های بدون ثبت کامل حضور و غیاب</h3>';if(!$missing)$out.='<p class="dga-empty">ثبت کلاس‌های همه پایه‌ها کامل است.</p>';
@@ -72,8 +72,8 @@ function dgs_att_insights($classes,$grade,$day,$year){
 function dgs_att_student_days($student,$year,$start,$end){
     // شناسه دانش‌آموز از نشست گرفته می‌شود؛ پارامتر URL حق انتخاب پرونده دیگران نمی‌دهد.
     if(!dgs_edu_role(get_current_user_id(),'dgs_student')||get_current_user_id()!==(int)$student)return array();
-    global $wpdb;$t=dgs_att_tables();$e=dgs_edu_tables();
-    return $wpdb->get_results($wpdb->prepare("SELECT s.school_day,s.closed,s.closure_note,c.title,r.status,r.minutes,r.note FROM {$t['sessions']} s JOIN {$e['classes']} c ON c.id=s.class_id LEFT JOIN {$t['records']} r ON r.session_id=s.id AND r.student_id=%d WHERE c.school_year=%s AND s.school_day BETWEEN %s AND %s AND (r.student_id=%d OR (s.closed=1 AND EXISTS (SELECT 1 FROM {$e['enrollments']} e WHERE e.class_id=s.class_id AND e.student_id=%d AND e.school_year=%s))) ORDER BY s.school_day",$student,$year,$start,$end,$student,$student,$year));
+    global $wpdb;$t=dgs_att_tables();$e=dgs_edu_tables();$history=dgs_membership_table();
+    return $wpdb->get_results($wpdb->prepare("SELECT s.school_day,s.closed,s.closure_note,c.title,r.status,r.minutes,r.note FROM {$t['sessions']} s JOIN {$e['classes']} c ON c.id=s.class_id LEFT JOIN {$t['records']} r ON r.session_id=s.id AND r.student_id=%d WHERE c.school_year=%s AND s.school_day BETWEEN %s AND %s AND (r.student_id=%d OR (s.closed=1 AND EXISTS (SELECT 1 FROM $history h WHERE h.class_id=s.class_id AND h.student_id=%d AND h.school_year=%s AND h.start_day<=s.school_day AND (h.end_day IS NULL OR h.end_day>s.school_day)))) ORDER BY s.school_day",$student,$year,$start,$end,$student,$student,$year));
 }
 function dgs_att_student($year){
     if(!dgs_edu_role(get_current_user_id(),'dgs_student'))return '';

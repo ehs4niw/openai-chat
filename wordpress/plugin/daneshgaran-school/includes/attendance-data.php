@@ -49,8 +49,11 @@ function dgs_att_today(){return (new DateTimeImmutable('now',wp_timezone()))->fo
 function dgs_att_roster($class,$day=''){
     global $wpdb;$t=dgs_edu_tables();$a=dgs_att_tables();
     if(!$day)return $wpdb->get_results($wpdb->prepare("SELECT u.ID,u.display_name FROM {$t['enrollments']} e JOIN {$wpdb->users} u ON u.ID=e.student_id WHERE e.class_id=%d ORDER BY u.ID",$class));
-    // در ویرایش یک روز قدیمی، شاگردانی که بعداً از کلاس خارج شده‌اند نیز حفظ می‌شوند.
-    return $wpdb->get_results($wpdb->prepare("SELECT u.ID,u.display_name FROM {$wpdb->users} u WHERE EXISTS (SELECT 1 FROM {$t['enrollments']} e WHERE e.class_id=%d AND e.student_id=u.ID) OR EXISTS (SELECT 1 FROM {$a['records']} r JOIN {$a['sessions']} s ON s.id=r.session_id WHERE s.class_id=%d AND s.school_day=%s AND r.student_id=u.ID) ORDER BY u.ID",$class,$class,$day));
+    $session=dgs_att_session($class,$day);
+    // An existing open day's saved roster must never acquire later arrivals.
+    if($session&&!$session->closed)return $wpdb->get_results($wpdb->prepare("SELECT u.ID,u.display_name FROM {$wpdb->users} u JOIN {$a['records']} r ON r.student_id=u.ID WHERE r.session_id=%d ORDER BY u.ID",$session->id));
+    $history=dgs_membership_table();
+    return $wpdb->get_results($wpdb->prepare("SELECT u.ID,u.display_name FROM {$wpdb->users} u WHERE EXISTS (SELECT 1 FROM $history h WHERE h.class_id=%d AND h.student_id=u.ID AND h.start_day<=%s AND (h.end_day IS NULL OR h.end_day>%s)) AND NOT EXISTS (SELECT 1 FROM {$a['records']} r JOIN {$a['sessions']} s ON s.id=r.session_id WHERE r.student_id=u.ID AND r.school_day=%s AND s.class_id<>%d) ORDER BY u.ID",$class,$day,$day,$day,$class));
 }
 function dgs_att_roster_hash($class,$day,$roster){return wp_hash($class.'|'.$day.'|'.implode(',',array_map(function($u){return $u->ID;},$roster)));}
 function dgs_att_session($class,$day){global $wpdb;$t=dgs_att_tables();return $wpdb->get_row($wpdb->prepare("SELECT * FROM {$t['sessions']} WHERE class_id=%d AND school_day=%s",$class,$day));}

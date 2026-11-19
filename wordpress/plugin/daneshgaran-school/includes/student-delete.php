@@ -1,7 +1,7 @@
 <?php
 if(!defined('ABSPATH'))exit;
 function dgs_student_delete_allowed($id){$u=get_userdata($id);return current_user_can('dgs_manage_education')&&!is_multisite()&&$u&&(int)$id!==get_current_user_id()&&count($u->roles)===1&&in_array('dgs_student',$u->roles,true);}
-function dgs_student_delete_tables(){$e=dgs_edu_tables();$a=dgs_att_tables();$q=dgs_quiz_tables();$s=dgs_study_tables();$h=dgs_hw_tables();$m=dgs_mg_tables();$c=dgs_cm_tables();return array($e['enrollments'],$e['counseling'],$a['records'],$q['attempts'],$s['entries'],$s['days'],$s['feedback'],$h['submissions'],$m['entries'],dgs_grade_table(),dgs_rc_feedback_table(),$c['items']);}
+function dgs_student_delete_tables(){$e=dgs_edu_tables();$a=dgs_att_tables();$q=dgs_quiz_tables();$s=dgs_study_tables();$h=dgs_hw_tables();$m=dgs_mg_tables();$c=dgs_cm_tables();return array(dgs_membership_table(),$e['enrollments'],$e['counseling'],$a['records'],$q['attempts'],$s['entries'],$s['days'],$s['feedback'],$h['submissions'],$m['entries'],dgs_grade_table(),dgs_rc_feedback_table(),$c['items']);}
 function dgs_student_delete($id,$confirm,$approved){
  $id=absint($id);if(!dgs_student_delete_allowed($id))return dgs_edu_error('access','حذف این حساب مجاز نیست.');$u=get_userdata($id);if($approved!=='1'||!is_string($confirm)||trim($confirm)!==$u->display_name)return dgs_edu_error('confirm','نام کامل دانش‌آموز و تأیید حذف دائمی لازم است.');
  $lock='dgs_student_delete_'.$id;if(!add_option($lock,time(),'','no'))return dgs_edu_error('busy','حذف در حال انجام است؛ صفحه را تازه کنید.');global $wpdb;$f=dgs_fin_tables();$h=dgs_hw_tables();$m=dgs_mg_tables();$files=array();$moved=array();$committed=false;

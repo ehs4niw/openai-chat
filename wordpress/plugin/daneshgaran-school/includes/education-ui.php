@@ -24,7 +24,7 @@ function dgs_edu_portal(){
       elseif($tab==='quizzes')$out.=dgs_quiz_portal($year);
       elseif($tab==='grades')$out.=dgs_grade_panel($year);
       elseif($tab==='account')$out.=dgs_edu_view_account($year);
-      elseif($tab==='attendance')$out.=dgs_att_student($year);
+      elseif($tab==='attendance')$out.=dgs_edu_role($u,'dgs_teacher')?dgs_att_manager($year):dgs_att_student($year);
       elseif($tab==='finance')$out.=dgs_fin_student($year);
       elseif(dgs_edu_role($u,'dgs_teacher'))$out.=dgs_edu_teacher_view($u->ID,$year);
       elseif(dgs_edu_role($u,'dgs_counselor'))$out.=dgs_edu_counselor_view($u->ID,$year);
