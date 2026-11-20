@@ -1,0 +1,33 @@
+.dgs-mobile-menu-head{display:none}
+@media(max-width:820px){
+html body.dg-site #dg-sidebar,html body.dg-site.admin-bar #dg-sidebar{position:fixed!important;inset:0 0 0 auto!important;top:0!important;bottom:0!important;height:100vh!important;height:100dvh!important;max-height:100vh!important;max-height:100dvh!important;min-height:0!important;width:min(320px,88vw)!important;max-width:88vw!important;box-sizing:border-box!important;padding:10px 12px max(12px,env(safe-area-inset-bottom))!important;margin:0!important;border-radius:16px 0 0 16px!important;display:flex!important;flex-direction:column!important;overflow:hidden!important;background:linear-gradient(155deg,#80399e,#59237e 65%,#49216c)!important;z-index:1000002!important;overscroll-behavior:contain;isolation:isolate}
+html body.dg-site #dg-sidebar:after{display:none!important}
+html body.dg-site #dg-sidebar .dgs-mobile-menu-head{display:flex;align-items:center;justify-content:space-between;gap:8px;flex:0 0 auto;margin:0 0 4px;color:white;font:inherit;font-size:14px}
+html body.dg-site #dg-sidebar .dgs-mobile-menu-close{display:grid;place-items:center;width:44px;height:44px;min-height:44px;border:1px solid #ffffff40;border-radius:10px;background:#ffffff12;color:white;font-size:27px;padding:0;cursor:pointer;line-height:1}
+html body.dg-site #dg-sidebar .dg-sidebar-brand{flex:0 0 auto;min-height:0;padding:4px 2px 12px;margin:0 0 10px;border-bottom:1px solid #ffffff30}
+html body.dg-site #dg-sidebar .dg-brand{display:grid!important;grid-template-columns:64px minmax(0,1fr);align-items:center;column-gap:10px;row-gap:2px;text-align:right;min-width:0}
+html body.dg-site #dg-sidebar .dg-brand :is(img,svg){grid-column:1;grid-row:1/span 4;width:64px!important;height:64px!important;max-height:64px!important;max-width:64px!important;object-fit:contain;margin:0!important}
+html body.dg-site #dg-sidebar .dg-brand strong{grid-column:2;font-size:17px!important;line-height:1.6!important;margin:0;overflow-wrap:anywhere}
+html body.dg-site #dg-sidebar .dg-brand small,html body.dg-site #dg-sidebar .dgs-brand-grades{grid-column:2;font-size:10px!important;line-height:1.7;margin:0;opacity:.85}
+html body.dg-site #dg-sidebar nav{position:relative!important;flex:1 1 0!important;min-height:0!important;height:auto!important;max-height:none!important;width:100%;box-sizing:border-box;overflow-x:hidden!important;overflow-y:auto!important;overscroll-behavior-y:contain;touch-action:pan-y;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:#c594dc transparent;padding:0 0 8px}
+html body.dg-site #dg-sidebar .dg-menu{padding:0;margin:0;min-height:0;list-style:none}
+html body.dg-site #dg-sidebar .dg-menu a{font-size:13px!important;line-height:1.7;min-height:44px;box-sizing:border-box;padding:10px!important;gap:10px;border-radius:10px;white-space:normal}
+html body.dg-site #dg-sidebar .dg-menu svg{width:22px!important;height:22px!important;flex-shrink:0}
+html body.dg-site #dg-sidebar .dgs-menu-group summary{font-size:13px;min-height:44px;padding:10px;box-sizing:border-box}
+html body.dg-site #dg-sidebar .dgs-menu-children{margin:0 8px 8px 0;padding:0 7px 0 0}
+html body.dg-site #dg-sidebar .dgs-menu-account{margin-top:10px;padding-top:8px;border-top:1px solid #ffffff24}
+html body.dg-site #dg-sidebar .dg-sidebar-bottom{position:static!important;flex:0 0 auto;margin:8px 0 0!important;padding:10px 2px 0!important;border-top:1px solid #ffffff24;font-size:10px;line-height:1.8;color:#f5e8fb;background:transparent;visibility:visible!important;min-height:0}
+html body.dg-site #dg-sidebar .dg-sidebar-bottom svg{width:20px;height:20px;flex-shrink:0}
+html body.dg-site .dg-backdrop:not([hidden]){position:fixed!important;inset:0!important;width:100vw;height:100vh;height:100dvh;box-sizing:border-box;background:#2110299c!important;z-index:1000001!important;touch-action:none}
+html body.dg-site #dg-sidebar :focus-visible{outline:2px solid #ffda5a;outline-offset:-2px}
+html body.dg-site.dg-menu-open{overscroll-behavior:none}
+}
+@media(prefers-reduced-motion:reduce){body.dg-site #dg-sidebar{transition:none!important}}
+
+/* A translated, fixed drawer still expands the browser's scrollable viewport.
+   Keep its closed box in the viewport and reveal it without translation. */
+@media(max-width:820px){
+html body.dg-site #dg-sidebar{transform:none!important;visibility:hidden!important;opacity:0;pointer-events:none;transition:opacity .18s ease,visibility .18s!important}
+html body.dg-site.dg-menu-open #dg-sidebar{transform:none!important;visibility:visible!important;opacity:1;pointer-events:auto}
+}
+@media(prefers-reduced-motion:reduce){html body.dg-site #dg-sidebar{transition:none!important}}

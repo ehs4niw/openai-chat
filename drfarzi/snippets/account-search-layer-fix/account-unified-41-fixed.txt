@@ -1,0 +1,465 @@
+/* ===== بخش: جزئیات حساب - گروه آزمایشی ===== */
+/* فیلدهای تحصیلی حساب کاربری — نسخه ۲؛ Run snippet everywhere */
+/* تشخیص کارکنان مستقل از پایه و رشتهٔ ذخیره‌شده */
+if (!function_exists('bs_edu_staff_roles')) {
+    function bs_edu_staff_roles() {
+        $roles = array('administrator', 'bs_study_support');
+        if (defined('BSC_ROLE_SLUGS')) $roles = array_merge($roles, (array)BSC_ROLE_SLUGS);
+        if (function_exists('bsc_role_slugs')) $roles = array_merge($roles, bsc_role_slugs());
+        foreach (wp_roles()->get_names() as $slug => $label) {
+            $label = strtr((string)translate_user_role($label), array('ي'=>'ی', 'ك'=>'ک', "\u{200c}"=>'', ' '=>''));
+            if (strpos($label, 'مدرسراهنما') !== false) $roles[] = $slug;
+        }
+        return array_values(array_unique($roles));
+    }
+}
+if (!function_exists('bs_edu_is_staff')) {
+    function bs_edu_is_staff($user_id = 0) {
+        $user = get_userdata($user_id ? (int)$user_id : get_current_user_id());
+        if (!$user) return false;
+        if (user_can($user, 'manage_options') || user_can($user, 'bs_counselor')) return true;
+        return (bool)array_intersect((array)$user->roles, bs_edu_staff_roles());
+    }
+}
+
+if (!function_exists('bs_grades')) {
+    function bs_grades() {
+        return array('10'=>'دهم', '11'=>'یازدهم', '12'=>'دوازدهم');
+    }
+}
+
+// فیلدهای تحصیلی فقط برای دانش‌آموزان نمایش داده می‌شوند.
+add_action('woocommerce_edit_account_form', 'bs_field_group');
+function bs_field_group() {
+    $uid = get_current_user_id();
+    if (bs_edu_is_staff($uid)) return;
+    $cur = get_user_meta($uid, 'edu_field', true);
+    $grade = get_user_meta($uid, 'edu_grade', true);
+    $opts = array('math'=>'ریاضی و فیزیک', 'science'=>'علوم تجربی', 'humanities'=>'علوم انسانی');
+    echo '<p class="woocommerce-form-row form-row form-row-wide"><label for="edu_grade">پایه تحصیلی</label><select name="edu_grade" id="edu_grade" class="woocommerce-Input input-text"><option value="">انتخاب کنید</option>';
+    foreach (bs_grades() as $key=>$label) echo '<option value="'.esc_attr($key).'"'.selected((string)$grade,(string)$key,false).'>'.esc_html($label).'</option>';
+    echo '</select></p><p class="woocommerce-form-row form-row form-row-wide"><label for="edu_field">گروه آزمایشی</label><select name="edu_field" id="edu_field" class="woocommerce-Input input-text"><option value="">انتخاب کنید</option>';
+    foreach ($opts as $key=>$label) echo '<option value="'.esc_attr($key).'"'.selected($cur,$key,false).'>'.esc_html($label).'</option>';
+    echo '</select></p>';
+}
+
+add_action('woocommerce_save_account_details', 'bs_save_extra_fields');
+function bs_save_extra_fields($user_id) {
+    // WooCommerce verifies the account form and nonce before this hook runs.
+    if (!bs_edu_is_staff($user_id)) {
+        if (isset($_POST['edu_grade']) && is_scalar($_POST['edu_grade'])) {
+            $grade = sanitize_text_field(wp_unslash($_POST['edu_grade']));
+            if (isset(bs_grades()[$grade])) update_user_meta($user_id, 'edu_grade', $grade);
+        }
+        if (isset($_POST['edu_field']) && is_scalar($_POST['edu_field'])) {
+            $group = sanitize_text_field(wp_unslash($_POST['edu_field']));
+            if (in_array($group, array('math','science','humanities',''), true)) update_user_meta($user_id, 'edu_field', $group);
+        }
+    }
+    // Location fields remain usable for students and staff alike.
+    if (isset($_POST['bs_state']) && is_scalar($_POST['bs_state'])) {
+        update_user_meta($user_id, 'billing_state', sanitize_text_field(wp_unslash($_POST['bs_state'])));
+        update_user_meta($user_id, 'billing_country', 'IR');
+    }
+    if (isset($_POST['bs_city']) && is_scalar($_POST['bs_city'])) {
+        update_user_meta($user_id, 'billing_city', sanitize_text_field(wp_unslash($_POST['bs_city'])));
+    }
+}
+
+/* ===== بخش: حذف فیلدهای رمز از جزئیات حساب ===== */
+add_action( 'template_redirect', 'bs_strip_password_fields', 1 );
+function bs_strip_password_fields() {
+    if ( ! function_exists( 'is_account_page' ) || ! is_account_page() ) {
+        return;
+    }
+    if ( empty( $_POST['action'] ) || 'save_account_details' !== $_POST['action'] ) {
+        return;
+    }
+    // فقط اگه هر سه فیلد رمز تکمیل نشده، همه رو پاک کن
+    $cur = isset( $_POST['password_current'] ) ? $_POST['password_current'] : '';
+    $n1  = isset( $_POST['password_1'] ) ? $_POST['password_1'] : '';
+    $n2  = isset( $_POST['password_2'] ) ? $_POST['password_2'] : '';
+    if ( '' === $n1 && '' === $n2 ) {
+        unset( $_POST['password_current'], $_POST['password_1'], $_POST['password_2'] );
+        unset( $_REQUEST['password_current'], $_REQUEST['password_1'], $_REQUEST['password_2'] );
+    }
+}
+
+/* ===== بخش: انتقال «نشانی» به «جزئیات حساب» ===== */
+/* ===== انتقال «نشانی» به صفحه‌ی «جزئیات حساب» (نسخه ۳) ===== */
+
+
+// ۱) حذف آیتم «نشانی» از منوی حساب کاربری
+// حذف نشانی از منو در bs_account_nav_build_v4 انجام می‌شود؛ هوک تکراری حذف شد.
+function bs_hide_address_menu( $items ) {
+    unset( $items['edit-address'] );
+    return $items;
+}
+
+// ۲) لینک قدیمی «نشانی» به «جزئیات حساب» برود
+add_action( 'template_redirect', 'bs_redirect_address_to_account' );
+function bs_redirect_address_to_account() {
+    if ( ! is_user_logged_in() || ! function_exists( 'is_wc_endpoint_url' ) ) { return; }
+    if ( is_wc_endpoint_url( 'edit-address' ) ) {
+        wp_safe_redirect( wc_get_account_endpoint_url( 'edit-account' ) );
+        exit;
+    }
+}
+
+// ۳) نمایش فیلدهای نشانی (مستقیم داخل فرم، بدون div اضافه؛ فقط یک بار چاپ می‌شود)
+add_action( 'woocommerce_edit_account_form', 'bs_account_address_fields', 20 );
+add_action( 'woocommerce_edit_account_form_end', 'bs_account_address_fields', 20 );
+function bs_account_address_fields() {
+    static $printed = false;
+    if ( $printed ) { return; }
+    $printed = true;
+
+    $uid    = get_current_user_id();
+    $states = WC()->countries->get_states( 'IR' );
+    $states = is_array( $states ) ? $states : array();
+    $cur_st = get_user_meta( $uid, 'billing_state', true );
+    $w      = ' style="width:100%;"';
+
+    echo '<h4 class="bs-addr-title" style="margin:20px 0 12px;font-weight:700;">نشانی</h4>';
+
+    echo '<p class="woocommerce-form-row form-row form-row-wide">';
+    echo '<label for="bs_addr_state">استان</label>';
+    echo '<select name="bs_addr_state" id="bs_addr_state" class="woocommerce-Input input-text"' . $w . '>';
+    echo '<option value="">انتخاب کنید</option>';
+    foreach ( $states as $code => $name ) {
+        echo '<option value="' . esc_attr( $code ) . '"' . selected( (string) $cur_st, (string) $code, false ) . '>' . esc_html( $name ) . '</option>';
+    }
+    echo '</select></p>';
+
+    echo '<p class="woocommerce-form-row form-row form-row-wide">';
+    echo '<label for="bs_addr_city">شهر</label>';
+    echo '<input type="text" class="woocommerce-Input input-text" name="bs_addr_city" id="bs_addr_city"' . $w . ' value="' . esc_attr( get_user_meta( $uid, 'billing_city', true ) ) . '">';
+    echo '</p>';
+
+    echo '<p class="woocommerce-form-row form-row form-row-wide">';
+    echo '<label for="bs_addr_address">نشانی کامل</label>';
+    echo '<textarea class="woocommerce-Input input-text" name="bs_addr_address" id="bs_addr_address" rows="3"' . $w . '>' . esc_textarea( get_user_meta( $uid, 'billing_address_1', true ) ) . '</textarea>';
+    echo '</p>';
+
+    echo '<p class="woocommerce-form-row form-row form-row-wide">';
+    echo '<label for="bs_addr_postcode">کد پستی</label>';
+    echo '<input type="text" class="woocommerce-Input input-text" name="bs_addr_postcode" id="bs_addr_postcode"' . $w . ' value="' . esc_attr( get_user_meta( $uid, 'billing_postcode', true ) ) . '">';
+    echo '</p>';
+}
+
+// ۴) ذخیره‌ی نشانی (در فیلدهای صورتحساب ووکامرس)
+add_action( 'woocommerce_save_account_details', 'bs_save_account_address', 20 );
+function bs_save_account_address( $user_id ) {
+    if ( ! isset( $_POST['bs_addr_state'] ) && ! isset( $_POST['bs_addr_city'] ) ) { return; }
+
+    $states = WC()->countries->get_states( 'IR' );
+    $state  = isset( $_POST['bs_addr_state'] ) ? sanitize_text_field( wp_unslash( $_POST['bs_addr_state'] ) ) : '';
+    if ( '' === $state || ( is_array( $states ) && isset( $states[ $state ] ) ) ) {
+        update_user_meta( $user_id, 'billing_state', $state );
+    }
+    if ( isset( $_POST['bs_addr_city'] ) ) {
+        update_user_meta( $user_id, 'billing_city', sanitize_text_field( wp_unslash( $_POST['bs_addr_city'] ) ) );
+    }
+    if ( isset( $_POST['bs_addr_address'] ) ) {
+        update_user_meta( $user_id, 'billing_address_1', sanitize_textarea_field( wp_unslash( $_POST['bs_addr_address'] ) ) );
+    }
+    if ( isset( $_POST['bs_addr_postcode'] ) ) {
+        update_user_meta( $user_id, 'billing_postcode', sanitize_text_field( wp_unslash( $_POST['bs_addr_postcode'] ) ) );
+    }
+    update_user_meta( $user_id, 'billing_country', 'IR' );
+}
+
+/* ===== بخش: مدیریت یکپارچه منوی حساب کاربری ===== */
+/* مدیریت یکپارچه منوی حساب کاربری — نسخه ۴
+ * جایگزین کامل نسخه قبلی
+ * اجرا: Run snippet everywhere
+ */
+
+function bs_account_nav_config_v4() {
+    return array(
+        'order' => array(
+            'dashboard',
+            'study-hours',
+            'bse-exams',
+            'bse-results',
+            'my-courses',
+            'purchased-products',
+            'orders',
+            'wishlist',
+            'downloads',
+            'edit-account',
+            'bs-shop',
+            'customer-logout',
+        ),
+
+        'shop_label' => 'فروشگاه دوره‌ها',
+        'shop_path'  => '/shop/',
+
+        'icons' => array(
+            /* مدیریت پیامک مطالعه؛ آیکون مشترک موبایل و دسکتاپ */
+            'study-sms-admin' =>
+                '<rect x="3" y="5" width="18" height="14" rx="2"/>'
+                . '<path d="m3 7 9 6 9-6"/>',
+
+            'bse-exams' =>
+                '<path d="M12 5H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7"/>'
+                . '<path d="m16 3 5 5M10 14l-1 4 4-1L22 8a2.1 2.1 0 0 0-5-5Z"/>',
+
+            'bse-results' =>
+                '<path d="M4 3v17h17M8 16v-5M13 16V7M18 16v-8"/>',
+
+            'bs-shop' =>
+                '<path d="M3 10h18l-2-7H5l-2 7Zm1 0v11h16V10M9 21v-7h6v7"/>'
+                . '<path d="M3 10a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0"/>',
+        ),
+    );
+}
+
+add_filter(
+    'woocommerce_account_menu_items',
+    'bs_account_nav_build_v4',
+    100010
+);
+
+function bs_account_nav_build_v4( $items ) {
+    $cfg = bs_account_nav_config_v4();
+
+    $vars = function_exists( 'WC' ) && WC()->query
+        ? WC()->query->get_query_vars()
+        : array();
+
+    if ( isset( $vars['study-hours'] ) ) {
+        $items['study-hours'] = current_user_can( 'bs_counselor' )
+            ? 'ثبت مطالعه دانش‌آموزان'
+            : 'ثبت ساعت مطالعه';
+    }
+
+    if ( isset( $vars['bse-exams'] ) ) {
+        $items['bse-exams'] = 'آزمون‌ها';
+    }
+
+    if ( isset( $vars['bse-results'] ) ) {
+        $items['bse-results'] = 'نتایج آزمون';
+    }
+
+    if (
+        isset( $vars['bse-exams'] )
+        && (
+            ! defined( 'BSE_KEEP_THEME_QUIZ' )
+            || ! BSE_KEEP_THEME_QUIZ
+        )
+    ) {
+        unset( $items['quiz-results'] );
+    }
+
+    unset(
+        $items['edit-address'],
+        $items['payment-methods'],
+        $items['notifications']
+    );
+
+    $items['bs-shop'] = $cfg['shop_label'];
+
+    $result = array();
+
+    foreach ( $cfg['order'] as $key ) {
+        if (
+            'customer-logout' !== $key
+            && 'bs-shop' !== $key
+            && isset( $items[ $key ] )
+        ) {
+            $result[ $key ] = $items[ $key ];
+            unset( $items[ $key ] );
+        }
+    }
+
+    $logout = isset( $items['customer-logout'] )
+        ? $items['customer-logout']
+        : null;
+
+    unset(
+        $items['customer-logout'],
+        $items['bs-shop']
+    );
+
+    $result += $items;
+    $result['bs-shop'] = $cfg['shop_label'];
+
+    if ( null !== $logout ) {
+        $result['customer-logout'] = $logout;
+    }
+
+    return $result;
+}
+
+add_filter(
+    'woocommerce_get_endpoint_url',
+    function ( $url, $endpoint, $value, $permalink ) {
+        if ( 'bs-shop' === $endpoint ) {
+            $cfg = bs_account_nav_config_v4();
+            return home_url( $cfg['shop_path'] );
+        }
+
+        return $url;
+    },
+    100010,
+    4
+);
+
+add_filter(
+    'woocommerce_endpoint_bse-exams_title',
+    function () {
+        return 'آزمون‌ها';
+    }
+);
+
+add_filter(
+    'woocommerce_endpoint_bse-results_title',
+    function () {
+        return 'نتایج آزمون';
+    }
+);
+
+add_filter(
+    'woocommerce_endpoint_study-hours_title',
+    function ( $title ) {
+        return current_user_can( 'bs_counselor' )
+            ? 'ثبت مطالعه دانش‌آموزان'
+            : $title;
+    }
+);
+
+add_action(
+    'wp_enqueue_scripts',
+    'bs_account_nav_icons_v4',
+    1000
+);
+
+function bs_account_nav_icons_v4() {
+    if (
+        ! function_exists( 'is_account_page' )
+        || ! is_account_page()
+    ) {
+        return;
+    }
+
+    $cfg = bs_account_nav_config_v4();
+    $css = '';
+
+    foreach ( $cfg['icons'] as $endpoint => $paths ) {
+        if ( ! preg_match( '/^[a-z0-9-]+$/', $endpoint ) ) {
+            continue;
+        }
+
+        $svg =
+            '<svg xmlns="http://www.w3.org/2000/svg"'
+            . ' viewBox="0 0 24 24"'
+            . ' fill="none" stroke="black"'
+            . ' stroke-width="1.6"'
+            . ' stroke-linecap="round"'
+            . ' stroke-linejoin="round">'
+            . $paths
+            . '</svg>';
+
+        $image = 'url("data:image/svg+xml,'
+            . rawurlencode( $svg )
+            . '")';
+
+        $targets = array(
+            /* منوی دسکتاپ */
+            'body.woocommerce-account'
+            . ' nav.woocommerce-MyAccount-navigation'
+            . ' li.woocommerce-MyAccount-navigation-link--'
+            . $endpoint . '>a',
+
+            /* منوی کشویی موبایل */
+            'body.woocommerce-account'
+            . ' .mobile-dropdown-menu'
+            . ' .top_accoun_nav_item'
+            . '.woocommerce-MyAccount-navigation-link--'
+            . $endpoint . '>a',
+        );
+
+        foreach ( $targets as $a ) {
+            $css .= $a . '{
+                position:relative!important;
+                padding-right:44px!important;
+            }';
+
+            $css .= $a . '::after{
+                content:none!important;
+                display:none!important;
+            }';
+
+            $css .= $a . '>i{
+                display:none!important;
+            }';
+
+            $css .= $a . '::before{
+                content:""!important;
+                display:block!important;
+                position:absolute!important;
+                right:12px!important;
+                left:auto!important;
+                top:50%!important;
+                bottom:auto!important;
+                transform:translateY(-50%)!important;
+                width:18px!important;
+                height:18px!important;
+                margin:0!important;
+                padding:0!important;
+                border:0!important;
+                border-radius:0!important;
+                font-size:0!important;
+                line-height:0!important;
+                opacity:1!important;
+                background:currentColor!important;
+                pointer-events:none;
+                -webkit-mask-image:' . $image . '!important;
+                mask-image:' . $image . '!important;
+                -webkit-mask-size:contain!important;
+                mask-size:contain!important;
+                -webkit-mask-repeat:no-repeat!important;
+                mask-repeat:no-repeat!important;
+                -webkit-mask-position:center!important;
+                mask-position:center!important;
+            }';
+        }
+    }
+
+
+    // Monthly report search: keep suggestions above the following account card.
+    if (function_exists('is_wc_endpoint_url') && is_wc_endpoint_url('study-hours')) {
+        $css .= '
+        .bs-app #bsc-monthly.bsm{position:relative!important;overflow:visible!important}
+        .bs-app #bsc-monthly.bsm:focus-within{z-index:30!important}
+        .bs-app #bsc-monthly .bsm-filters{position:relative!important;overflow:visible!important;z-index:2}
+        .bs-app #bsc-monthly .bsm-picker{position:relative!important;overflow:visible!important;z-index:3!important}
+        .bs-app #bsc-monthly .bsm-results{z-index:40!important;max-height:min(240px,50vh);overflow-y:auto!important;overscroll-behavior:contain}
+        ';
+    }
+
+    wp_register_style(
+        'bs-account-nav-v4',
+        false,
+        array(),
+        '4.0'
+    );
+
+    wp_enqueue_style( 'bs-account-nav-v4' );
+
+    wp_add_inline_style(
+        'bs-account-nav-v4',
+        $css
+    );
+}
+
+
+/* ساده‌سازی منوی مدیرکل؛ منوی دانش‌آموزان بدون تغییر */
+add_filter('woocommerce_account_menu_items', function ($items) {
+    if (!current_user_can('manage_options')) {
+        return $items;
+    }
+    unset($items['wishlist'], $items['bse-results'], $items['quiz-results']);
+    return $items;
+}, 100050);

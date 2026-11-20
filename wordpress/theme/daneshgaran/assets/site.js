@@ -1,8 +1,8 @@
 (function(){'use strict';
 const toggle=document.querySelector('.dg-mobile-toggle'),sidebar=document.getElementById('dg-sidebar'),backdrop=document.querySelector('.dg-backdrop');
 function menu(open){document.body.classList.toggle('dg-menu-open',open);if(toggle)toggle.setAttribute('aria-expanded',String(open));if(backdrop)backdrop.hidden=!open;}
-if(toggle)toggle.addEventListener('click',()=>menu(!document.body.classList.contains('dg-menu-open')));
-if(backdrop)backdrop.addEventListener('click',()=>menu(false));
+// Mobile button uses its immediate handler so optimization plugins cannot delay it.
+
 document.addEventListener('keydown',e=>{if(e.key==='Escape')menu(false);});
 if(sidebar)sidebar.addEventListener('click',e=>{if(e.target.closest('a'))menu(false);});
 document.querySelectorAll('[data-dg-tablist]').forEach(list=>{

@@ -1,3 +1,103 @@
+نسخه۰.۲۵.۲۲: مبنا ZIP ارسالی۰.۲۵.۲۱ (نسخه داخلی۰.۲۵.۲۰)، ایران‌یکان X با نصب‌کننده خصوصی و نگهداری در uploads؛ فایل تجاری در مخزن عمومی نیست. راهنما: releases/UPDATE-0.25.22-fa.md
+
+نسخه ۰.۲۵.۴: اصلاح محتوای صفحه اصلی مطابق طرح، حفظ فوتر/منو/لوگو، نام موسسه آموزشی دانشگران و میانگین/موفقیت‌های برگزیده. راهنما: releases/UPDATE-0.25.4-fa.md
+
+نسخه ۰.۲۵.۳: مدیریت برگزیدگان و گالری برای مدیر و معاون در امور مدرسه؛ راهنما: releases/UPDATE-0.25.3-fa.md
+
+افزونه **۰.۲۵.۲**: [دانلود کامل](releases/daneshgaran-school-0.25.2.zip) · [الگوی اکسل جدید](releases/daneshgaran-students-template-0.25.2.xlsx) · [راهنما](releases/UPDATE-0.25.2-fa.md). مشخصات کامل پدر/مادر و وضعیت مسکن؛ تمام پرونده اختیاری، نام و کد ملی دانش‌آموز الزامی.
+
+افزونه **۰.۲۵.۱**: [دانلود کامل](releases/daneshgaran-school-0.25.1.zip) · [راهنما](releases/UPDATE-0.25.1-fa.md) · [الگوی دانش‌آموزان](releases/daneshgaran-students-template-0.25.1.xlsx). اطلاعات مستقل پدر/مادر در فرم و اکسل؛ تمام پرونده و تماس اختیاری، فقط نام و کد ملی لازم.
+
+افزونه **۰.۲۵.۰**: [دانلود کامل](releases/daneshgaran-school-0.25.0.zip) · [راهنما](releases/UPDATE-0.25.0-fa.md). امور مدرسه ← اخبار مدرسه: ایجاد، ویرایش، عکس، پیش‌نویس و انتشار از پنل مدیر/معاون. اتصال خودکار منبع خارجی در این نسخه نیست.
+
+افزونه **۰.۲۴.۸**: [دانلود کامل](releases/daneshgaran-school-0.24.8.zip). ترتیب معرفی کادر: مدیر راست و معاون‌ها سمت چپ.
+
+افزونه **۰.۲۴.۷**: [دانلود کامل](releases/daneshgaran-school-0.24.7.zip) · [راهنما](releases/UPDATE-0.24.7-fa.md). منوی مدیریت با۶ گزینه اصلی و زیرمنوهای بازشونده؛ حساب و خروج در انتهای منو.
+
+افزونه **۰.۲۴.۶**: [دانلود کامل](releases/daneshgaran-school-0.24.6.zip) · [راهنما](releases/UPDATE-0.24.6-fa.md). قانون مشترک کد ملی در کل سامانه:۱۰رقم، بدون کنترل رقم آخر؛ حفظ صفر ابتدایی و جلوگیری از حساب تکراری.
+
+افزونه **۰.۲۴.۵**: [دانلود کامل](releases/daneshgaran-school-0.24.5.zip) · [راهنما](releases/UPDATE-0.24.5-fa.md). رفع خواندن متن‌های اکسل؛ فقط نام و کد ملی الزامی، موبایل و سایر اطلاعات اختیاری؛ ستون‌های Text و پیام دقیق ردیف/ستون.
+
+افزونه **۰.۲۴.۴**: [دانلود کامل](releases/daneshgaran-school-0.24.4.zip) · [راهنما](releases/UPDATE-0.24.4-fa.md). ورود و خروجی اکسل دبیران، پیام دقیق اعتبارسنجی حساب معاون و پاک‌سازی فاصله‌های کد ملی؛ داده‌های موجود حفظ می‌شوند.
+
+افزونه **۰.۲۴.۲**: [دانلود کامل](releases/daneshgaran-school-0.24.2.zip). درج مستقیم استایل اصلاح سایدبار در HTML برای حذف وابستگی به درخواست CSS و رفع تداخل گردی گوشه‌های پنل.
+
+افزونه **۰.۲۴.۱**: [دانلود کامل](releases/daneshgaran-school-0.24.1.zip) · [راهنمای اصلاح ظاهر](releases/UPDATE-0.24.1-fa.md). سایدبار راست با گوشه گرد و بدون اسکرول داخلی؛ اصلاح عرض پنل و نوار مراحل پیش‌ثبت‌نام.
+
+افزونه **۰.۲۴.۰**: [دانلود کامل](releases/daneshgaran-school-0.24.0.zip) · [راهنمای نصب و تغییرات](releases/UPDATE-0.24.0-fa.md). حساب مشترک دانش‌آموز و اولیا، مدیر/معاون مستقل، معرفی عمومی اختیاری، رمز ساده‌تر، پنل جمع‌وجور و پیش‌ثبت‌نام بدون مدارک؛ پیامک خودکار حفظ شده است.
+
+افزونه **۰.۲۳.۰**: [دانلود کامل](releases/daneshgaran-school-0.23.0.zip) · [راهنمای کاربران و دسترسی](releases/UPDATE-0.23.0-fa.md). چهار فرم مرتب برای استاد، دانش‌آموز، مشاور و معاون؛ ساخت معاون فقط مدیر کل؛ غیرفعال‌کردن بدون حذف سوابق؛ رمز اولیه اجباری مدیر/معاون/استاد و اختیاری دانش‌آموز؛ وردپرس فقط مدیر کل. **پیامک نسخه۰.۲۲.۰ با ارسال خودکار حفظ شده است.**
+
+افزونه **۰.۲۲.۱**: [دانلود کامل](releases/daneshgaran-school-0.22.1.zip) · [راهنمای پیامک فقط دستی و فقط به اولیا](releases/UPDATE-0.22.1-fa.md). تمام پیامک‌های خودکار حذف و صف‌های خودکار قبلی متوقف می‌شوند؛ ارسال فقط با انتخاب و تأیید دستی مدیریت به شماره ولی است. نصب در `public_html/wp-content/plugins/`.
+
+افزونه **۰.۲۲.۰**: [دانلود کامل](releases/daneshgaran-school-0.22.0.zip) · [راهنمای ارتباط با اولیا و IPPanel پترنی](releases/UPDATE-0.22.0-fa.md). ارسال دستی با پیش‌نمایش و تأیید هزینه، صف و سابقه، پیامک خودکار غیبت و انتشار کارنامه؛ نیازمند کلید، خط و سه پترن واقعی در تنظیمات سایت. نصب در `public_html/wp-content/plugins/`.
+
+افزونه **۰.۲۱.۰**: [دانلود کامل](releases/daneshgaran-school-0.21.0.zip) · [راهنمای کارنامه تحلیلی مطابق طرح انتخاب‌شده](releases/UPDATE-0.21.0-fa.md). مقایسه ماه جاری و قبل، رتبه در پایه، روند چهارماهه، بازخورد استاد راهنما و آرشیو با چاپ و دانلود PDF. نصب در `public_html/wp-content/plugins/`؛ لوگو، فوتر و سایدبار حفظ می‌شوند.
+
+افزونه **۰.۲۰.۰**: [دانلود کامل](releases/daneshgaran-school-0.20.0.zip) · [راهنمای دفتر نمرات ماهانه](releases/UPDATE-0.20.0-fa.md). ثبت چندباره نمره و رویداد با خالی‌شدن فرم، خلاصه و میانگین زیر فرم، مهلت و نهایی‌سازی دبیر و انتشار مدیریت. نصب در `public_html/wp-content/plugins/`؛ قالب و لوگوها حفظ می‌شوند.
+
+افزونه **۰.۱۹.۶**: [دانلود کامل](releases/daneshgaran-school-0.19.6.zip) · [طرح۳ فقط برای لوگوی سایدبار؛ فوتر بدون تغییر](releases/UPDATE-0.19.6-fa.md). نصب در `public_html/wp-content/plugins/`؛ قالب۰.۱.۸ قبلی حفظ می‌شود.
+
+**لوگوی شفاف سایدبار و فوتر — افزونه۰.۱۹.۵ + قالب۰.۱.۸:** [بسته یک‌مرحله‌ای cPanel](releases/daneshgaran-branding-0.19.5-cpanel.zip) در `public_html/wp-content/` استخراج شود · [راهنما](releases/UPDATE-0.19.5-fa.md) · [PNG شفاف۵۱۲](branding/school-main-logo-transparent-512.png).
+
+افزونه **۰.۱۹.۴**: [دانلود کامل](releases/daneshgaran-school-0.19.4.zip) · [لوگوی اصلی جدید روی ساختمان تصویر ورود و جامدادی بنر آموزشگاه](releases/UPDATE-0.19.4-fa.md). سایر لوگوها و نمادک در این نسخه تغییر نکرده‌اند.
+
+افزونه **۰.۱۹.۳**: [دانلود کامل](releases/daneshgaran-school-0.19.3.zip) · [بازگشت نمادک سفارشی به اندازه‌های استاندارد وردپرس](releases/UPDATE-0.19.3-fa.md). اصلاح فیلتر۰.۱۹.۲ که فایل اصلی را برای همه اندازه‌ها تحمیل می‌کرد.
+
+افزونه **۰.۱۹.۲**: [دانلود کامل](releases/daneshgaran-school-0.19.2.zip) · [نمادک تب در سایت و پنل + فرم ورود جمع‌وجور](releases/UPDATE-0.19.2-fa.md). لوگوی انتخابی وردپرس حفظ می‌شود؛ تغییر خودکار در محتوای المنتور ندارد.
+
+افزونه **۰.۱۹.۱**: [دانلود کامل](releases/daneshgaran-school-0.19.1.zip) · [تصویر اصلی ورود و اصلاح مجوز فایل‌های تصویر](releases/UPDATE-0.19.1-fa.md). همه فایل‌های ZIP با مجوز۶۴۴، پوشه‌ها۷۵۵؛ نصب در cPanel داخل plugins.
+
+**قالب‌های مستقل المنتور پرو، فقط محتوای وسط صفحات:** [بسته همه قالب‌ها](releases/daneshgaran-elementor-content-1.0.zip) · [فقط صفحه اصلی](releases/daneshgaran-elementor-home-1.0.zip) · [فقط معرفی](releases/daneshgaran-elementor-about-1.0.zip) · [راهنمای درون‌ریزی و فهرست بخش‌ها](elementor-templates/README-fa.md). این بسته افزونه نیست و صفحات را خودکار عوض نمی‌کند؛ به افزونه فعلی۰.۱۹.۰ متصل است.
+
+افزونه **۰.۱۹.۰**: [دانلود کامل](releases/daneshgaran-school-0.19.0.zip) · [گالری قابل مدیریت و ردیف ورود](releases/UPDATE-0.19.0-fa.md). نصب از cPanel در `wp-content/plugins/`؛ قالب تغییر نکرده است.
+
+افزونه **۰.۱۸.۰**: [دانلود کامل](releases/daneshgaran-school-0.18.0.zip) · [پچ برای۰.۱۷.۰](releases/daneshgaran-school-patch-0.18.0.zip) · [ویرایش واقعی خانه و معرفی با المنتور](releases/UPDATE-0.18.0-fa.md).
+
+افزونه **۰.۱۷.۰**: [دانلود کامل](releases/daneshgaran-school-0.17.0.zip) · [پچ سبک برای۰.۱۶.۰](releases/daneshgaran-school-patch-0.17.0.zip) · [صفحه اصلی و معرفی مدرسه](releases/UPDATE-0.17.0-fa.md).
+
+افزونه **۰.۱۶.۰**: [دانلود کامل](releases/daneshgaran-school-0.16.0.zip) · [پرونده دبیر و صفحات اساتید/رزومه/آموزشگاه/اخبار](releases/UPDATE-0.16.0-fa.md) · [الگوی اکسل دبیران](samples/daneshgaran-teachers-template.xlsx).
+
+افزونه **۰.۱۵.۰**: [دانلود کامل](releases/daneshgaran-school-0.15.0.zip) · [صفحه ورود مطابق طرح و رفع اسکرول سند](releases/UPDATE-0.15.0-fa.md).
+
+افزونه **۰.۱۴.۲**: [دانلود کامل](releases/daneshgaran-school-0.14.2.zip) · رفع اسکرول افقی صفحه عمومی.
+
+افزونه **۰.۱۴.۱**: [دانلود کامل](releases/daneshgaran-school-0.14.1.zip) · [رفع فوتر عمومی و پنجره مشاوره](releases/UPDATE-0.14.1-fa.md).
+
+قالب **۰.۱.۷**: [پچ فوتر یکپارچه](releases/daneshgaran-theme-patch-0.1.7.zip) · [قالب کامل](releases/daneshgaran-theme-0.1.7.zip).
+
+قالب **۰.۱.۶**: [پچ موبایل و فوتر](releases/daneshgaran-theme-patch-0.1.6.zip) · [قالب کامل](releases/daneshgaran-theme-0.1.6.zip).
+
+قالب **۰.۱.۵**: [پچ حذف فوتر پنل‌ها](releases/daneshgaran-theme-patch-0.1.5.zip) · [قالب کامل](releases/daneshgaran-theme-0.1.5.zip).
+
+قالب **۰.۱.۴**: [قالب کامل](releases/daneshgaran-theme-0.1.4.zip) · [پچ فوتر](releases/daneshgaran-theme-patch-0.1.4.zip) · [راهنما](releases/UPDATE-THEME-0.1.4-fa.md).
+
+نسخه **۰.۱۴.۰**: [افزونه کامل](releases/daneshgaran-school-0.14.0.zip) · [فرم‌های عمومی پیش‌ثبت‌نام و مشاوره](releases/UPDATE-0.14.0-fa.md).
+
+نسخه **۰.۱۳.۰**: [افزونه کامل](releases/daneshgaran-school-0.13.0.zip) · [نظارت/انتشار کارنامه و مدیریت درخواست‌ها](releases/UPDATE-0.13.0-fa.md).
+
+نسخه **۰.۱۲.۳**: [افزونه](releases/daneshgaran-school-0.12.3.zip) · [اصلاح اندازه‌های نمادک](releases/UPDATE-0.12.3-fa.md).
+
+هویت مشترک کل سایت: **افزونه۰.۱۲.۲ + قالب۰.۱.۳** — [افزونه](releases/daneshgaran-school-0.12.2.zip) · [پچ قالب برای cPanel](releases/daneshgaran-theme-patch-0.1.3.zip) · [قالب کامل](releases/daneshgaran-theme-0.1.3.zip) · [راهنما](releases/UPDATE-0.12.2-fa.md).
+
+نسخه **۰.۱۲.۱**: [دانلود افزونه](releases/daneshgaran-school-0.12.1.zip) · [سال متمرکز، لوگو و فونت پنل](releases/UPDATE-0.12.1-fa.md).
+
+نسخه **۰.۱۲.۰**: [افزونه کامل](releases/daneshgaran-school-0.12.0.zip) · [راهنمای مطالعه روزانه و پنل مشاور](releases/UPDATE-0.12.0-fa.md).
+
+نسخه **۰.۱۱.۲**: [افزونه کامل](releases/daneshgaran-school-0.11.2.zip) · [راهنما](releases/UPDATE-0.11.2-fa.md).
+
+نسخه **۰.۱۱.۱**: [دانلود افزونه](releases/daneshgaran-school-0.11.1.zip) · [حذف کلاس خالی و ساخت پنج کلاس](releases/UPDATE-0.11.1-fa.md).
+
+نسخه جدید **۰.۱۱.۰**: [افزونه کامل](releases/daneshgaran-school-0.11.0.zip) · [ثبت کامل، اکسل و سال تحصیلی](releases/UPDATE-0.11.0-fa.md).
+
+نسخه جدید: **۰.۱۰.۰** — [دانلود افزونه کامل](releases/daneshgaran-school-0.10.0.zip) و [راهنمای پرونده دانش‌آموز](releases/UPDATE-0.10.0-fa.md).
+
+نسخه جدید: **۰.۹.۰** — [دانلود افزونه کامل](releases/daneshgaran-school-0.9.0.zip) و [راهنمای نصب و چهار بخش پنل](releases/UPDATE-0.9.0-fa.md).
+
+# آخرین نسخه: افزونه ۰.۸.۰، قالب ۰.۱.۲
+
+برای به‌روزرسانی سایت نصب‌شده، [راهنمای نسخه ۰.۸.۰](releases/UPDATE-0.8.0-fa.md) را بخوانید و [ZIP افزونه](releases/daneshgaran-school-0.8.0.zip) را نصب کنید. دستورهای زیر مربوط به نصب اولیه هستند.
+
 # دانشگران — مرحله اول، نسخه ۰.۱.۰
 
 این بسته شامل قالب و افزونه واقعی وردپرس است؛ تصاویر طرح نیستند.

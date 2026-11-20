@@ -1,0 +1,39 @@
+<?php
+if(!defined('ABSPATH'))exit;
+function dgs_portal_links(){
+    if(!is_user_logged_in())return array();$uid=get_current_user_id();
+    if(current_user_can('dgs_manage_education'))return array('overview'=>array('مدیریت','home'),'education'=>array('مدیریت آموزشی','class'),'timetable'=>array('برنامه هفتگی','calendar'),'grades'=>array('ثبت و مدیریت نمرات','book'),'oversight'=>array('نظارت و انتشار کارنامه','book'),'reports'=>array('کارنامه تحلیلی دانش‌آموزان','book'),'attendance'=>array('حضور و غیاب','calendar'),'quizzes'=>array('آزمون‌ها','book'),'homework'=>array('تکالیف و ارسال فایل','book'),'finance'=>array('مالی','book'),'study'=>array('گزارش مطالعه','book'),'communication'=>array('ارتباط با اولیا و تنظیمات','message'),'requests'=>array('درخواست‌ها و پیش‌ثبت‌نام‌ها','book'),'news'=>array('اخبار مدرسه','requests'),'stars'=>array('دانش‌آموزان برگزیده','users'),'gallery'=>array('گالری مدرسه','book'),'account'=>array('مشخصات حساب و تغییر رمز','users'));
+    $links=array();if(dgs_edu_role($uid,'dgs_teacher'))$links=array('overview'=>array('پنل مدرس','home'),'timetable'=>array('برنامه هفتگی','calendar'),'homework'=>array('تکالیف و ارسال فایل','book'),'quizzes'=>array('کوییزهای کلاس','book'),'grades'=>array('ثبت نمرات و کارنامه','book'),'attendance'=>array('حضور و غیاب','calendar'));
+    elseif(dgs_edu_role($uid,'dgs_counselor'))$links=array('overview'=>array('پنل مشاور','home'),'students'=>array('دانش‌آموزان من','users'),'study'=>array('مطالعه روزانه','book'),'homework'=>array('تکالیف دانش‌آموزان','book'),'grades'=>array('کارنامه و بازخورد دانش‌آموزان','book'));
+    elseif(dgs_edu_role($uid,'dgs_student'))$links=array('overview'=>array('پیشخوان','home'),'study'=>array('ثبت مطالعه روزانه','book'),'timetable'=>array('برنامه هفتگی','calendar'),'homework'=>array('تکالیف و ارسال فایل','book'),'quizzes'=>array('آزمون‌ها و کوییزها','book'),'grades'=>array('کارنامه تحلیلی','book'),'attendance'=>array('سوابق حضور و غیاب','calendar'),'finance'=>array('شهریه و پرداخت‌های من','book'));
+    if($links)$links['account']=array('مشخصات حساب و تغییر رمز','users');return $links;
+}
+function dgs_portal_tab(){if(function_exists('dgs_um_password_required')&&dgs_um_password_required())return 'account';$raw=isset($_GET['dg_tab'])&&is_string($_GET['dg_tab'])?sanitize_key($_GET['dg_tab']):'overview';if($raw==='password')$raw='account';if(current_user_can('dgs_manage_education')&&$raw==='counseling')$raw='study';if(current_user_can('dgs_manage_education')&&$raw==='users')return 'communication';if(current_user_can('dgs_manage_education')&&$raw==='records')return 'records';if(current_user_can('dgs_manage_education')&&in_array($raw,array('classes','subjects','assignments'),true))return 'education';return isset(dgs_portal_links()[$raw])?$raw:'overview';}
+// The theme sidebar provides navigation for every role and portal section.
+function dgs_portal_has_sidebar_navigation(){return get_template()==='daneshgaran'&&dgs_is_role_portal();}
+function dgs_is_role_portal(){$p=get_option('dgs_pages',array());return !empty($p['portal'])&&is_page((int)$p['portal'])&&(bool)dgs_portal_links();}
+add_filter('body_class',function($classes){if(dgs_is_role_portal())$classes[]='dgs-role-portal';return $classes;});
+function dgs_panel_menu_link($key,$label,$year,$active,$section=''){
+ $url=dgs_edu_url($key,$year);if($section!=='')$url=add_query_arg('cm_section',$section,$url);
+ return '<li><a '.($active?'aria-current="page"':'').' href="'.esc_url($url).'">'.dgs_portal_icon($key).'<span>'.esc_html($label).'</span></a></li>';
+}
+function dgs_panel_menu_html(){
+ $year=dgs_edu_request_year();$tab=dgs_portal_tab();$links=dgs_portal_links();if(!$links)return '';$h='<ul class="dg-menu dgs-grouped-menu">';
+ if(current_user_can('dgs_manage_education')&&!(function_exists('dgs_um_password_required')&&dgs_um_password_required())){
+  $h.=dgs_panel_menu_link('overview','پیشخوان',$year,$tab==='overview');
+  $groups=array('education'=>array('آموزش','education',array('education'=>'کلاس‌ها و دروس','timetable'=>'برنامه هفتگی','attendance'=>'حضور و غیاب','quizzes'=>'آزمون‌ها','homework'=>'تکالیف')),'marks'=>array('نمرات و کارنامه','grades',array('grades'=>'ثبت نمرات','oversight'=>'تأیید و انتشار','reports'=>'کارنامه تحلیلی')),'counsel'=>array('مشاوره','counseling',array('study'=>'گزارش مطالعه')),'affairs'=>array('امور مدرسه','finance',array('news'=>'اخبار مدرسه','stars'=>'دانش‌آموزان برگزیده','gallery'=>'گالری مدرسه','finance'=>'مالی','requests'=>'درخواست‌ها و پیش‌ثبت‌نام')),'settings'=>array('ارتباطات و تنظیمات','communication',array('communication'=>'پیامک اولیا')));
+  foreach($groups as $group=>$data){$active=isset($data[2][$tab])||($tab==='records'&&$group==='education');$h.='<li class="dgs-menu-group"><details name="dgs-panel-groups" '.($active?'open':'').'><summary '.($active?'class="dgs-group-active"':'').'>'.dgs_portal_icon($data[1]).'<span>'.esc_html($data[0]).'</span><span class="dgs-group-chevron" aria-hidden="true">⌄</span></summary><ul class="dgs-menu-children">';
+   if($group==='settings'){$section=dgs_att_get('cm_section','sms');if(dgs_um_creation_context())$section='create';if(dgs_att_get('dg_tab')==='users')$section='users';if(!in_array($section,array('sms','users','create','school','gateway'),true))$section='sms';foreach(array('sms'=>'پیامک اولیا','users'=>'کاربران و دسترسی','create'=>'ساخت حساب','school'=>'تنظیمات مدرسه','gateway'=>'اتصال پیامک') as $key=>$label)$h.=dgs_panel_menu_link('communication',$label,$year,$tab==='communication'&&$section===$key,$key);}
+   else foreach($data[2] as $key=>$label)if(isset($links[$key]))$h.=dgs_panel_menu_link($key,$label,$year,$tab===$key||($tab==='records'&&$key==='education'));
+   $h.='</ul></details></li>';
+  }
+ }else foreach($links as $key=>$item)if($key!=='account')$h.=dgs_panel_menu_link($key,$item[0],$year,$tab===$key);
+ $h.='</ul><ul class="dg-menu dgs-menu-account">';if(isset($links['account']))$h.=dgs_panel_menu_link('account',count($links)===1?'تغییر رمز اولیه':'حساب من',$year,$tab==='account');
+ return $h.'<li><a href="'.esc_url(home_url('/')).'">'.dgs_portal_icon('overview').'<span>بازگشت به سایت</span></a></li><li><a href="'.esc_url(wp_logout_url(home_url('/'))).'">'.dgs_portal_icon('logout').'<span>خروج</span></a></li></ul>';
+}
+add_action('wp_footer',function(){if(dgs_is_role_portal())echo '<template data-dgs-panel-menu>'.dgs_panel_menu_html().'</template>';},10);
+add_action('wp_enqueue_scripts',function(){if(!dgs_is_role_portal())return;
+    wp_register_style('dgs-panel-menu',false,array(),DGS_VERSION);wp_enqueue_style('dgs-panel-menu');wp_add_inline_style('dgs-panel-menu','.dgs-role-portal .dg-content-page>h1,.dgs-role-portal .dg-footer,.dgs-role-portal .dge-portal>.dge-tabs{display:none}.dgs-role-portal .dg-sidebar{background:linear-gradient(155deg,#7d359e,#58217e 65%,#662f94);overflow:hidden}.dgs-role-portal .dg-sidebar:after{content:"";position:absolute;width:180%;height:50px;bottom:25px;right:-50%;border-radius:50%;border-top:15px solid #ffc628;transform:rotate(-26deg);pointer-events:none;opacity:.85}.dgs-role-portal .dg-sidebar nav{position:relative;z-index:1}.dgs-role-portal .dg-sidebar-bottom{visibility:hidden}');
+    wp_add_inline_style('dgs-panel-menu',file_get_contents(DGS_PATH.'assets/panel-groups.css'));
+    wp_register_script('dgs-panel-menu',false,array(),DGS_VERSION,true);wp_enqueue_script('dgs-panel-menu');wp_add_inline_script('dgs-panel-menu',"(function(){var t=document.querySelector('[data-dgs-panel-menu]'),n=document.querySelector('.dg-sidebar nav');if(t&&n){n.replaceChildren(t.content.cloneNode(true));document.body.classList.add('dga-nav-ready');n.addEventListener('toggle',function(e){if(e.target.tagName!=='DETAILS'||!e.target.open)return;n.querySelectorAll('.dgs-menu-group details').forEach(function(d){if(d!==e.target)d.open=false;});},true);}})();");
+});

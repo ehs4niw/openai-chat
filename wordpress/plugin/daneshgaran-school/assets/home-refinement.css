@@ -1,0 +1,123 @@
+/* Only home content. Sidebar, top bar and footer retain their existing layout. */
+.dgs-home-refined .dse-document,.dgs-home-refined .dsh-home{max-width:1440px;margin-inline:auto;min-width:0}
+.dgs-home-refined .dse-document .elementor-widget-heading .elementor-heading-title,.dgs-home-refined .dsh-home h2{font-size:clamp(20px,1.5vw,25px)!important;line-height:1.6}
+.dgs-home-refined .dse-document .elementor-widget-text-editor,.dgs-home-refined .dsh-home .dsh-card p{font-size:14px;line-height:1.9}
+.dgs-home-refined .dse-document .elementor-widget:not(:last-child){margin-bottom:10px}
+.dgs-home-refined .dse-document .elementor-button,.dgs-home-refined .dsh-home .dsh-soft-button{font-size:13px!important;padding:7px 19px!important;line-height:1.5;min-height:34px;box-sizing:border-box}
+.dgs-home-refined .dhr-hero .elementor-heading-title,.dgs-home-refined .dsh-home-hero h1{font-size:clamp(30px,3vw,46px)!important;line-height:1.45!important}
+.dgs-home-refined .dhr-hero .elementor-button,.dgs-home-refined .dsh-home-hero .dg-btn{min-width:245px;min-height:43px;font-size:15px!important;display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:9px 22px!important;border-radius:25px}
+.dgs-home-refined .dhr-hero .elementor-widget-button:last-child .elementor-button{background:transparent!important;color:#59217c!important;border:1px solid #7c34a1}
+.dgs-home-refined .dhr-hero .elementor-widget-text-editor{font-size:16px!important;line-height:1.9}
+.dgs-home-refined .dhr-hero .elementor-widget-text-editor:nth-child(2) .elementor-widget-container{background:#ead7f8;border-radius:24px;padding:5px 12px;width:fit-content;margin:auto;font-size:13px;font-weight:700}
+.dgs-home-refined .dhr-hero .elementor-widget-text-editor:nth-child(2) p{margin:0}
+.dgs-home-refined .dhr-hero .elementor-button-content-wrapper:before{content:'✎';font-size:21px;margin-left:8px}
+.dgs-home-refined .dhr-hero .elementor-widget-button:last-child .elementor-button-content-wrapper:before{content:'♧'}
+.dgs-home-refined .dhr-intro>.elementor-container>.elementor-column:first-child{width:62%}
+.dgs-home-refined .dhr-intro>.elementor-container>.elementor-column:last-child{width:38%}
+.dgs-home-refined .dhr-intro .dse-picture-frame{height:185px!important}
+.dgs-home-refined .dhr-intro .elementor-widget-button{text-align:left}
+.dgs-home-refined .dhr-intro .elementor-button-wrapper{text-align:left!important}
+.dgs-home-refined .dsh-intro{grid-template-columns:1.65fr 1fr}
+.dgs-home-refined .dhr-intro .elementor-heading-title:before,.dgs-home-refined .dhr-teachers .elementor-heading-title:before,.dgs-home-refined .dhr-featured .elementor-heading-title:before,.dgs-home-refined .dhr-staff .elementor-heading-title:before,.dgs-home-refined .dhr-news .elementor-heading-title:before{content:'';display:inline-block;width:25px;height:25px;background:currentColor;vertical-align:middle;margin-left:8px;mask:var(--dhr-icon) center/contain no-repeat}
+.dgs-home-refined .dhr-intro{--dhr-icon:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 5C9 2 5 2 2 3v16c4-1 7 0 10 2 3-2 6-3 10-2V3c-4-1-7 0-10 2v16' fill='none' stroke='black' stroke-width='1.8'/%3E%3C/svg%3E")}
+.dgs-home-refined :is(.dhr-teachers,.dhr-staff){--dhr-icon:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 3a3 3 0 1 0 0 6 3 3 0 0 0 0-6M5 5a2 2 0 1 0 0 4M19 5a2 2 0 1 1 0 4M6 21v-4c0-6 12-6 12 0v4M2 19v-4c0-2 2-3 4-3M22 19v-4c0-2-2-3-4-3' fill='none' stroke='black' stroke-width='1.8'/%3E%3C/svg%3E")}
+.dgs-home-refined .dhr-featured{--dhr-icon:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 2h10v7a5 5 0 0 1-10 0V2M7 4H2v4c0 3 3 4 5 4M17 4h5v4c0 3-3 4-5 4M12 14v6M7 22h10' fill='none' stroke='black' stroke-width='1.8'/%3E%3C/svg%3E")}
+.dgs-home-refined .dhr-news{--dhr-icon:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M3 3h18v18H3zM6 6h5v5H6zM14 6h4M14 10h4M6 15h12M6 18h12' fill='none' stroke='black' stroke-width='1.8'/%3E%3C/svg%3E")}
+@media(min-width:821px){
+.dgs-home-refined :is(.dhr-teachers,.dhr-featured)>.elementor-container>.elementor-column:first-child{width:21%}
+.dgs-home-refined :is(.dhr-teachers,.dhr-featured)>.elementor-container>.elementor-column:last-child{width:79%}
+.dgs-home-refined .dsh-teachers-strip,.dgs-home-refined .dsh-featured{grid-template-columns:21% minmax(0,1fr)}
+.dgs-home-refined .dsh-people-scroll>.dsh-person{flex:1 0 calc((100% - 64px)/5);max-width:none;min-width:0}
+.dgs-home-refined .dsh-people-scroll{gap:16px}
+.dgs-home-refined .dgg-track>.dgg-item{flex:1 0 calc((100% - 40px)/5)}
+}
+.dgs-home-refined .dsh-person-photo{width:clamp(76px,6.5vw,102px);height:clamp(76px,6.5vw,102px);border-width:3px}
+.dgs-home-refined .dsh-people-scroll .dsh-person h3{font-size:14px!important;line-height:1.8;margin:7px 0 3px}
+.dgs-home-refined .dsh-people-scroll .dsh-person>div>span{font-size:12px;padding:3px 12px;min-height:20px;box-sizing:border-box}
+.dgs-home-refined .dsh-people-scroll .dsh-person>div>span:empty{display:none}
+.dgs-home-refined .dsh-carousel{padding-inline:30px}
+.dgs-home-refined .dsh-carousel-controls button{width:28px;height:28px}
+.dgs-home-refined .dhr-teachers .elementor-widget-button .elementor-button{min-width:135px}
+.dgs-home-refined .dsh-star-content{display:grid;grid-template-columns:1.3fr 100px 1.2fr 80px;gap:18px;align-items:center;direction:rtl}
+.dgs-home-refined .dsh-star-content h3{font-size:22px!important}
+.dgs-home-refined .dsh-star-highlights{background:#eee3fa;border-radius:10px;padding:10px 12px}
+.dgs-home-refined .dsh-star-highlights:empty{display:none}
+.dgs-home-refined .dsh-star-highlights ul{padding:0;margin:0;list-style:none}
+.dgs-home-refined .dsh-star-highlights li{display:flex;align-items:center;gap:7px;font-size:13px;line-height:1.9}
+.dgs-home-refined .dsh-star-highlights svg{width:18px;height:18px;color:#8e30b9}
+.dgs-home-refined .dsh-star-content:not(:has(.dsh-star-highlights li,.dsh-star-highlights p)){grid-template-columns:100px 1fr 80px}
+.dgs-home-refined .dsh-award svg{width:74px!important;height:90px!important}
+.dgs-home-refined .dsh-star-photo{width:100px;height:118px}
+.dgs-home-refined .dsh-featured-tabs{margin-bottom:14px}
+.dgs-home-refined .dsh-news-row{min-height:70px;padding:7px 9px;gap:12px}
+.dgs-home-refined .dsh-news-photo{width:105px;height:65px}
+.dgs-home-refined .dsh-news-row h3{font-size:14px!important;font-weight:700;line-height:1.8}
+.dgs-home-refined .dsh-news-row small{font-size:12px}
+.dgs-home-refined .dhr-news .elementor-button{background:#fff0c7!important;border:1px solid #e3b947}
+.dgs-home-refined .dsh-staff-horizontal{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(235px,1fr))!important;gap:14px;width:100%}
+.dgs-home-refined .dsh-staff-horizontal .dsh-person{padding:12px;gap:12px;text-align:right;display:flex;align-items:center}
+.dgs-home-refined .dsh-staff-horizontal .dsh-person-photo{width:86px;height:98px;border-radius:16px}
+.dgs-home-refined .dsh-staff-horizontal .dsh-person h3{font-size:16px!important}
+.dgs-home-refined .dsh-staff-horizontal .dsh-person p{display:block;font-size:12px!important;line-height:1.8}
+.dgs-home-refined .dsh-staff-horizontal .dsh-person>div>span{font-size:13px}
+.dgs-home-refined .dgg-preview{grid-template-columns:21% minmax(0,1fr)}
+.dgs-home-refined .dgg-track{gap:10px}
+.dgs-home-refined .dgg-open{height:140px}
+.dgs-home-refined .dgg-item figcaption{font-size:12px}
+.dgs-home-refined .dsh-role-grid article{padding:16px 12px}
+.dgs-home-refined .dsh-role-grid h3{font-size:17px!important}
+.dgs-home-refined .dsh-role-grid p{font-size:13px!important}
+.dgs-home-refined .dsh-role-grid .dg-btn{min-height:35px;font-size:13px;padding:6px 20px}
+.dgs-home-refined .dgg-portal-card .elementor-widget-heading .elementor-heading-title{font-size:17px!important}
+.dgs-home-refined .dgg-portal-card .elementor-widget-text-editor{font-size:13px!important}
+.dgs-home-refined .dgg-portal-card .dse-icon svg{width:34px!important;height:34px!important}
+.dgs-home-refined .dgg-portal-card .elementor-button{min-width:135px}
+@media(max-width:820px){
+.dgs-home-refined .dsh-people-scroll>.dsh-person{flex:0 0 calc((100% - 32px)/3)}
+.dgs-home-refined .dgg-track>.dgg-item{flex:0 0 calc((100% - 20px)/3)}
+.dgs-home-refined .dsh-star-content{grid-template-columns:90px 1fr 65px;gap:12px}
+.dgs-home-refined .dsh-star-highlights{grid-column:1/-1;grid-row:2}
+.dgs-home-refined .dsh-star-photo{width:90px;height:110px}
+}
+@media(max-width:560px){
+.dgs-home-refined .dhr-intro>.elementor-container>.elementor-column{width:100%!important}
+.dgs-home-refined .dsh-people-scroll>.dsh-person{flex:0 0 calc((100% - 16px)/2)}
+.dgs-home-refined .dgg-preview{grid-template-columns:1fr}
+.dgs-home-refined .dgg-track>.dgg-item{flex:0 0 calc((100% - 10px)/2)}
+.dgs-home-refined .dsh-staff-horizontal{grid-template-columns:1fr!important}
+.dgs-home-refined .dsh-star-content,.dgs-home-refined .dsh-star-content:not(:has(.dsh-star-highlights li,.dsh-star-highlights p)){grid-template-columns:75px 1fr 48px;gap:10px}
+.dgs-home-refined .dsh-star-content h3{font-size:18px!important}
+.dgs-home-refined .dsh-star-photo{width:75px;height:95px}
+.dgs-home-refined .dsh-award svg{width:48px!important;height:65px!important}
+.dgs-home-refined .dhr-hero .elementor-heading-title{font-size:29px!important}
+}
+.dgs-home-refined .dhr-hero .elementor-button-content-wrapper:before{content:'';display:inline-block;width:21px;height:21px;background:currentColor;margin-left:8px;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='m4 16-1 5 5-1L21 7l-4-4L4 16M14 6l4 4M4 16l4 4' fill='none' stroke='black' stroke-width='2'/%3E%3C/svg%3E") center/contain no-repeat}
+.dgs-home-refined .dhr-hero .elementor-widget-button:last-child .elementor-button-content-wrapper:before{content:'';mask:var(--dhr-people-icon) center/contain no-repeat}
+.dgs-home-refined .dhr-hero{--dhr-people-icon:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 3a4 4 0 1 0 0 8 4 4 0 0 0 0-8M4 22v-3c0-7 16-7 16 0v3M20 4a3 3 0 0 1 0 6M22 14v7' fill='none' stroke='black' stroke-width='1.8'/%3E%3C/svg%3E")}
+.dgs-home-refined .dse-document .dhr-hero .elementor-heading-title{font-size:clamp(30px,3vw,46px)!important;line-height:1.45!important;font-weight:850}
+.dgs-home-refined .dhr-hero .elementor-widget-button:has(a[href*="counseling"]) .elementor-button{background:transparent!important;color:#59217c!important;border:1px solid #7c34a1}
+.dgs-home-refined .dhr-hero .elementor-widget-button:has(a[href*="counseling"]) .elementor-button-content-wrapper:before{mask:var(--dhr-people-icon) center/contain no-repeat}
+.dgs-home-refined .dhr-intro .elementor-widget-heading,.dgs-home-refined .dhr-news .elementor-widget-heading,.dgs-home-refined .dhr-staff .elementor-widget-heading{text-align:right!important}
+.dgs-home-refined .dhr-hero .elementor-widget-dgs_picture .dse-picture-frame{height:315px!important}
+@media(min-width:821px){.dgs-home-refined .dse-section:has(.dse-kind-teachers)>.elementor-container>.elementor-column:first-child{width:21%}.dgs-home-refined .dse-section:has(.dse-kind-teachers)>.elementor-container>.elementor-column:last-child{width:79%}}
+@media(max-width:560px){.dgs-home-refined .dse-document .dhr-hero .elementor-heading-title{font-size:29px!important}.dgs-home-refined .dhr-hero .elementor-widget-dgs_picture .dse-picture-frame{height:210px!important}.dgs-home-refined .dhr-intro .elementor-widget-button .elementor-button-wrapper{text-align:center!important}}
+.dgs-home-refined .dse-section:has(.dse-kind-teachers) .elementor-widget-button,.dgs-home-refined .dsh-teachers-strip .dsh-strip-copy>.dg-btn{display:none}
+.dgs-home-refined .dhr-teachers-more{display:flex;width:fit-content;margin:10px auto 0 0;font-size:13px;min-height:34px;gap:7px;padding:5px 15px;border-radius:20px}
+.dgs-home-refined .dhr-teachers-more svg{width:20px;height:20px}
+.dgs-home-refined .dse-section:has(.dse-kind-teachers) .elementor-heading-title:before{content:'';display:inline-block;width:25px;height:25px;background:currentColor;vertical-align:middle;margin-left:8px;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 3a3 3 0 1 0 0 6 3 3 0 0 0 0-6M5 5a2 2 0 1 0 0 4M19 5a2 2 0 1 1 0 4M6 21v-4c0-6 12-6 12 0v4M2 19v-4c0-2 2-3 4-3M22 19v-4c0-2-2-3-4-3' fill='none' stroke='black' stroke-width='1.8'/%3E%3C/svg%3E") center/contain no-repeat}
+
+/* Five reserved slots: never grow cards to fill unused slots, never shrink extras. */
+body.dg-site .dsh-carousel .dsh-people-scroll,body.dg-site .dgg-preview .dgg-track{display:grid!important;grid-template-columns:none!important;grid-auto-flow:column!important;grid-auto-columns:calc((100% - 48px)/5)!important;gap:12px!important;overflow-x:auto!important;scroll-snap-type:x mandatory;min-width:0;direction:rtl;align-items:start}
+body.dg-site .dsh-carousel .dsh-people-scroll>.dsh-person,body.dg-site .dgg-preview .dgg-track>.dgg-item{width:auto!important;min-width:0!important;max-width:none!important;margin:0!important;scroll-snap-align:start;box-sizing:border-box}
+body.dg-site .dgg-preview .dgg-open{height:auto!important;aspect-ratio:1.12;max-height:145px;border-radius:11px}
+body.dg-site .dgg-preview .dgg-open img{height:100%!important;width:100%!important;object-fit:cover!important;display:block}
+body.dg-site .dgg-empty-slot>div{aspect-ratio:1.12;border:1px dashed #dfccec;border-radius:11px;background:#fbf8fd;box-sizing:border-box;max-height:145px}
+body.dg-site .dsh-carousel .dsh-person-photo{width:80px!important;height:80px!important;max-width:100%;margin:0 auto 6px;border-radius:50%}
+body.dg-site .dsh-carousel .dsh-person h3{font-size:13px!important;line-height:1.65;margin:5px 0;overflow-wrap:anywhere}
+body.dg-site .dsh-carousel .dsh-person>div>span{font-size:11px;line-height:1.6;padding:2px 9px;background:#ecdcfa;border-radius:14px}
+body.dg-site .dsh-carousel .dhr-teachers-more{margin:10px auto 0 0!important;display:flex!important;width:fit-content;font-size:12px;min-height:30px;padding:5px 14px;border-radius:16px}
+body.dg-site .dsh-teachers-strip .dsh-strip-copy>.dg-btn{display:none!important}
+body.dg-site .dgg-controls button:disabled,body.dg-site .dsh-carousel-controls button:disabled{opacity:.35;cursor:default}
+@media(max-width:820px){body.dg-site .dsh-carousel .dsh-people-scroll,body.dg-site .dgg-preview .dgg-track{grid-auto-columns:calc((100% - 24px)/3)!important}}
+@media(max-width:560px){body.dg-site .dsh-carousel .dsh-people-scroll,body.dg-site .dgg-preview .dgg-track{grid-auto-columns:calc((100% - 12px)/2)!important}}
+body.dg-site .dgg-preview .dgg-item figcaption{display:none}

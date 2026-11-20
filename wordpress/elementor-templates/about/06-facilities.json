@@ -1,0 +1,645 @@
+{
+    "version": "0.4",
+    "title": "معرفی مدرسه — امکانات مدرسه",
+    "type": "section",
+    "content": [
+        {
+            "id": "7f8bd4e",
+            "elType": "section",
+            "settings": {
+                "content_width": {
+                    "unit": "px",
+                    "size": 1200
+                },
+                "layout": "full_width",
+                "gap": "no",
+                "column_position": "middle",
+                "css_classes": "dse-section det-section det-facilities-title",
+                "margin": {
+                    "unit": "px",
+                    "top": "0",
+                    "right": "0",
+                    "bottom": "12",
+                    "left": "0",
+                    "isLinked": false
+                },
+                "padding": {
+                    "unit": "px",
+                    "top": "14",
+                    "right": "14",
+                    "bottom": "14",
+                    "left": "14",
+                    "isLinked": true
+                },
+                "background_background": "gradient",
+                "background_color": "#ffffff",
+                "background_color_b": "#f6efff",
+                "background_gradient_angle": {
+                    "unit": "deg",
+                    "size": 125
+                },
+                "border_border": "solid",
+                "border_width": {
+                    "unit": "px",
+                    "top": "1",
+                    "right": "1",
+                    "bottom": "1",
+                    "left": "1",
+                    "isLinked": true
+                },
+                "border_color": "#dac0ee",
+                "border_radius": {
+                    "unit": "px",
+                    "top": "15",
+                    "right": "15",
+                    "bottom": "15",
+                    "left": "15",
+                    "isLinked": true
+                },
+                "custom_css": "selector{direction:rtl;box-sizing:border-box;overflow:hidden;color:#45215e;font-family:DgsPortal,Estedad,Tahoma,sans-serif;min-width:0}\nselector>.elementor-container{display:grid!important;grid-template-columns:1fr;gap:14px;align-items:center;max-width:none!important}\nselector>.elementor-container>.elementor-column{width:auto!important;min-width:0}\nselector .elementor-widget-wrap{min-width:0;align-content:center;box-sizing:border-box}\nselector .elementor-widget:not(:last-child){margin-bottom:8px}\nselector p{margin:0;line-height:1.9}\nselector h1,selector h2,selector h3{margin:0;line-height:1.65;overflow-wrap:normal!important}\nselector a{text-decoration:none}\nselector svg{flex-shrink:0}\nselector .elementor-button{line-height:1.7;min-height:0;box-shadow:none}\nselector .elementor-widget-text-editor{font-size:13px;line-height:1.9}\nselector .dse-live,selector .dsh-carousel,selector .dsh-featured-main{min-width:0}\nselector .dg-empty-inline{font-size:12px;padding:16px;border-radius:10px}\n@media(max-width:767px){selector>.elementor-container{grid-template-columns:1fr!important;gap:14px}selector{padding:14px!important}selector .elementor-heading-title{overflow-wrap:normal!important}}\nselector{margin-bottom:0!important;border-bottom:0!important;border-radius:14px 14px 0 0!important;padding-bottom:4px!important}"
+            },
+            "elements": [
+                {
+                    "id": "426a363",
+                    "elType": "column",
+                    "settings": {
+                        "_column_size": 100,
+                        "padding": {
+                            "unit": "px",
+                            "top": "0",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": true
+                        },
+                        "_inline_size": 100,
+                        "css_classes": ""
+                    },
+                    "elements": [
+                        {
+                            "id": "98faf25",
+                            "elType": "widget",
+                            "widgetType": "heading",
+                            "settings": {
+                                "title": "امکانات و خدمات آموزشی",
+                                "header_size": "h2",
+                                "title_color": "#511c72",
+                                "align": "right",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 21,
+                                    "unit": "px"
+                                },
+                                "typography_font_size_mobile": {
+                                    "size": 19,
+                                    "unit": "px"
+                                },
+                                "typography_font_weight": "800",
+                                "typography_line_height": {
+                                    "size": 1.6,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "fdf0a8b",
+            "elType": "section",
+            "settings": {
+                "content_width": {
+                    "unit": "px",
+                    "size": 1200
+                },
+                "layout": "full_width",
+                "gap": "no",
+                "column_position": "middle",
+                "css_classes": "dse-section det-section det-facilities",
+                "margin": {
+                    "unit": "px",
+                    "top": "0",
+                    "right": "0",
+                    "bottom": "12",
+                    "left": "0",
+                    "isLinked": false
+                },
+                "padding": {
+                    "unit": "px",
+                    "top": "14",
+                    "right": "14",
+                    "bottom": "14",
+                    "left": "14",
+                    "isLinked": true
+                },
+                "background_background": "gradient",
+                "background_color": "#ffffff",
+                "background_color_b": "#f6efff",
+                "background_gradient_angle": {
+                    "unit": "deg",
+                    "size": 125
+                },
+                "border_border": "solid",
+                "border_width": {
+                    "unit": "px",
+                    "top": "1",
+                    "right": "1",
+                    "bottom": "1",
+                    "left": "1",
+                    "isLinked": true
+                },
+                "border_color": "#dac0ee",
+                "border_radius": {
+                    "unit": "px",
+                    "top": "15",
+                    "right": "15",
+                    "bottom": "15",
+                    "left": "15",
+                    "isLinked": true
+                },
+                "custom_css": "selector{direction:rtl;box-sizing:border-box;overflow:hidden;color:#45215e;font-family:DgsPortal,Estedad,Tahoma,sans-serif;min-width:0}\nselector>.elementor-container{display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr));gap:14px;align-items:center;max-width:none!important}\nselector>.elementor-container>.elementor-column{width:auto!important;min-width:0}\nselector .elementor-widget-wrap{min-width:0;align-content:center;box-sizing:border-box}\nselector .elementor-widget:not(:last-child){margin-bottom:8px}\nselector p{margin:0;line-height:1.9}\nselector h1,selector h2,selector h3{margin:0;line-height:1.65;overflow-wrap:normal!important}\nselector a{text-decoration:none}\nselector svg{flex-shrink:0}\nselector .elementor-button{line-height:1.7;min-height:0;box-shadow:none}\nselector .elementor-widget-text-editor{font-size:13px;line-height:1.9}\nselector .dse-live,selector .dsh-carousel,selector .dsh-featured-main{min-width:0}\nselector .dg-empty-inline{font-size:12px;padding:16px;border-radius:10px}\n@media(max-width:767px){selector>.elementor-container{grid-template-columns:1fr!important;gap:14px}selector{padding:14px!important}selector .elementor-heading-title{overflow-wrap:normal!important}}\nselector{border-top:0!important;border-radius:0 0 14px 14px!important}selector .det-facility>.elementor-widget-wrap{padding:10px 5px;border:1px solid #e2d0ee;border-radius:13px;background:#ffffff88;text-align:center}selector .dse-icon{text-align:center!important}selector .elementor-heading-title{font-size:14px!important}selector .elementor-widget:not(:last-child){margin-bottom:3px}@media(max-width:1024px){selector>.elementor-container{grid-template-columns:repeat(3,minmax(0,1fr))!important}}@media(max-width:767px){selector>.elementor-container{grid-template-columns:repeat(2,minmax(0,1fr))!important}}"
+            },
+            "elements": [
+                {
+                    "id": "411bf80",
+                    "elType": "column",
+                    "settings": {
+                        "_column_size": 16.666666666666668,
+                        "padding": {
+                            "unit": "px",
+                            "top": "0",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": true
+                        },
+                        "_inline_size": 16.666666666666668,
+                        "css_classes": "det-facility"
+                    },
+                    "elements": [
+                        {
+                            "id": "e7355b4",
+                            "elType": "widget",
+                            "widgetType": "dgs_icon",
+                            "settings": {
+                                "icon_name": "building",
+                                "align": "right",
+                                "size": {
+                                    "size": 25,
+                                    "unit": "px"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "0642109",
+                            "elType": "widget",
+                            "widgetType": "heading",
+                            "settings": {
+                                "title": "کلاس‌های هوشمند",
+                                "header_size": "h3",
+                                "title_color": "#511c72",
+                                "align": "center",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 15,
+                                    "unit": "px"
+                                },
+                                "typography_font_size_mobile": {
+                                    "size": 19,
+                                    "unit": "px"
+                                },
+                                "typography_font_weight": "800",
+                                "typography_line_height": {
+                                    "size": 1.6,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "5ac1a2c",
+                            "elType": "widget",
+                            "widgetType": "text-editor",
+                            "settings": {
+                                "editor": "<p>و مجهز</p>\n",
+                                "align": "center",
+                                "text_color": "#654879",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 12,
+                                    "unit": "px"
+                                },
+                                "typography_line_height": {
+                                    "size": 1.9,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        }
+                    ]
+                },
+                {
+                    "id": "f103225",
+                    "elType": "column",
+                    "settings": {
+                        "_column_size": 16.666666666666668,
+                        "padding": {
+                            "unit": "px",
+                            "top": "0",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": true
+                        },
+                        "_inline_size": 16.666666666666668,
+                        "css_classes": "det-facility"
+                    },
+                    "elements": [
+                        {
+                            "id": "abe85e1",
+                            "elType": "widget",
+                            "widgetType": "dgs_icon",
+                            "settings": {
+                                "icon_name": "education",
+                                "align": "right",
+                                "size": {
+                                    "size": 25,
+                                    "unit": "px"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "23d7604",
+                            "elType": "widget",
+                            "widgetType": "heading",
+                            "settings": {
+                                "title": "آزمایشگاه‌های علوم",
+                                "header_size": "h3",
+                                "title_color": "#511c72",
+                                "align": "center",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 15,
+                                    "unit": "px"
+                                },
+                                "typography_font_size_mobile": {
+                                    "size": 19,
+                                    "unit": "px"
+                                },
+                                "typography_font_weight": "800",
+                                "typography_line_height": {
+                                    "size": 1.6,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "c63fcd8",
+                            "elType": "widget",
+                            "widgetType": "text-editor",
+                            "settings": {
+                                "editor": "<p>فیزیک، شیمی، زیست</p>\n",
+                                "align": "center",
+                                "text_color": "#654879",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 12,
+                                    "unit": "px"
+                                },
+                                "typography_line_height": {
+                                    "size": 1.9,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        }
+                    ]
+                },
+                {
+                    "id": "7beff3b",
+                    "elType": "column",
+                    "settings": {
+                        "_column_size": 16.666666666666668,
+                        "padding": {
+                            "unit": "px",
+                            "top": "0",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": true
+                        },
+                        "_inline_size": 16.666666666666668,
+                        "css_classes": "det-facility"
+                    },
+                    "elements": [
+                        {
+                            "id": "55dc0b6",
+                            "elType": "widget",
+                            "widgetType": "dgs_icon",
+                            "settings": {
+                                "icon_name": "study",
+                                "align": "right",
+                                "size": {
+                                    "size": 25,
+                                    "unit": "px"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "07dba4e",
+                            "elType": "widget",
+                            "widgetType": "heading",
+                            "settings": {
+                                "title": "کتابخانه تخصصی",
+                                "header_size": "h3",
+                                "title_color": "#511c72",
+                                "align": "center",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 15,
+                                    "unit": "px"
+                                },
+                                "typography_font_size_mobile": {
+                                    "size": 19,
+                                    "unit": "px"
+                                },
+                                "typography_font_weight": "800",
+                                "typography_line_height": {
+                                    "size": 1.6,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "30c0022",
+                            "elType": "widget",
+                            "widgetType": "text-editor",
+                            "settings": {
+                                "editor": "<p>و منابع کمک‌آموزشی</p>\n",
+                                "align": "center",
+                                "text_color": "#654879",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 12,
+                                    "unit": "px"
+                                },
+                                "typography_line_height": {
+                                    "size": 1.9,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        }
+                    ]
+                },
+                {
+                    "id": "d469b8b",
+                    "elType": "column",
+                    "settings": {
+                        "_column_size": 16.666666666666668,
+                        "padding": {
+                            "unit": "px",
+                            "top": "0",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": true
+                        },
+                        "_inline_size": 16.666666666666668,
+                        "css_classes": "det-facility"
+                    },
+                    "elements": [
+                        {
+                            "id": "403175c",
+                            "elType": "widget",
+                            "widgetType": "dgs_icon",
+                            "settings": {
+                                "icon_name": "users",
+                                "align": "right",
+                                "size": {
+                                    "size": 25,
+                                    "unit": "px"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "25f595a",
+                            "elType": "widget",
+                            "widgetType": "heading",
+                            "settings": {
+                                "title": "سالن مطالعه",
+                                "header_size": "h3",
+                                "title_color": "#511c72",
+                                "align": "center",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 15,
+                                    "unit": "px"
+                                },
+                                "typography_font_size_mobile": {
+                                    "size": 19,
+                                    "unit": "px"
+                                },
+                                "typography_font_weight": "800",
+                                "typography_line_height": {
+                                    "size": 1.6,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "2034050",
+                            "elType": "widget",
+                            "widgetType": "text-editor",
+                            "settings": {
+                                "editor": "<p>و فضای پژوهشی</p>\n",
+                                "align": "center",
+                                "text_color": "#654879",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 12,
+                                    "unit": "px"
+                                },
+                                "typography_line_height": {
+                                    "size": 1.9,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        }
+                    ]
+                },
+                {
+                    "id": "58d9818",
+                    "elType": "column",
+                    "settings": {
+                        "_column_size": 16.666666666666668,
+                        "padding": {
+                            "unit": "px",
+                            "top": "0",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": true
+                        },
+                        "_inline_size": 16.666666666666668,
+                        "css_classes": "det-facility"
+                    },
+                    "elements": [
+                        {
+                            "id": "e03aa70",
+                            "elType": "widget",
+                            "widgetType": "dgs_icon",
+                            "settings": {
+                                "icon_name": "target",
+                                "align": "right",
+                                "size": {
+                                    "size": 25,
+                                    "unit": "px"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "cccf584",
+                            "elType": "widget",
+                            "widgetType": "heading",
+                            "settings": {
+                                "title": "سالن ورزشی",
+                                "header_size": "h3",
+                                "title_color": "#511c72",
+                                "align": "center",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 15,
+                                    "unit": "px"
+                                },
+                                "typography_font_size_mobile": {
+                                    "size": 19,
+                                    "unit": "px"
+                                },
+                                "typography_font_weight": "800",
+                                "typography_line_height": {
+                                    "size": 1.6,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "30823a6",
+                            "elType": "widget",
+                            "widgetType": "text-editor",
+                            "settings": {
+                                "editor": "<p>و امکانات تربیت‌بدنی</p>\n",
+                                "align": "center",
+                                "text_color": "#654879",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 12,
+                                    "unit": "px"
+                                },
+                                "typography_line_height": {
+                                    "size": 1.9,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        }
+                    ]
+                },
+                {
+                    "id": "4354bfc",
+                    "elType": "column",
+                    "settings": {
+                        "_column_size": 16.666666666666668,
+                        "padding": {
+                            "unit": "px",
+                            "top": "0",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": true
+                        },
+                        "_inline_size": 16.666666666666668,
+                        "css_classes": "det-facility"
+                    },
+                    "elements": [
+                        {
+                            "id": "56b0998",
+                            "elType": "widget",
+                            "widgetType": "dgs_icon",
+                            "settings": {
+                                "icon_name": "home",
+                                "align": "right",
+                                "size": {
+                                    "size": 25,
+                                    "unit": "px"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "030acd7",
+                            "elType": "widget",
+                            "widgetType": "heading",
+                            "settings": {
+                                "title": "فضای سبز",
+                                "header_size": "h3",
+                                "title_color": "#511c72",
+                                "align": "center",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 15,
+                                    "unit": "px"
+                                },
+                                "typography_font_size_mobile": {
+                                    "size": 19,
+                                    "unit": "px"
+                                },
+                                "typography_font_weight": "800",
+                                "typography_line_height": {
+                                    "size": 1.6,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "ba6b32a",
+                            "elType": "widget",
+                            "widgetType": "text-editor",
+                            "settings": {
+                                "editor": "<p>و حیاط دلنشین</p>\n",
+                                "align": "center",
+                                "text_color": "#654879",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 12,
+                                    "unit": "px"
+                                },
+                                "typography_line_height": {
+                                    "size": 1.9,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "page_settings": {
+        "hide_title": "yes"
+    }
+}
