@@ -1,0 +1,1797 @@
+{
+    "version": "0.4",
+    "title": "دانشگران — معرفی مدرسه کامل",
+    "type": "page",
+    "content": [
+        {
+            "id": "5b62347",
+            "elType": "section",
+            "settings": {
+                "content_width": {
+                    "unit": "px",
+                    "size": 1200
+                },
+                "layout": "full_width",
+                "gap": "no",
+                "column_position": "middle",
+                "css_classes": "dse-section det-section det-about-hero",
+                "margin": {
+                    "unit": "px",
+                    "top": "0",
+                    "right": "0",
+                    "bottom": "12",
+                    "left": "0",
+                    "isLinked": false
+                },
+                "padding": {
+                    "unit": "px",
+                    "top": "14",
+                    "right": "14",
+                    "bottom": "14",
+                    "left": "14",
+                    "isLinked": true
+                },
+                "background_background": "gradient",
+                "background_color": "#ffffff",
+                "background_color_b": "#f6efff",
+                "background_gradient_angle": {
+                    "unit": "deg",
+                    "size": 125
+                },
+                "border_border": "solid",
+                "border_width": {
+                    "unit": "px",
+                    "top": "1",
+                    "right": "1",
+                    "bottom": "1",
+                    "left": "1",
+                    "isLinked": true
+                },
+                "border_color": "#dac0ee",
+                "border_radius": {
+                    "unit": "px",
+                    "top": "15",
+                    "right": "15",
+                    "bottom": "15",
+                    "left": "15",
+                    "isLinked": true
+                },
+                "custom_css": "selector{direction:rtl;box-sizing:border-box;overflow:hidden;color:#45215e;font-family:DgsPortal,Estedad,Tahoma,sans-serif;min-width:0}\nselector>.elementor-container{display:grid!important;grid-template-columns:1fr 1.15fr;gap:14px;align-items:center;max-width:none!important}\nselector>.elementor-container>.elementor-column{width:auto!important;min-width:0}\nselector .elementor-widget-wrap{min-width:0;align-content:center;box-sizing:border-box}\nselector .elementor-widget:not(:last-child){margin-bottom:8px}\nselector p{margin:0;line-height:1.9}\nselector h1,selector h2,selector h3{margin:0;line-height:1.65;overflow-wrap:normal!important}\nselector a{text-decoration:none}\nselector svg{flex-shrink:0}\nselector .elementor-button{line-height:1.7;min-height:0;box-shadow:none}\nselector .elementor-widget-text-editor{font-size:13px;line-height:1.9}\nselector .dse-live,selector .dsh-carousel,selector .dsh-featured-main{min-width:0}\nselector .dg-empty-inline{font-size:12px;padding:16px;border-radius:10px}\n@media(max-width:767px){selector>.elementor-container{grid-template-columns:1fr!important;gap:14px}selector{padding:14px!important}selector .elementor-heading-title{overflow-wrap:normal!important}}\nselector .dsh-reference{background-image:url('https://daneshgaranedu.ir/wp-content/plugins/daneshgaran-school/assets/showcase-reference.jpg');background-size:193.39% 524.8%;background-position:0 5.18%;background-repeat:no-repeat}selector .dse-picture-frame{mask-image:none;min-height:0;max-height:none}\nselector{padding:0!important}selector>.elementor-container{gap:0}selector>.elementor-container>.elementor-column:first-child>.elementor-widget-wrap{padding:22px}selector .dse-picture-frame{mask-image:linear-gradient(to right,#000 70%,transparent)}@media(max-width:767px){selector .dse-picture-frame{mask-image:none}}"
+            },
+            "elements": [
+                {
+                    "id": "68e09d8",
+                    "elType": "column",
+                    "settings": {
+                        "_column_size": 47,
+                        "padding": {
+                            "unit": "px",
+                            "top": "0",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": true
+                        },
+                        "_inline_size": 47,
+                        "css_classes": ""
+                    },
+                    "elements": [
+                        {
+                            "id": "a3b9cc8",
+                            "elType": "widget",
+                            "widgetType": "heading",
+                            "settings": {
+                                "title": "معرفی مدرسه و کادر آموزشی",
+                                "header_size": "h1",
+                                "title_color": "#511c72",
+                                "align": "right",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 33,
+                                    "unit": "px"
+                                },
+                                "typography_font_size_mobile": {
+                                    "size": 28,
+                                    "unit": "px"
+                                },
+                                "typography_font_weight": "800",
+                                "typography_line_height": {
+                                    "size": 1.6,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "88dd3b6",
+                            "elType": "widget",
+                            "widgetType": "text-editor",
+                            "settings": {
+                                "editor": "<p>آشنایی با مدرسه دانشگران، رسالت آموزشی، امکانات و تیم آموزشی در مقطع متوسطه دوم (پایه‌های دهم، یازدهم و دوازدهم)</p>\n",
+                                "align": "right",
+                                "text_color": "#654879",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 16,
+                                    "unit": "px"
+                                },
+                                "typography_line_height": {
+                                    "size": 1.9,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        }
+                    ]
+                },
+                {
+                    "id": "ad5553f",
+                    "elType": "column",
+                    "settings": {
+                        "_column_size": 53,
+                        "padding": {
+                            "unit": "px",
+                            "top": "0",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": true
+                        },
+                        "_inline_size": 53,
+                        "css_classes": ""
+                    },
+                    "elements": [
+                        {
+                            "id": "ce29ed2",
+                            "elType": "widget",
+                            "widgetType": "dgs_picture",
+                            "settings": {
+                                "image": {
+                                    "id": 0,
+                                    "url": ""
+                                },
+                                "reference": "hero",
+                                "alt": "نمای مدرسه؛ تصویر نمایشی قابل جایگزینی",
+                                "caption": "",
+                                "priority": "yes",
+                                "height": {
+                                    "size": 270,
+                                    "unit": "px"
+                                },
+                                "height_mobile": {
+                                    "size": 210,
+                                    "unit": "px"
+                                },
+                                "radius": {
+                                    "size": 14,
+                                    "unit": "px"
+                                }
+                            },
+                            "elements": []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "9441c8a",
+            "elType": "section",
+            "settings": {
+                "content_width": {
+                    "unit": "px",
+                    "size": 1200
+                },
+                "layout": "full_width",
+                "gap": "no",
+                "column_position": "middle",
+                "css_classes": "dse-section det-section det-overview",
+                "margin": {
+                    "unit": "px",
+                    "top": "0",
+                    "right": "0",
+                    "bottom": "12",
+                    "left": "0",
+                    "isLinked": false
+                },
+                "padding": {
+                    "unit": "px",
+                    "top": "14",
+                    "right": "14",
+                    "bottom": "14",
+                    "left": "14",
+                    "isLinked": true
+                },
+                "background_background": "gradient",
+                "background_color": "#ffffff",
+                "background_color_b": "#f6efff",
+                "background_gradient_angle": {
+                    "unit": "deg",
+                    "size": 125
+                },
+                "border_border": "solid",
+                "border_width": {
+                    "unit": "px",
+                    "top": "1",
+                    "right": "1",
+                    "bottom": "1",
+                    "left": "1",
+                    "isLinked": true
+                },
+                "border_color": "#dac0ee",
+                "border_radius": {
+                    "unit": "px",
+                    "top": "15",
+                    "right": "15",
+                    "bottom": "15",
+                    "left": "15",
+                    "isLinked": true
+                },
+                "custom_css": "selector{direction:rtl;box-sizing:border-box;overflow:hidden;color:#45215e;font-family:DgsPortal,Estedad,Tahoma,sans-serif;min-width:0}\nselector>.elementor-container{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;align-items:center;max-width:none!important}\nselector>.elementor-container>.elementor-column{width:auto!important;min-width:0}\nselector .elementor-widget-wrap{min-width:0;align-content:center;box-sizing:border-box}\nselector .elementor-widget:not(:last-child){margin-bottom:8px}\nselector p{margin:0;line-height:1.9}\nselector h1,selector h2,selector h3{margin:0;line-height:1.65;overflow-wrap:normal!important}\nselector a{text-decoration:none}\nselector svg{flex-shrink:0}\nselector .elementor-button{line-height:1.7;min-height:0;box-shadow:none}\nselector .elementor-widget-text-editor{font-size:13px;line-height:1.9}\nselector .dse-live,selector .dsh-carousel,selector .dsh-featured-main{min-width:0}\nselector .dg-empty-inline{font-size:12px;padding:16px;border-radius:10px}\n@media(max-width:767px){selector>.elementor-container{grid-template-columns:1fr!important;gap:14px}selector{padding:14px!important}selector .elementor-heading-title{overflow-wrap:normal!important}}\nselector>.elementor-container{align-items:stretch}selector .det-overview-card>.elementor-widget-wrap{padding:14px;border:1px solid #dbc1ed;border-radius:14px;background:#f8f0fd}selector .elementor-heading-title{font-size:19px!important}"
+            },
+            "elements": [
+                {
+                    "id": "be0917f",
+                    "elType": "column",
+                    "settings": {
+                        "_column_size": 34,
+                        "padding": {
+                            "unit": "px",
+                            "top": "0",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": true
+                        },
+                        "_inline_size": 34,
+                        "css_classes": "det-overview-card"
+                    },
+                    "elements": [
+                        {
+                            "id": "a678839",
+                            "elType": "widget",
+                            "widgetType": "dgs_icon",
+                            "settings": {
+                                "icon_name": "building",
+                                "align": "right",
+                                "size": {
+                                    "size": 25,
+                                    "unit": "px"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "1f62e20",
+                            "elType": "widget",
+                            "widgetType": "heading",
+                            "settings": {
+                                "title": "درباره مدرسه دانشگران",
+                                "header_size": "h2",
+                                "title_color": "#511c72",
+                                "align": "right",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 21,
+                                    "unit": "px"
+                                },
+                                "typography_font_size_mobile": {
+                                    "size": 19,
+                                    "unit": "px"
+                                },
+                                "typography_font_weight": "800",
+                                "typography_line_height": {
+                                    "size": 1.6,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "d7f7af1",
+                            "elType": "widget",
+                            "widgetType": "text-editor",
+                            "settings": {
+                                "editor": "<p>مدرسه دانشگران یک دبیرستان دوره دوم (پایه‌های دهم، یازدهم و دوازدهم) با رویکرد علمی، مهارتی و تربیتی است که با همراهی کادر آموزشی و محیطی امن و پویا، مسیر رشد و موفقیت دانش‌آموزان را هموار می‌سازد.</p>\n",
+                                "align": "right",
+                                "text_color": "#654879",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 13,
+                                    "unit": "px"
+                                },
+                                "typography_line_height": {
+                                    "size": 1.9,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        }
+                    ]
+                },
+                {
+                    "id": "ed11729",
+                    "elType": "column",
+                    "settings": {
+                        "_column_size": 33,
+                        "padding": {
+                            "unit": "px",
+                            "top": "0",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": true
+                        },
+                        "_inline_size": 33,
+                        "css_classes": "det-overview-card"
+                    },
+                    "elements": [
+                        {
+                            "id": "c308da3",
+                            "elType": "widget",
+                            "widgetType": "dgs_icon",
+                            "settings": {
+                                "icon_name": "target",
+                                "align": "right",
+                                "size": {
+                                    "size": 25,
+                                    "unit": "px"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "ff306c1",
+                            "elType": "widget",
+                            "widgetType": "heading",
+                            "settings": {
+                                "title": "رسالت ما",
+                                "header_size": "h2",
+                                "title_color": "#511c72",
+                                "align": "right",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 21,
+                                    "unit": "px"
+                                },
+                                "typography_font_size_mobile": {
+                                    "size": 19,
+                                    "unit": "px"
+                                },
+                                "typography_font_weight": "800",
+                                "typography_line_height": {
+                                    "size": 1.6,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "2f8f612",
+                            "elType": "widget",
+                            "widgetType": "text-editor",
+                            "settings": {
+                                "editor": "<p>پرورش دانش‌آموزانی دانا، خلاق، مسئولیت‌پذیر و آماده برای موفقیت در دانشگاه و زندگی اجتماعی، با تکیه بر آموزش باکیفیت، تربیت اخلاقی و فضای آموزشی پویا و حمایتگر.</p>\n",
+                                "align": "right",
+                                "text_color": "#654879",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 13,
+                                    "unit": "px"
+                                },
+                                "typography_line_height": {
+                                    "size": 1.9,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        }
+                    ]
+                },
+                {
+                    "id": "1896466",
+                    "elType": "column",
+                    "settings": {
+                        "_column_size": 33,
+                        "padding": {
+                            "unit": "px",
+                            "top": "0",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": true
+                        },
+                        "_inline_size": 33,
+                        "css_classes": "det-overview-card"
+                    },
+                    "elements": [
+                        {
+                            "id": "a21d033",
+                            "elType": "widget",
+                            "widgetType": "dgs_icon",
+                            "settings": {
+                                "icon_name": "education",
+                                "align": "right",
+                                "size": {
+                                    "size": 25,
+                                    "unit": "px"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "123007f",
+                            "elType": "widget",
+                            "widgetType": "heading",
+                            "settings": {
+                                "title": "پایه‌های تحصیلی",
+                                "header_size": "h2",
+                                "title_color": "#511c72",
+                                "align": "right",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 21,
+                                    "unit": "px"
+                                },
+                                "typography_font_size_mobile": {
+                                    "size": 19,
+                                    "unit": "px"
+                                },
+                                "typography_font_weight": "800",
+                                "typography_line_height": {
+                                    "size": 1.6,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "37b4619",
+                            "elType": "widget",
+                            "widgetType": "text-editor",
+                            "settings": {
+                                "editor": "<p>متوسطه دوم (دوره دوم دبیرستان)</p>\n",
+                                "align": "center",
+                                "text_color": "#654879",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 13,
+                                    "unit": "px"
+                                },
+                                "typography_line_height": {
+                                    "size": 1.9,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "3af6de0",
+                            "elType": "widget",
+                            "widgetType": "text-editor",
+                            "settings": {
+                                "editor": "<p>پایه دهم     |     پایه یازدهم     |     پایه دوازدهم</p>\n",
+                                "align": "center",
+                                "text_color": "#654879",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 14,
+                                    "unit": "px"
+                                },
+                                "typography_line_height": {
+                                    "size": 1.9,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "0a43ff0",
+            "elType": "section",
+            "settings": {
+                "content_width": {
+                    "unit": "px",
+                    "size": 1200
+                },
+                "layout": "full_width",
+                "gap": "no",
+                "column_position": "middle",
+                "css_classes": "dse-section det-section det-director",
+                "margin": {
+                    "unit": "px",
+                    "top": "0",
+                    "right": "0",
+                    "bottom": "12",
+                    "left": "0",
+                    "isLinked": false
+                },
+                "padding": {
+                    "unit": "px",
+                    "top": "14",
+                    "right": "14",
+                    "bottom": "14",
+                    "left": "14",
+                    "isLinked": true
+                },
+                "background_background": "gradient",
+                "background_color": "#ffffff",
+                "background_color_b": "#f6efff",
+                "background_gradient_angle": {
+                    "unit": "deg",
+                    "size": 125
+                },
+                "border_border": "solid",
+                "border_width": {
+                    "unit": "px",
+                    "top": "1",
+                    "right": "1",
+                    "bottom": "1",
+                    "left": "1",
+                    "isLinked": true
+                },
+                "border_color": "#dac0ee",
+                "border_radius": {
+                    "unit": "px",
+                    "top": "15",
+                    "right": "15",
+                    "bottom": "15",
+                    "left": "15",
+                    "isLinked": true
+                },
+                "custom_css": "selector{direction:rtl;box-sizing:border-box;overflow:hidden;color:#45215e;font-family:DgsPortal,Estedad,Tahoma,sans-serif;min-width:0}\nselector>.elementor-container{display:grid!important;grid-template-columns:1fr;gap:14px;align-items:center;max-width:none!important}\nselector>.elementor-container>.elementor-column{width:auto!important;min-width:0}\nselector .elementor-widget-wrap{min-width:0;align-content:center;box-sizing:border-box}\nselector .elementor-widget:not(:last-child){margin-bottom:8px}\nselector p{margin:0;line-height:1.9}\nselector h1,selector h2,selector h3{margin:0;line-height:1.65;overflow-wrap:normal!important}\nselector a{text-decoration:none}\nselector svg{flex-shrink:0}\nselector .elementor-button{line-height:1.7;min-height:0;box-shadow:none}\nselector .elementor-widget-text-editor{font-size:13px;line-height:1.9}\nselector .dse-live,selector .dsh-carousel,selector .dsh-featured-main{min-width:0}\nselector .dg-empty-inline{font-size:12px;padding:16px;border-radius:10px}\n@media(max-width:767px){selector>.elementor-container{grid-template-columns:1fr!important;gap:14px}selector{padding:14px!important}selector .elementor-heading-title{overflow-wrap:normal!important}}\nselector .dsh-director-row{display:flex;align-items:center;gap:20px}selector .dsh-director-photo{width:225px;height:160px;border-radius:12px;flex-shrink:0;overflow:hidden}selector .dsh-director-photo img{width:100%;height:100%;object-fit:cover}selector .dsh-director-row h3{font-size:22px!important}selector .dsh-director-row p{font-size:14px}@media(max-width:767px){selector .dsh-director-row{flex-direction:column}selector .dsh-director-photo{width:100%;height:220px}} "
+            },
+            "elements": [
+                {
+                    "id": "7c1e26a",
+                    "elType": "column",
+                    "settings": {
+                        "_column_size": 100,
+                        "padding": {
+                            "unit": "px",
+                            "top": "0",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": true
+                        },
+                        "_inline_size": 100,
+                        "css_classes": ""
+                    },
+                    "elements": [
+                        {
+                            "id": "d8e8131",
+                            "elType": "widget",
+                            "widgetType": "heading",
+                            "settings": {
+                                "title": "مدیر مدرسه",
+                                "header_size": "h2",
+                                "title_color": "#511c72",
+                                "align": "right",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 21,
+                                    "unit": "px"
+                                },
+                                "typography_font_size_mobile": {
+                                    "size": 19,
+                                    "unit": "px"
+                                },
+                                "typography_font_weight": "800",
+                                "typography_line_height": {
+                                    "size": 1.6,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "2cff154",
+                            "elType": "widget",
+                            "widgetType": "dgs_live",
+                            "settings": {
+                                "kind": "director",
+                                "count": 3,
+                                "columns": "3",
+                                "columns_tablet": "2",
+                                "columns_mobile": "1",
+                                "director_id": "0",
+                                "director_text": ""
+                            },
+                            "elements": []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "b1df79d",
+            "elType": "section",
+            "settings": {
+                "content_width": {
+                    "unit": "px",
+                    "size": 1200
+                },
+                "layout": "full_width",
+                "gap": "no",
+                "column_position": "middle",
+                "css_classes": "dse-section det-section det-team",
+                "margin": {
+                    "unit": "px",
+                    "top": "0",
+                    "right": "0",
+                    "bottom": "12",
+                    "left": "0",
+                    "isLinked": false
+                },
+                "padding": {
+                    "unit": "px",
+                    "top": "14",
+                    "right": "14",
+                    "bottom": "14",
+                    "left": "14",
+                    "isLinked": true
+                },
+                "background_background": "gradient",
+                "background_color": "#ffffff",
+                "background_color_b": "#f6efff",
+                "background_gradient_angle": {
+                    "unit": "deg",
+                    "size": 125
+                },
+                "border_border": "solid",
+                "border_width": {
+                    "unit": "px",
+                    "top": "1",
+                    "right": "1",
+                    "bottom": "1",
+                    "left": "1",
+                    "isLinked": true
+                },
+                "border_color": "#dac0ee",
+                "border_radius": {
+                    "unit": "px",
+                    "top": "15",
+                    "right": "15",
+                    "bottom": "15",
+                    "left": "15",
+                    "isLinked": true
+                },
+                "custom_css": "selector{direction:rtl;box-sizing:border-box;overflow:hidden;color:#45215e;font-family:DgsPortal,Estedad,Tahoma,sans-serif;min-width:0}\nselector>.elementor-container{display:grid!important;grid-template-columns:1.5fr 1fr;gap:14px;align-items:center;max-width:none!important}\nselector>.elementor-container>.elementor-column{width:auto!important;min-width:0}\nselector .elementor-widget-wrap{min-width:0;align-content:center;box-sizing:border-box}\nselector .elementor-widget:not(:last-child){margin-bottom:8px}\nselector p{margin:0;line-height:1.9}\nselector h1,selector h2,selector h3{margin:0;line-height:1.65;overflow-wrap:normal!important}\nselector a{text-decoration:none}\nselector svg{flex-shrink:0}\nselector .elementor-button{line-height:1.7;min-height:0;box-shadow:none}\nselector .elementor-widget-text-editor{font-size:13px;line-height:1.9}\nselector .dse-live,selector .dsh-carousel,selector .dsh-featured-main{min-width:0}\nselector .dg-empty-inline{font-size:12px;padding:16px;border-radius:10px}\n@media(max-width:767px){selector>.elementor-container{grid-template-columns:1fr!important;gap:14px}selector{padding:14px!important}selector .elementor-heading-title{overflow-wrap:normal!important}}\nselector>.elementor-container{align-items:stretch}selector>.elementor-container>.elementor-column>.elementor-widget-wrap{border:1px solid #dbc1ed;border-radius:14px;padding:12px;background:#faf6ff}selector .dsh-person{border:1px solid #dfcaef;border-radius:13px;padding:10px;background:#ffffff55}selector .dsh-person-photo{width:76px;height:76px}selector .dsh-person h3{font-size:13px!important}selector .dsh-person p{font-size:11px}@media(max-width:1024px){selector>.elementor-container{grid-template-columns:1fr!important}}"
+            },
+            "elements": [
+                {
+                    "id": "45f6dcd",
+                    "elType": "column",
+                    "settings": {
+                        "_column_size": 60,
+                        "padding": {
+                            "unit": "px",
+                            "top": "0",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": true
+                        },
+                        "_inline_size": 60,
+                        "css_classes": ""
+                    },
+                    "elements": [
+                        {
+                            "id": "e687e94",
+                            "elType": "widget",
+                            "widgetType": "heading",
+                            "settings": {
+                                "title": "برخی از اعضای کادر آموزشی",
+                                "header_size": "h2",
+                                "title_color": "#511c72",
+                                "align": "right",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 21,
+                                    "unit": "px"
+                                },
+                                "typography_font_size_mobile": {
+                                    "size": 19,
+                                    "unit": "px"
+                                },
+                                "typography_font_weight": "800",
+                                "typography_line_height": {
+                                    "size": 1.6,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "76804d0",
+                            "elType": "widget",
+                            "widgetType": "dgs_live",
+                            "settings": {
+                                "kind": "teachers",
+                                "count": 3,
+                                "columns": "3",
+                                "columns_tablet": "2",
+                                "columns_mobile": "1"
+                            },
+                            "elements": []
+                        }
+                    ]
+                },
+                {
+                    "id": "9e2225f",
+                    "elType": "column",
+                    "settings": {
+                        "_column_size": 40,
+                        "padding": {
+                            "unit": "px",
+                            "top": "0",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": true
+                        },
+                        "_inline_size": 40,
+                        "css_classes": ""
+                    },
+                    "elements": [
+                        {
+                            "id": "979a94d",
+                            "elType": "widget",
+                            "widgetType": "heading",
+                            "settings": {
+                                "title": "کادر معاونت",
+                                "header_size": "h2",
+                                "title_color": "#511c72",
+                                "align": "right",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 21,
+                                    "unit": "px"
+                                },
+                                "typography_font_size_mobile": {
+                                    "size": 19,
+                                    "unit": "px"
+                                },
+                                "typography_font_weight": "800",
+                                "typography_line_height": {
+                                    "size": 1.6,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "892d941",
+                            "elType": "widget",
+                            "widgetType": "dgs_live",
+                            "settings": {
+                                "kind": "staff",
+                                "count": 2,
+                                "columns": "2",
+                                "columns_tablet": "2",
+                                "columns_mobile": "1",
+                                "staff_group": "deputies"
+                            },
+                            "elements": []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "ab180d4",
+            "elType": "section",
+            "settings": {
+                "content_width": {
+                    "unit": "px",
+                    "size": 1200
+                },
+                "layout": "full_width",
+                "gap": "no",
+                "column_position": "middle",
+                "css_classes": "dse-section det-section det-about-gallery",
+                "margin": {
+                    "unit": "px",
+                    "top": "0",
+                    "right": "0",
+                    "bottom": "12",
+                    "left": "0",
+                    "isLinked": false
+                },
+                "padding": {
+                    "unit": "px",
+                    "top": "14",
+                    "right": "14",
+                    "bottom": "14",
+                    "left": "14",
+                    "isLinked": true
+                },
+                "background_background": "gradient",
+                "background_color": "#ffffff",
+                "background_color_b": "#f6efff",
+                "background_gradient_angle": {
+                    "unit": "deg",
+                    "size": 125
+                },
+                "border_border": "solid",
+                "border_width": {
+                    "unit": "px",
+                    "top": "1",
+                    "right": "1",
+                    "bottom": "1",
+                    "left": "1",
+                    "isLinked": true
+                },
+                "border_color": "#dac0ee",
+                "border_radius": {
+                    "unit": "px",
+                    "top": "15",
+                    "right": "15",
+                    "bottom": "15",
+                    "left": "15",
+                    "isLinked": true
+                },
+                "custom_css": "selector{direction:rtl;box-sizing:border-box;overflow:hidden;color:#45215e;font-family:DgsPortal,Estedad,Tahoma,sans-serif;min-width:0}\nselector>.elementor-container{display:grid!important;grid-template-columns:1fr;gap:14px;align-items:center;max-width:none!important}\nselector>.elementor-container>.elementor-column{width:auto!important;min-width:0}\nselector .elementor-widget-wrap{min-width:0;align-content:center;box-sizing:border-box}\nselector .elementor-widget:not(:last-child){margin-bottom:8px}\nselector p{margin:0;line-height:1.9}\nselector h1,selector h2,selector h3{margin:0;line-height:1.65;overflow-wrap:normal!important}\nselector a{text-decoration:none}\nselector svg{flex-shrink:0}\nselector .elementor-button{line-height:1.7;min-height:0;box-shadow:none}\nselector .elementor-widget-text-editor{font-size:13px;line-height:1.9}\nselector .dse-live,selector .dsh-carousel,selector .dsh-featured-main{min-width:0}\nselector .dg-empty-inline{font-size:12px;padding:16px;border-radius:10px}\n@media(max-width:767px){selector>.elementor-container{grid-template-columns:1fr!important;gap:14px}selector{padding:14px!important}selector .elementor-heading-title{overflow-wrap:normal!important}}\nselector .dgg-preview{display:block;border:0;background:none;padding:0;margin:0}selector .dgg-preview-intro{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}selector .dgg-preview-intro p{display:none}selector .dgg-preview-intro h2{margin:0}selector .dgg-preview-body{padding:0}selector .dgg-controls{display:none}selector .dgg-track{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;overflow:visible}selector .dgg-open{height:150px}selector .dgg-item figcaption{font-size:12px;background:#f3e8fc;border-radius:8px;padding:4px;margin-top:5px}@media(max-width:1024px){selector .dgg-track{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:767px){selector .dgg-preview-intro{display:block}selector .dgg-preview-intro a{margin:8px 0}selector .dgg-track{grid-template-columns:1fr}selector .dgg-open{height:220px}}"
+            },
+            "elements": [
+                {
+                    "id": "a5d0d15",
+                    "elType": "column",
+                    "settings": {
+                        "_column_size": 100,
+                        "padding": {
+                            "unit": "px",
+                            "top": "0",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": true
+                        },
+                        "_inline_size": 100,
+                        "css_classes": ""
+                    },
+                    "elements": [
+                        {
+                            "id": "a867ee5",
+                            "elType": "widget",
+                            "widgetType": "dgs_live",
+                            "settings": {
+                                "kind": "gallery",
+                                "count": 4,
+                                "columns": "3",
+                                "columns_tablet": "2",
+                                "columns_mobile": "1",
+                                "gallery_title": "گالری تصاویر مدرسه",
+                                "gallery_description": "",
+                                "gallery_link_label": "مشاهده گالری کامل"
+                            },
+                            "elements": []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "7f8bd4e",
+            "elType": "section",
+            "settings": {
+                "content_width": {
+                    "unit": "px",
+                    "size": 1200
+                },
+                "layout": "full_width",
+                "gap": "no",
+                "column_position": "middle",
+                "css_classes": "dse-section det-section det-facilities-title",
+                "margin": {
+                    "unit": "px",
+                    "top": "0",
+                    "right": "0",
+                    "bottom": "12",
+                    "left": "0",
+                    "isLinked": false
+                },
+                "padding": {
+                    "unit": "px",
+                    "top": "14",
+                    "right": "14",
+                    "bottom": "14",
+                    "left": "14",
+                    "isLinked": true
+                },
+                "background_background": "gradient",
+                "background_color": "#ffffff",
+                "background_color_b": "#f6efff",
+                "background_gradient_angle": {
+                    "unit": "deg",
+                    "size": 125
+                },
+                "border_border": "solid",
+                "border_width": {
+                    "unit": "px",
+                    "top": "1",
+                    "right": "1",
+                    "bottom": "1",
+                    "left": "1",
+                    "isLinked": true
+                },
+                "border_color": "#dac0ee",
+                "border_radius": {
+                    "unit": "px",
+                    "top": "15",
+                    "right": "15",
+                    "bottom": "15",
+                    "left": "15",
+                    "isLinked": true
+                },
+                "custom_css": "selector{direction:rtl;box-sizing:border-box;overflow:hidden;color:#45215e;font-family:DgsPortal,Estedad,Tahoma,sans-serif;min-width:0}\nselector>.elementor-container{display:grid!important;grid-template-columns:1fr;gap:14px;align-items:center;max-width:none!important}\nselector>.elementor-container>.elementor-column{width:auto!important;min-width:0}\nselector .elementor-widget-wrap{min-width:0;align-content:center;box-sizing:border-box}\nselector .elementor-widget:not(:last-child){margin-bottom:8px}\nselector p{margin:0;line-height:1.9}\nselector h1,selector h2,selector h3{margin:0;line-height:1.65;overflow-wrap:normal!important}\nselector a{text-decoration:none}\nselector svg{flex-shrink:0}\nselector .elementor-button{line-height:1.7;min-height:0;box-shadow:none}\nselector .elementor-widget-text-editor{font-size:13px;line-height:1.9}\nselector .dse-live,selector .dsh-carousel,selector .dsh-featured-main{min-width:0}\nselector .dg-empty-inline{font-size:12px;padding:16px;border-radius:10px}\n@media(max-width:767px){selector>.elementor-container{grid-template-columns:1fr!important;gap:14px}selector{padding:14px!important}selector .elementor-heading-title{overflow-wrap:normal!important}}\nselector{margin-bottom:0!important;border-bottom:0!important;border-radius:14px 14px 0 0!important;padding-bottom:4px!important}"
+            },
+            "elements": [
+                {
+                    "id": "426a363",
+                    "elType": "column",
+                    "settings": {
+                        "_column_size": 100,
+                        "padding": {
+                            "unit": "px",
+                            "top": "0",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": true
+                        },
+                        "_inline_size": 100,
+                        "css_classes": ""
+                    },
+                    "elements": [
+                        {
+                            "id": "98faf25",
+                            "elType": "widget",
+                            "widgetType": "heading",
+                            "settings": {
+                                "title": "امکانات و خدمات آموزشی",
+                                "header_size": "h2",
+                                "title_color": "#511c72",
+                                "align": "right",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 21,
+                                    "unit": "px"
+                                },
+                                "typography_font_size_mobile": {
+                                    "size": 19,
+                                    "unit": "px"
+                                },
+                                "typography_font_weight": "800",
+                                "typography_line_height": {
+                                    "size": 1.6,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "fdf0a8b",
+            "elType": "section",
+            "settings": {
+                "content_width": {
+                    "unit": "px",
+                    "size": 1200
+                },
+                "layout": "full_width",
+                "gap": "no",
+                "column_position": "middle",
+                "css_classes": "dse-section det-section det-facilities",
+                "margin": {
+                    "unit": "px",
+                    "top": "0",
+                    "right": "0",
+                    "bottom": "12",
+                    "left": "0",
+                    "isLinked": false
+                },
+                "padding": {
+                    "unit": "px",
+                    "top": "14",
+                    "right": "14",
+                    "bottom": "14",
+                    "left": "14",
+                    "isLinked": true
+                },
+                "background_background": "gradient",
+                "background_color": "#ffffff",
+                "background_color_b": "#f6efff",
+                "background_gradient_angle": {
+                    "unit": "deg",
+                    "size": 125
+                },
+                "border_border": "solid",
+                "border_width": {
+                    "unit": "px",
+                    "top": "1",
+                    "right": "1",
+                    "bottom": "1",
+                    "left": "1",
+                    "isLinked": true
+                },
+                "border_color": "#dac0ee",
+                "border_radius": {
+                    "unit": "px",
+                    "top": "15",
+                    "right": "15",
+                    "bottom": "15",
+                    "left": "15",
+                    "isLinked": true
+                },
+                "custom_css": "selector{direction:rtl;box-sizing:border-box;overflow:hidden;color:#45215e;font-family:DgsPortal,Estedad,Tahoma,sans-serif;min-width:0}\nselector>.elementor-container{display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr));gap:14px;align-items:center;max-width:none!important}\nselector>.elementor-container>.elementor-column{width:auto!important;min-width:0}\nselector .elementor-widget-wrap{min-width:0;align-content:center;box-sizing:border-box}\nselector .elementor-widget:not(:last-child){margin-bottom:8px}\nselector p{margin:0;line-height:1.9}\nselector h1,selector h2,selector h3{margin:0;line-height:1.65;overflow-wrap:normal!important}\nselector a{text-decoration:none}\nselector svg{flex-shrink:0}\nselector .elementor-button{line-height:1.7;min-height:0;box-shadow:none}\nselector .elementor-widget-text-editor{font-size:13px;line-height:1.9}\nselector .dse-live,selector .dsh-carousel,selector .dsh-featured-main{min-width:0}\nselector .dg-empty-inline{font-size:12px;padding:16px;border-radius:10px}\n@media(max-width:767px){selector>.elementor-container{grid-template-columns:1fr!important;gap:14px}selector{padding:14px!important}selector .elementor-heading-title{overflow-wrap:normal!important}}\nselector{border-top:0!important;border-radius:0 0 14px 14px!important}selector .det-facility>.elementor-widget-wrap{padding:10px 5px;border:1px solid #e2d0ee;border-radius:13px;background:#ffffff88;text-align:center}selector .dse-icon{text-align:center!important}selector .elementor-heading-title{font-size:14px!important}selector .elementor-widget:not(:last-child){margin-bottom:3px}@media(max-width:1024px){selector>.elementor-container{grid-template-columns:repeat(3,minmax(0,1fr))!important}}@media(max-width:767px){selector>.elementor-container{grid-template-columns:repeat(2,minmax(0,1fr))!important}}"
+            },
+            "elements": [
+                {
+                    "id": "411bf80",
+                    "elType": "column",
+                    "settings": {
+                        "_column_size": 16.666666666666668,
+                        "padding": {
+                            "unit": "px",
+                            "top": "0",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": true
+                        },
+                        "_inline_size": 16.666666666666668,
+                        "css_classes": "det-facility"
+                    },
+                    "elements": [
+                        {
+                            "id": "e7355b4",
+                            "elType": "widget",
+                            "widgetType": "dgs_icon",
+                            "settings": {
+                                "icon_name": "building",
+                                "align": "right",
+                                "size": {
+                                    "size": 25,
+                                    "unit": "px"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "0642109",
+                            "elType": "widget",
+                            "widgetType": "heading",
+                            "settings": {
+                                "title": "کلاس‌های هوشمند",
+                                "header_size": "h3",
+                                "title_color": "#511c72",
+                                "align": "center",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 15,
+                                    "unit": "px"
+                                },
+                                "typography_font_size_mobile": {
+                                    "size": 19,
+                                    "unit": "px"
+                                },
+                                "typography_font_weight": "800",
+                                "typography_line_height": {
+                                    "size": 1.6,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "5ac1a2c",
+                            "elType": "widget",
+                            "widgetType": "text-editor",
+                            "settings": {
+                                "editor": "<p>و مجهز</p>\n",
+                                "align": "center",
+                                "text_color": "#654879",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 12,
+                                    "unit": "px"
+                                },
+                                "typography_line_height": {
+                                    "size": 1.9,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        }
+                    ]
+                },
+                {
+                    "id": "f103225",
+                    "elType": "column",
+                    "settings": {
+                        "_column_size": 16.666666666666668,
+                        "padding": {
+                            "unit": "px",
+                            "top": "0",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": true
+                        },
+                        "_inline_size": 16.666666666666668,
+                        "css_classes": "det-facility"
+                    },
+                    "elements": [
+                        {
+                            "id": "abe85e1",
+                            "elType": "widget",
+                            "widgetType": "dgs_icon",
+                            "settings": {
+                                "icon_name": "education",
+                                "align": "right",
+                                "size": {
+                                    "size": 25,
+                                    "unit": "px"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "23d7604",
+                            "elType": "widget",
+                            "widgetType": "heading",
+                            "settings": {
+                                "title": "آزمایشگاه‌های علوم",
+                                "header_size": "h3",
+                                "title_color": "#511c72",
+                                "align": "center",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 15,
+                                    "unit": "px"
+                                },
+                                "typography_font_size_mobile": {
+                                    "size": 19,
+                                    "unit": "px"
+                                },
+                                "typography_font_weight": "800",
+                                "typography_line_height": {
+                                    "size": 1.6,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "c63fcd8",
+                            "elType": "widget",
+                            "widgetType": "text-editor",
+                            "settings": {
+                                "editor": "<p>فیزیک، شیمی، زیست</p>\n",
+                                "align": "center",
+                                "text_color": "#654879",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 12,
+                                    "unit": "px"
+                                },
+                                "typography_line_height": {
+                                    "size": 1.9,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        }
+                    ]
+                },
+                {
+                    "id": "7beff3b",
+                    "elType": "column",
+                    "settings": {
+                        "_column_size": 16.666666666666668,
+                        "padding": {
+                            "unit": "px",
+                            "top": "0",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": true
+                        },
+                        "_inline_size": 16.666666666666668,
+                        "css_classes": "det-facility"
+                    },
+                    "elements": [
+                        {
+                            "id": "55dc0b6",
+                            "elType": "widget",
+                            "widgetType": "dgs_icon",
+                            "settings": {
+                                "icon_name": "study",
+                                "align": "right",
+                                "size": {
+                                    "size": 25,
+                                    "unit": "px"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "07dba4e",
+                            "elType": "widget",
+                            "widgetType": "heading",
+                            "settings": {
+                                "title": "کتابخانه تخصصی",
+                                "header_size": "h3",
+                                "title_color": "#511c72",
+                                "align": "center",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 15,
+                                    "unit": "px"
+                                },
+                                "typography_font_size_mobile": {
+                                    "size": 19,
+                                    "unit": "px"
+                                },
+                                "typography_font_weight": "800",
+                                "typography_line_height": {
+                                    "size": 1.6,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "30c0022",
+                            "elType": "widget",
+                            "widgetType": "text-editor",
+                            "settings": {
+                                "editor": "<p>و منابع کمک‌آموزشی</p>\n",
+                                "align": "center",
+                                "text_color": "#654879",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 12,
+                                    "unit": "px"
+                                },
+                                "typography_line_height": {
+                                    "size": 1.9,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        }
+                    ]
+                },
+                {
+                    "id": "d469b8b",
+                    "elType": "column",
+                    "settings": {
+                        "_column_size": 16.666666666666668,
+                        "padding": {
+                            "unit": "px",
+                            "top": "0",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": true
+                        },
+                        "_inline_size": 16.666666666666668,
+                        "css_classes": "det-facility"
+                    },
+                    "elements": [
+                        {
+                            "id": "403175c",
+                            "elType": "widget",
+                            "widgetType": "dgs_icon",
+                            "settings": {
+                                "icon_name": "users",
+                                "align": "right",
+                                "size": {
+                                    "size": 25,
+                                    "unit": "px"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "25f595a",
+                            "elType": "widget",
+                            "widgetType": "heading",
+                            "settings": {
+                                "title": "سالن مطالعه",
+                                "header_size": "h3",
+                                "title_color": "#511c72",
+                                "align": "center",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 15,
+                                    "unit": "px"
+                                },
+                                "typography_font_size_mobile": {
+                                    "size": 19,
+                                    "unit": "px"
+                                },
+                                "typography_font_weight": "800",
+                                "typography_line_height": {
+                                    "size": 1.6,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "2034050",
+                            "elType": "widget",
+                            "widgetType": "text-editor",
+                            "settings": {
+                                "editor": "<p>و فضای پژوهشی</p>\n",
+                                "align": "center",
+                                "text_color": "#654879",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 12,
+                                    "unit": "px"
+                                },
+                                "typography_line_height": {
+                                    "size": 1.9,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        }
+                    ]
+                },
+                {
+                    "id": "58d9818",
+                    "elType": "column",
+                    "settings": {
+                        "_column_size": 16.666666666666668,
+                        "padding": {
+                            "unit": "px",
+                            "top": "0",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": true
+                        },
+                        "_inline_size": 16.666666666666668,
+                        "css_classes": "det-facility"
+                    },
+                    "elements": [
+                        {
+                            "id": "e03aa70",
+                            "elType": "widget",
+                            "widgetType": "dgs_icon",
+                            "settings": {
+                                "icon_name": "target",
+                                "align": "right",
+                                "size": {
+                                    "size": 25,
+                                    "unit": "px"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "cccf584",
+                            "elType": "widget",
+                            "widgetType": "heading",
+                            "settings": {
+                                "title": "سالن ورزشی",
+                                "header_size": "h3",
+                                "title_color": "#511c72",
+                                "align": "center",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 15,
+                                    "unit": "px"
+                                },
+                                "typography_font_size_mobile": {
+                                    "size": 19,
+                                    "unit": "px"
+                                },
+                                "typography_font_weight": "800",
+                                "typography_line_height": {
+                                    "size": 1.6,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "30823a6",
+                            "elType": "widget",
+                            "widgetType": "text-editor",
+                            "settings": {
+                                "editor": "<p>و امکانات تربیت‌بدنی</p>\n",
+                                "align": "center",
+                                "text_color": "#654879",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 12,
+                                    "unit": "px"
+                                },
+                                "typography_line_height": {
+                                    "size": 1.9,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        }
+                    ]
+                },
+                {
+                    "id": "4354bfc",
+                    "elType": "column",
+                    "settings": {
+                        "_column_size": 16.666666666666668,
+                        "padding": {
+                            "unit": "px",
+                            "top": "0",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": true
+                        },
+                        "_inline_size": 16.666666666666668,
+                        "css_classes": "det-facility"
+                    },
+                    "elements": [
+                        {
+                            "id": "56b0998",
+                            "elType": "widget",
+                            "widgetType": "dgs_icon",
+                            "settings": {
+                                "icon_name": "home",
+                                "align": "right",
+                                "size": {
+                                    "size": 25,
+                                    "unit": "px"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "030acd7",
+                            "elType": "widget",
+                            "widgetType": "heading",
+                            "settings": {
+                                "title": "فضای سبز",
+                                "header_size": "h3",
+                                "title_color": "#511c72",
+                                "align": "center",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 15,
+                                    "unit": "px"
+                                },
+                                "typography_font_size_mobile": {
+                                    "size": 19,
+                                    "unit": "px"
+                                },
+                                "typography_font_weight": "800",
+                                "typography_line_height": {
+                                    "size": 1.6,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "ba6b32a",
+                            "elType": "widget",
+                            "widgetType": "text-editor",
+                            "settings": {
+                                "editor": "<p>و حیاط دلنشین</p>\n",
+                                "align": "center",
+                                "text_color": "#654879",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 12,
+                                    "unit": "px"
+                                },
+                                "typography_line_height": {
+                                    "size": 1.9,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "4653a20",
+            "elType": "section",
+            "settings": {
+                "content_width": {
+                    "unit": "px",
+                    "size": 1200
+                },
+                "layout": "full_width",
+                "gap": "no",
+                "column_position": "middle",
+                "css_classes": "dse-section det-section det-admission",
+                "margin": {
+                    "unit": "px",
+                    "top": "0",
+                    "right": "0",
+                    "bottom": "12",
+                    "left": "0",
+                    "isLinked": false
+                },
+                "padding": {
+                    "unit": "px",
+                    "top": "14",
+                    "right": "14",
+                    "bottom": "14",
+                    "left": "14",
+                    "isLinked": true
+                },
+                "background_background": "gradient",
+                "background_color": "#ffffff",
+                "background_color_b": "#f6efff",
+                "background_gradient_angle": {
+                    "unit": "deg",
+                    "size": 125
+                },
+                "border_border": "solid",
+                "border_width": {
+                    "unit": "px",
+                    "top": "1",
+                    "right": "1",
+                    "bottom": "1",
+                    "left": "1",
+                    "isLinked": true
+                },
+                "border_color": "#dac0ee",
+                "border_radius": {
+                    "unit": "px",
+                    "top": "15",
+                    "right": "15",
+                    "bottom": "15",
+                    "left": "15",
+                    "isLinked": true
+                },
+                "custom_css": "selector{direction:rtl;box-sizing:border-box;overflow:hidden;color:#45215e;font-family:DgsPortal,Estedad,Tahoma,sans-serif;min-width:0}\nselector>.elementor-container{display:grid!important;grid-template-columns:1.8fr 1fr;gap:14px;align-items:center;max-width:none!important}\nselector>.elementor-container>.elementor-column{width:auto!important;min-width:0}\nselector .elementor-widget-wrap{min-width:0;align-content:center;box-sizing:border-box}\nselector .elementor-widget:not(:last-child){margin-bottom:8px}\nselector p{margin:0;line-height:1.9}\nselector h1,selector h2,selector h3{margin:0;line-height:1.65;overflow-wrap:normal!important}\nselector a{text-decoration:none}\nselector svg{flex-shrink:0}\nselector .elementor-button{line-height:1.7;min-height:0;box-shadow:none}\nselector .elementor-widget-text-editor{font-size:13px;line-height:1.9}\nselector .dse-live,selector .dsh-carousel,selector .dsh-featured-main{min-width:0}\nselector .dg-empty-inline{font-size:12px;padding:16px;border-radius:10px}\n@media(max-width:767px){selector>.elementor-container{grid-template-columns:1fr!important;gap:14px}selector{padding:14px!important}selector .elementor-heading-title{overflow-wrap:normal!important}}\nselector>.elementor-container{align-items:stretch}selector .det-admission-card>.elementor-widget-wrap{padding:18px;border-radius:14px;background:linear-gradient(110deg,#ffda4d,#ffc821)}selector .det-admission-card .elementor-button{background:#77289a;color:white}selector .det-contact-card>.elementor-widget-wrap{padding:12px}selector .dse-contact-line{font-size:12px}"
+            },
+            "elements": [
+                {
+                    "id": "2c9f79f",
+                    "elType": "column",
+                    "settings": {
+                        "_column_size": 65,
+                        "padding": {
+                            "unit": "px",
+                            "top": "0",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": true
+                        },
+                        "_inline_size": 65,
+                        "css_classes": "det-admission-card"
+                    },
+                    "elements": [
+                        {
+                            "id": "b741b45",
+                            "elType": "widget",
+                            "widgetType": "heading",
+                            "settings": {
+                                "title": "پیش‌ثبت‌نام سال تحصیلی جدید",
+                                "header_size": "h2",
+                                "title_color": "#511c72",
+                                "align": "right",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 23,
+                                    "unit": "px"
+                                },
+                                "typography_font_size_mobile": {
+                                    "size": 19,
+                                    "unit": "px"
+                                },
+                                "typography_font_weight": "800",
+                                "typography_line_height": {
+                                    "size": 1.6,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "70c0b6b",
+                            "elType": "widget",
+                            "widgetType": "text-editor",
+                            "settings": {
+                                "editor": "<p>همین حالا برای پیش‌ثبت‌نام در پایه‌های دهم، یازدهم و دوازدهم اقدام کنید و از اولویت ثبت‌نام و برنامه‌های ویژه بهره‌مند شوید.</p>\n",
+                                "align": "right",
+                                "text_color": "#654879",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 13,
+                                    "unit": "px"
+                                },
+                                "typography_line_height": {
+                                    "size": 1.9,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "4e5141b",
+                            "elType": "widget",
+                            "widgetType": "button",
+                            "settings": {
+                                "text": "پیش‌ثبت‌نام",
+                                "link": {
+                                    "url": "https://daneshgaranedu.ir/index.php/school-admission/"
+                                },
+                                "align": "center",
+                                "background_color": "#ffcd35",
+                                "button_text_color": "#4e255c",
+                                "border_radius": {
+                                    "unit": "px",
+                                    "top": "20",
+                                    "right": "20",
+                                    "bottom": "20",
+                                    "left": "20",
+                                    "isLinked": true
+                                },
+                                "button_padding": {
+                                    "unit": "px",
+                                    "top": "9",
+                                    "right": "20",
+                                    "bottom": "9",
+                                    "left": "20",
+                                    "isLinked": false
+                                },
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 12,
+                                    "unit": "px"
+                                },
+                                "typography_font_weight": "700",
+                                "text_padding": {
+                                    "unit": "px",
+                                    "top": "5",
+                                    "right": "19",
+                                    "bottom": "5",
+                                    "left": "19",
+                                    "isLinked": false
+                                }
+                            },
+                            "elements": []
+                        }
+                    ]
+                },
+                {
+                    "id": "94cd4e2",
+                    "elType": "column",
+                    "settings": {
+                        "_column_size": 35,
+                        "padding": {
+                            "unit": "px",
+                            "top": "0",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": true
+                        },
+                        "_inline_size": 35,
+                        "css_classes": "det-contact-card"
+                    },
+                    "elements": [
+                        {
+                            "id": "d1879ba",
+                            "elType": "widget",
+                            "widgetType": "heading",
+                            "settings": {
+                                "title": "ارتباط با ما",
+                                "header_size": "h2",
+                                "title_color": "#511c72",
+                                "align": "right",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 21,
+                                    "unit": "px"
+                                },
+                                "typography_font_size_mobile": {
+                                    "size": 19,
+                                    "unit": "px"
+                                },
+                                "typography_font_weight": "800",
+                                "typography_line_height": {
+                                    "size": 1.6,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "517a59a",
+                            "elType": "widget",
+                            "widgetType": "dgs_live",
+                            "settings": {
+                                "kind": "contact",
+                                "count": 3,
+                                "columns": "3",
+                                "columns_tablet": "2",
+                                "columns_mobile": "1"
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "e45dfc5",
+                            "elType": "widget",
+                            "widgetType": "button",
+                            "settings": {
+                                "text": "راه‌های ارتباطی",
+                                "link": {
+                                    "url": "https://daneshgaranedu.ir/index.php/contact-school/"
+                                },
+                                "align": "center",
+                                "background_color": "#fff6df",
+                                "button_text_color": "#4e255c",
+                                "border_radius": {
+                                    "unit": "px",
+                                    "top": "20",
+                                    "right": "20",
+                                    "bottom": "20",
+                                    "left": "20",
+                                    "isLinked": true
+                                },
+                                "button_padding": {
+                                    "unit": "px",
+                                    "top": "9",
+                                    "right": "20",
+                                    "bottom": "9",
+                                    "left": "20",
+                                    "isLinked": false
+                                },
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 12,
+                                    "unit": "px"
+                                },
+                                "typography_font_weight": "700",
+                                "text_padding": {
+                                    "unit": "px",
+                                    "top": "5",
+                                    "right": "19",
+                                    "bottom": "5",
+                                    "left": "19",
+                                    "isLinked": false
+                                },
+                                "border_border": "solid",
+                                "border_color": "#eac46b",
+                                "border_width": {
+                                    "unit": "px",
+                                    "top": "1",
+                                    "right": "1",
+                                    "bottom": "1",
+                                    "left": "1",
+                                    "isLinked": true
+                                }
+                            },
+                            "elements": []
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "page_settings": {
+        "hide_title": "yes"
+    }
+}

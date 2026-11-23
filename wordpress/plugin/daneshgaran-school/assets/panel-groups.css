@@ -1,0 +1,7 @@
+/* Native details keep keyboard access and a useful server-rendered state. */
+body.dg-site.dgs-role-portal .dgs-menu-group summary{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:10px;cursor:pointer;list-style:none;font-weight:700;font-size:14px;color:#fff;line-height:1.7}
+.dgs-menu-group summary::-webkit-details-marker{display:none}.dgs-menu-group summary::marker{content:""}.dgs-menu-group summary>svg{width:23px;height:23px;flex:none}.dgs-group-chevron{margin-inline-start:auto;transition:transform .15s}.dgs-menu-group details[open]>summary .dgs-group-chevron{transform:rotate(180deg)}
+body.dg-site.dgs-role-portal .dgs-menu-group summary:hover,body.dg-site.dgs-role-portal .dgs-menu-group summary.dgs-group-active{background:#ffffff19}
+body.dg-site.dgs-role-portal .dgs-menu-children{list-style:none;margin:5px 10px 12px 0;padding:0 9px 0 0;border-right:1px solid #ffffff38}
+body.dg-site.dgs-role-portal .dgs-menu-children li{margin:3px 0}body.dg-site.dgs-role-portal .dgs-menu-children a{font-size:12px;line-height:1.7;padding:8px 9px;gap:7px}body.dg-site.dgs-role-portal .dgs-menu-children a svg{width:18px;height:18px;flex:none}
+body.dg-site.dgs-role-portal .dgs-menu-account{border-top:1px solid #ffffff35;margin-top:18px;padding-top:10px}body.dg-site.dgs-role-portal .dgs-menu-account a{font-size:13px;padding:9px 12px}.dgs-menu-group summary:focus-visible{outline:2px solid #ffda4e;outline-offset:2px}

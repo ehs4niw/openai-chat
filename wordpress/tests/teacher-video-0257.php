@@ -1,0 +1,6 @@
+<?php
+if(getenv('DGS_TEST_ALLOW_FIXTURES')!=='1'||empty($argv[1]))exit(2);require $argv[1];$n=0;function ck257($v,$m){global $n;if(!$v)throw new RuntimeException($m);$n++;}
+foreach(['https://www.aparat.com/v/otv499p','http://aparat.com/v/otv499p/?x=1'] as $url){$v=dgs_teacher_video_source($url);ck257($v&&$v['type']==='aparat','aparat accepted');ck257($v['embed']==='https://www.aparat.com/video/video/embed/videohash/otv499p/vt/frame','fixed embed host');}
+foreach(['https://aparat.com.evil.test/v/otv499p','https://evil.test/v/otv499p','https://user@aparat.com/v/otv499p','https://aparat.com:444/v/otv499p','javascript:alert(1)','<iframe src=x>','https://aparat.com/v/abc/other'] as $url)ck257(dgs_teacher_video_source($url)===false,'invalid URL rejected');
+foreach(['https://example.com/a.mp4','https://example.com/a.webm?token=1'] as $url)ck257(dgs_teacher_video_source($url)['type']==='file','direct video preserved');
+$h=dgs_teacher_video_html('https://www.aparat.com/v/otv499p',0);ck257(strpos($h,'<iframe')!==false&&strpos($h,'videohash/otv499p/vt/frame')!==false,'embed renders');ck257(strpos(dgs_teacher_video_html('',0),'dc-video-empty')!==false,'empty state');echo "PASS $n teacher video checks\n";

@@ -1,0 +1,2311 @@
+/*
+ * آزمون‌ساز استادیار — اتصال به ووکامرس و پیشخوان وردپرس
+ * نسخه ۲٫۴ — کارت‌های نتایج آزمون
+ * جایگزین کامل نسخه قبلی همین اسنیپت
+ * Run snippet everywhere
+ *
+ * اسنیپت اصلی آزمون‌ساز باید فعال بماند.
+ */
+
+/* ---------- ابزارها ---------- */
+
+function bse_ready() {
+    return function_exists( 'bse_is_mgr' )
+        && function_exists( 'bse_tbl' )
+        && function_exists( 'bse_finalize' )
+        && function_exists( 'bse_card' )
+        && function_exists( 'bse_row' )
+        && function_exists( 'bse_exam' );
+}
+
+function bse_ok() {
+    return bse_ready() && bse_is_mgr();
+}
+
+function bse_cap() {
+    return current_user_can( 'manage_options' )
+        ? 'manage_options'
+        : 'manage_woocommerce';
+}
+
+function bse_fa( $s ) {
+    return strtr(
+        (string) $s,
+        array(
+            '0' => '۰', '1' => '۱', '2' => '۲',
+            '3' => '۳', '4' => '۴', '5' => '۵',
+            '6' => '۶', '7' => '۷', '8' => '۸', '9' => '۹',
+        )
+    );
+}
+
+function bse_gregorian_to_jalali( $gy, $gm, $gd ) {
+    $gdm = array( 0,31,59,90,120,151,181,212,243,273,304,334 );
+    $gy2 = $gm > 2 ? $gy + 1 : $gy;
+    $days = 355666 + 365 * $gy + intdiv( $gy2 + 3, 4 ) - intdiv( $gy2 + 99, 100 )
+        + intdiv( $gy2 + 399, 400 ) + $gd + $gdm[$gm - 1];
+    $jy = -1595 + 33 * intdiv( $days, 12053 );
+    $days %= 12053;
+    $jy += 4 * intdiv( $days, 1461 );
+    $days %= 1461;
+    if ( $days > 365 ) { $jy += intdiv( $days - 1, 365 ); $days = ( $days - 1 ) % 365; }
+    if ( $days < 186 ) { $jm = 1 + intdiv( $days, 31 ); $jd = 1 + $days % 31; }
+    else { $jm = 7 + intdiv( $days - 186, 30 ); $jd = 1 + ( $days - 186 ) % 30; }
+    return array( $jy, $jm, $jd );
+}
+function bse_dt( $timestamp ) {
+    if ( (int) $timestamp <= 0 ) { return '—'; }
+    $date = ( new DateTimeImmutable( '@' . (int) $timestamp ) )->setTimezone( wp_timezone() );
+    list( $jy, $jm, $jd ) = bse_gregorian_to_jalali( (int) $date->format('Y'), (int) $date->format('n'), (int) $date->format('j') );
+    $months = array( 'فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند' );
+    return bse_fa( $jd . ' ' . $months[$jm - 1] . ' ' . $jy . '، ' . $date->format('H:i') );
+}
+
+function bse_mm( $seconds ) {
+    $seconds = max( 0, (int) $seconds );
+    $hours = floor( $seconds / 3600 );
+    $minutes = floor( $seconds % 3600 / 60 );
+    $rest = $seconds % 60;
+
+    return bse_fa(
+        ( $hours ? sprintf( '%02d:', $hours ) : '' )
+        . sprintf( '%02d:%02d', $minutes, $rest )
+    );
+}
+
+function bse_pct( $percent ) {
+    $value = number_format( (float) $percent, 2, '.', '' );
+    $value = rtrim( rtrim( $value, '0' ), '.' );
+
+    return bse_fa(
+        str_replace( '.', '٫', $value )
+    ) . '٪';
+}
+
+function bse_sweep( $uid = 0 ) {
+    // Account cards only finalize their own user's attempts, never everybody's results.
+    if (!$uid) { return bse_close_due(); }
+    global $wpdb;
+    $last=0;
+    do {
+        $rows=$wpdb->get_results($wpdb->prepare('SELECT id,exam_id FROM '.bse_tbl().' WHERE user_id=%d AND submitted=0 AND id>%d ORDER BY id ASC LIMIT 25',$uid,$last));
+        foreach($rows as $a){$last=(int)$a->id;bse_my((int)$a->exam_id,(int)$uid);}
+    }while(count($rows)===25);
+}
+
+/* ---------- محصول و دسترسی ---------- */
+
+function bse_prods( $exam_id ) {
+    $products = get_post_meta(
+        $exam_id,
+        'bse_products',
+        true
+    );
+
+    return is_array( $products )
+        ? array_values(
+            array_filter(
+                array_map( 'intval', $products )
+            )
+        )
+        : array();
+}
+
+function bse_days( $exam_id ) {
+    $days = get_post_meta( $exam_id, 'bse_days', true );
+
+    if ( '' === $days || false === $days ) {
+        return defined( 'BSE_DEFAULT_DAYS' )
+            ? max( 0, (int) BSE_DEFAULT_DAYS )
+            : 7;
+    }
+
+    return max( 0, (int) $days );
+}
+
+function bse_buys( $uid ) {
+    static $cache = array();
+
+    if ( isset( $cache[ $uid ] ) ) {
+        return $cache[ $uid ];
+    }
+
+    $out = array();
+
+    if ( $uid && function_exists( 'wc_get_orders' ) ) {
+        $user = get_userdata( $uid );
+        $email = $user
+            ? strtolower( (string) $user->user_email )
+            : '';
+
+        $base = array(
+            'status' => array(
+                'wc-processing',
+                'wc-completed',
+            ),
+            'limit' => -1,
+        );
+
+        $orders = array();
+
+        foreach (
+            wc_get_orders(
+                $base + array( 'customer_id' => $uid )
+            ) as $order
+        ) {
+            $orders[ $order->get_id() ] = $order;
+        }
+
+        if ( $email ) {
+            foreach (
+                wc_get_orders(
+                    $base + array(
+                        'billing_email' => $email,
+                    )
+                ) as $order
+            ) {
+                if (
+                    strtolower(
+                        (string) $order->get_billing_email()
+                    ) === $email
+                ) {
+                    $orders[ $order->get_id() ] = $order;
+                }
+            }
+        }
+
+        foreach ( $orders as $order ) {
+            $date = $order->get_date_paid()
+                ? $order->get_date_paid()
+                : $order->get_date_created();
+
+            $timestamp = $date ? $date->getTimestamp() : 0;
+
+            foreach ( $order->get_items() as $item ) {
+                foreach (
+                    array(
+                        (int) $item->get_product_id(),
+                        (int) $item->get_variation_id(),
+                    ) as $product_id
+                ) {
+                    if (
+                        $product_id
+                        && (
+                            ! isset( $out[ $product_id ] )
+                            || $out[ $product_id ] < $timestamp
+                        )
+                    ) {
+                        $out[ $product_id ] = $timestamp;
+                    }
+                }
+            }
+        }
+    }
+
+    $cache[ $uid ] = $out;
+    return $out;
+}
+
+function bse_acc( $exam_id, $uid ) {
+    $products = bse_prods( $exam_id );
+
+    $result = array(
+        'linked' => (bool) $products,
+        'ever' => false,
+        'active' => false,
+        'until' => 0,
+        'pid' => $products ? $products[0] : 0,
+    );
+
+    if ( ! $products || ! $uid ) {
+        return $result;
+    }
+
+    $purchases = bse_buys( $uid );
+    $best = 0;
+
+    foreach ( $products as $product_id ) {
+        if ( isset( $purchases[ $product_id ] ) ) {
+            $result['ever'] = true;
+
+            if ( $purchases[ $product_id ] >= $best ) {
+                $best = $purchases[ $product_id ];
+                $result['pid'] = $product_id;
+            }
+        }
+    }
+
+    if ( $result['ever'] ) {
+        $days = bse_days( $exam_id );
+
+        if ( 0 === $days ) {
+            $result['active'] = true;
+        } else {
+            $result['until'] = $best + $days * DAY_IN_SECONDS;
+            $result['active'] = time() <= $result['until'];
+        }
+    }
+
+    return $result;
+}
+
+function bse_can( $exam_id, $uid ) {
+    if ( ! $uid ) {
+        return false;
+    }
+
+    if ( bse_is_mgr() ) {
+        return true;
+    }
+
+    $access = bse_acc( $exam_id, $uid );
+
+    if ( ! $access['linked'] ) {
+        return defined( 'BSE_OPEN_WITHOUT_PRODUCT' )
+            && BSE_OPEN_WITHOUT_PRODUCT;
+    }
+
+    return $access['active'];
+}
+
+function bse_deny( $exam_id, $uid ) {
+    $access = bse_acc( $exam_id, $uid );
+
+    if (
+        $access['linked']
+        && $access['ever']
+        && ! $access['active']
+    ) {
+        return 'دسترسی شما به این آزمون تمام شده است؛ برای شرکت دوباره باید محصول مربوط به آن را بخرید';
+    }
+
+    return 'برای شرکت در این آزمون باید محصول مربوط به آن را خریداری کنید';
+}
+
+function bse_gate_card( $post, $uid ) {
+    $id = $post->ID;
+    $row = bse_row( $id, $uid );
+    $access = bse_acc( $id, $uid );
+
+    if ( ! $access['linked'] ) {
+        if (
+            $row
+            || (
+                defined( 'BSE_OPEN_WITHOUT_PRODUCT' )
+                && BSE_OPEN_WITHOUT_PRODUCT
+            )
+        ) {
+            return bse_card( $post, $uid );
+        }
+
+        return null;
+    }
+
+    if ( ! $row && ! $access['ever'] ) {
+        return null;
+    }
+
+    $card = bse_card( $post, $uid );
+
+    if ( $access['active'] ) {
+        if ( $access['until'] ) {
+            $card['until'] = $access['until'];
+        }
+    } elseif ( ! $row ) {
+        if ( 'ended' === $card['status'] ) {
+            return null;
+        }
+
+        $card['lock'] = array(
+            'name' => get_the_title( $access['pid'] ),
+            'url' => get_permalink( $access['pid'] ),
+        );
+    }
+
+    return $card;
+}
+
+/* ---------- دروازه API ---------- */
+
+add_action( 'wp_ajax_bse', 'bse_gate', 1 );
+
+function bse_gate() {
+    if ( ! bse_ready() || bse_is_mgr() ) {
+        return;
+    }
+
+    $operation = isset( $_POST['op'] )
+        ? sanitize_key( $_POST['op'] )
+        : '';
+
+    $uid = get_current_user_id();
+
+    if ( 'list' === $operation ) {
+        check_ajax_referer( 'bse', 'n' );
+
+        $out = array();
+
+        $posts = get_posts(
+            array(
+                'post_type' => 'bs_exam',
+                'numberposts' => 200,
+                'orderby' => 'date',
+                'order' => 'DESC',
+            )
+        );
+
+        foreach ( $posts as $post ) {
+            $card = bse_gate_card( $post, $uid );
+
+            if ( $card ) {
+                $out[] = $card;
+            }
+        }
+
+        wp_send_json_success( $out );
+    }
+
+    if (
+        in_array(
+            $operation,
+            array(
+                'get', 'start', 'save',
+                'submit', 'result', 'board',
+            ),
+            true
+        )
+    ) {
+        check_ajax_referer( 'bse', 'n' );
+
+        $id = isset( $_POST['id'] )
+            ? (int) $_POST['id']
+            : 0;
+
+        $post = bse_exam( $id );
+
+        if ( ! $post ) {
+            wp_send_json_error( 'آزمون پیدا نشد' );
+        }
+
+        if ( 'get' === $operation ) {
+            $card = bse_gate_card( $post, $uid );
+
+            if ( ! $card ) {
+                wp_send_json_error( bse_deny( $id, $uid ) );
+            }
+
+            wp_send_json_success( $card );
+        }
+
+        if (
+            ! bse_row( $id, $uid )
+            && ! bse_can( $id, $uid )
+        ) {
+            wp_send_json_error( bse_deny( $id, $uid ) );
+        }
+    }
+}
+
+/* ---------- آدرس‌ها و منوی حساب ---------- */
+
+add_action( 'init', function () {
+    add_rewrite_endpoint(
+        'bse-exams',
+        EP_ROOT | EP_PAGES
+    );
+
+    add_rewrite_endpoint(
+        'bse-results',
+        EP_ROOT | EP_PAGES
+    );
+} );
+
+add_action( 'wp_loaded', function () {
+    if ( '3' !== get_option( 'bse_ep' ) ) {
+        flush_rewrite_rules( false );
+        update_option( 'bse_ep', '3' );
+    }
+} );
+
+add_filter(
+    'woocommerce_get_query_vars',
+    function ( $vars ) {
+        $vars['bse-exams'] = 'bse-exams';
+        $vars['bse-results'] = 'bse-results';
+        return $vars;
+    }
+);
+
+add_filter(
+    'woocommerce_account_menu_items',
+    function ( $items ) {
+        $mine = array(
+            'bse-exams' => 'آزمون‌ها',
+            'bse-results' => 'نتایج آزمون',
+        );
+
+        foreach ( $mine as $key => $label ) {
+            unset( $items[ $key ] );
+        }
+
+        if (
+            ! defined( 'BSE_KEEP_THEME_QUIZ' )
+            || ! BSE_KEEP_THEME_QUIZ
+        ) {
+            unset( $items['quiz-results'] );
+        }
+
+        $anchor = '';
+
+        foreach (
+            array(
+                'study-hours',
+                'my-courses',
+                'dashboard',
+            ) as $key
+        ) {
+            if ( isset( $items[ $key ] ) ) {
+                $anchor = $key;
+                break;
+            }
+        }
+
+        if ( '' === $anchor ) {
+            return $mine + $items;
+        }
+
+        $new = array();
+
+        foreach ( $items as $key => $label ) {
+            $new[ $key ] = $label;
+
+            if ( $key === $anchor ) {
+                $new = $new + $mine;
+            }
+        }
+
+        return $new;
+    },
+    100000
+);
+
+add_filter(
+    'woocommerce_endpoint_bse-exams_title',
+    function () {
+        return 'آزمون‌ها';
+    }
+);
+
+add_filter(
+    'woocommerce_endpoint_bse-results_title',
+    function () {
+        return 'نتایج آزمون';
+    }
+);
+
+add_action(
+    'woocommerce_account_bse-exams_endpoint',
+    function () {
+        echo do_shortcode( '[bs_exams]' );
+    }
+);
+
+/* ---------- نتایج آزمون: کارت‌های کارنامه ---------- */
+
+add_action(
+    'woocommerce_account_bse-results_endpoint',
+    'bse_modern_results_page'
+);
+
+function bse_modern_results_page() {
+    if (
+        ! bse_ready()
+        || ! is_user_logged_in()
+    ) {
+        return;
+    }
+
+    global $wpdb;
+
+    $table = bse_tbl();
+    $uid = get_current_user_id();
+
+    bse_sweep( $uid );
+
+    $rows = $wpdb->get_results(
+        $wpdb->prepare(
+            "SELECT a.*, p.post_title
+            FROM $table a
+            JOIN {$wpdb->posts} p ON p.ID=a.exam_id
+            WHERE a.user_id=%d AND a.submitted>0
+            ORDER BY a.submitted DESC",
+            $uid
+        )
+    );
+
+    $base = wc_get_account_endpoint_url(
+        'bse-exams'
+    );
+
+    echo '<section id="bser-results" class="bser-results" dir="rtl" data-now="' . time() . '" aria-labelledby="bser-title">';
+
+    echo '<header class="bser-header">';
+    echo '<div class="bser-heading">';
+    echo '<span class="bser-heading-icon" aria-hidden="true">▤</span>';
+    echo '<div>';
+    echo '<h3 id="bser-title">نتایج آزمون‌های من</h3>';
+    echo '<p>کارنامه و پاسخ‌نامهٔ آزمون‌هایی که شرکت کرده‌اید</p>';
+    echo '</div></div>';
+
+    echo '<span class="bser-total">'
+        . esc_html( bse_fa( count( $rows ) ) )
+        . ' آزمون ثبت‌شده</span>';
+    echo '</header>';
+
+    if ( ! $rows ) {
+        echo '<div class="bser-empty">';
+        echo '<span aria-hidden="true">▤</span>';
+        echo '<h4>هنوز نتیجه‌ای ثبت نشده</h4>';
+        echo '<p>پس از شرکت در آزمون، نتیجهٔ آن در این بخش نمایش داده می‌شود.</p>';
+        echo '<a class="bser-button bser-primary" href="'
+            . esc_url( $base )
+            . '">رفتن به آزمون‌ها</a>';
+        echo '</div></section>';
+
+        bse_modern_results_assets();
+        return;
+    }
+
+    echo '<div class="bser-toolbar" hidden>';
+    echo '<label class="bser-search">';
+    echo '<span class="bser-sr">جستجوی آزمون</span>';
+    echo '<input id="bser-search" type="search" placeholder="جستجوی آزمون…" autocomplete="off" aria-controls="bser-cards">';
+    echo '<span class="bser-search-icon" aria-hidden="true">⌕</span>';
+    echo '</label>';
+    echo '<span class="bser-search-status" role="status" aria-live="polite"></span>';
+    echo '</div>';
+
+    echo '<div class="bser-cards" id="bser-cards">';
+
+    foreach ( $rows as $row ) {
+        $end = (int) get_post_meta(
+            $row->exam_id,
+            'en',
+            true
+        );
+
+        $release = bse_release_at( $row->exam_id, $row );
+        $released = bse_result_visible( $row->exam_id, $row );
+        if($released && !bse_close_due((int)$row->exam_id)){$released=false;$release=time()+5+mt_rand(0,5);}
+        $temporary = $released && bse_rank_is_temporary( $row->exam_id );
+
+        echo '<article class="bser-card bser-result-row" data-release="' . ( $released ? 0 : (int) $release ) . '" data-search="'
+            . esc_attr( $row->post_title )
+            . '" aria-labelledby="bser-exam-'
+            . (int) $row->id
+            . '">';
+
+        echo '<div class="bser-card-top">';
+        echo '<div class="bser-card-heading">';
+        echo '<span class="bser-exam-icon" aria-hidden="true">▤</span>';
+
+        echo '<h4 id="bser-exam-'
+            . (int) $row->id
+            . '">'
+            . esc_html( $row->post_title )
+            . '</h4>';
+
+        echo '<div class="bser-date">';
+        echo '<span>تاریخ شرکت</span>';
+        echo '<span>'
+            . esc_html( bse_dt( $row->submitted ) )
+            . '</span>';
+        echo '</div></div>';
+
+        if ( $released ) {
+            $result = bse_res( get_post( $row->exam_id ), $row );
+            $rank = $result['rank'];
+            $card_scaled=isset($result['score'])&&$result['score']!==null;$card_pct=$result['pct'];
+
+            /*
+             * حلقه بین صفر و صد رسم می‌شود.
+             * متن درصد، مقدار واقعی و منفی را هم نشان می‌دهد.
+             */
+            $progress = number_format(
+                max(
+                    0,
+                    min( 100, $card_scaled ? ($result['score']-3000)/60 : (float)$card_pct )
+                ),
+                4,
+                '.',
+                ''
+            );
+
+            $long_score = mb_strlen(
+                ($card_scaled?bse_fa($result['score']):bse_pct($card_pct))
+            ) > 5;
+
+            echo '<div class="bser-ring'
+                . ( $long_score ? ' is-long' : '' )
+                . '" style="--bser-progress:'
+                . esc_attr( $progress )
+                . '%">';
+
+            echo '<div><bdi dir="ltr">'
+                . esc_html( ($card_scaled?bse_fa($result['score']):bse_pct($card_pct)) )
+                . '</bdi><span>'.($card_scaled?'تراز کل':'درصد').'</span></div>';
+
+            echo '</div></div>';
+
+            echo '<div class="bser-counts">';
+
+            echo '<div class="bser-count is-correct">';
+            echo '<b>'
+                . esc_html( bse_fa( $row->correct ) )
+                . '</b><span>صحیح</span>';
+            echo '</div>';
+
+            echo '<div class="bser-count is-wrong">';
+            echo '<b>'
+                . esc_html( bse_fa( $row->wrong ) )
+                . '</b><span>غلط</span>';
+            echo '</div>';
+
+            echo '<div class="bser-count is-blank">';
+            echo '<b>'
+                . esc_html( bse_fa( $row->blank ) )
+                . '</b><span>نزده</span>';
+            echo '</div>';
+
+            echo '</div>';
+
+            echo '<div class="bser-metrics">';
+
+            echo '<div>';
+            echo '<span class="bser-metric-icon" aria-hidden="true">◷</span>';
+            echo '<span class="bser-metric-copy">';
+            echo '<small>زمان پاسخ‌گویی</small>';
+            echo '<bdi dir="ltr">'
+                . esc_html( bse_mm( $row->secs ) )
+                . '</bdi>';
+            echo '</span></div>';
+
+            echo '<div>';
+            echo '<span class="bser-metric-icon" aria-hidden="true">☆</span>';
+            echo '<span class="bser-metric-copy">';
+            echo '<small>' . ( $temporary ? 'رتبه موقت' : 'رتبه' ) . '</small>';
+            echo '<b>'
+                . esc_html(
+                    'رتبه ' . bse_fa( $rank )
+                )
+                . '</b>';
+            echo '</span></div>';
+
+            echo '</div>';
+            if ( function_exists('bsem_is') && bsem_is($row->exam_id) ) {
+                echo '<details class="bsem-report" style="padding:12px"><summary>درصد و تراز درس‌ها و دفترچه‌ها</summary>';
+                foreach ( $result['books'] as $book ) {
+                    echo '<p><strong>'.esc_html($book['title']).(isset($book['score'])?' — تراز '.esc_html(bse_fa($book['score'])):'').' — '.esc_html(bse_pct($book['pct'])).'٪</strong></p>';
+                    foreach ( $book['subjects'] as $subject ) {
+                        echo '<p>'.esc_html($subject['title']).(isset($subject['score'])?' — تراز '.esc_html(bse_fa($subject['score'])):'').' (ضریب '.esc_html(bse_fa($subject['weight'])).'): <bdi dir="ltr">'.esc_html(bse_pct($subject['pct'])).'٪</bdi> · '.esc_html(bse_fa($subject['correct'])).' صحیح · '.esc_html(bse_fa($subject['wrong'])).' غلط · '.esc_html(bse_fa($subject['blank'])).' نزده</p>';
+                    }
+                }
+                echo '</details>';
+            }
+
+            echo '<div class="bser-actions">';
+
+            echo '<a class="bser-button bser-primary" href="'
+                . esc_url(
+                    $base . '#/b/' . $row->exam_id
+                )
+                . '" aria-label="نفرات برتر آزمون '
+                . esc_attr( $row->post_title )
+                . '">نفرات برتر</a>';
+
+            echo '<a class="bser-button bser-secondary" href="'
+                . esc_url(
+                    $base . '#/a/' . $row->exam_id
+                )
+                . '" aria-label="پاسخ‌نامهٔ '
+                . esc_attr( $row->post_title )
+                . '">پاسخ‌نامه</a>';
+            if(function_exists('bse_practice_available') && bse_practice_available((int)$row->exam_id,get_current_user_id())){
+                echo '<a class="bser-button bser-secondary" style="grid-column:1/-1" href="'.esc_url($base.'#/practice/info/'.$row->exam_id).'">آزمون تمرینی (نامحدود)</a>';
+            }
+
+
+            echo '</div>';
+        } else {
+            echo '<span class="bser-pending-label">در انتظار انتشار</span>';
+            echo '</div>';
+
+            echo '<div class="bser-pending">';
+            echo '<strong>نتیجه هنوز منتشر نشده</strong>';
+            echo '<p>' . ( bse_early_results( $row->exam_id ) ? 'نتیجه پس از پایان مدت پاسخ‌گویی شما (' : 'نتیجه پس از پایان مهلت آزمون (' )
+                . esc_html( bse_dt( $release ) )
+                . ') منتشر می‌شود.</p>';
+            echo '</div>';
+
+            echo '<div class="bser-actions bser-single">';
+            echo '<a class="bser-button bser-secondary" href="'
+                . esc_url(
+                    $base . '#/e/' . $row->exam_id
+                )
+                . '">مشاهده آزمون</a>';
+            echo '</div>';
+        }
+
+        echo '</article>';
+    }
+
+    echo '</div>';
+
+    echo '<div class="bser-no-results" hidden>آزمونی با این نام پیدا نشد.</div>';
+    echo '</section>';
+
+    bse_modern_results_assets();
+}
+
+/* ---------- ظاهر کارت‌ها و جستجو ---------- */
+
+function bse_modern_results_assets() {
+    echo <<<'BSERUI'
+<style>
+#bser-results{
+ --br-text:#302443;
+ --br-muted:#897d96;
+ --br-line:#ebe5f4;
+ direction:rtl;
+ text-align:right;
+ font-family:inherit;
+ color:var(--br-text);
+ padding:22px;
+ border:1px solid #e5def6;
+ border-radius:22px;
+ background:linear-gradient(140deg,#f8f7ff,#eef1ff);
+ box-shadow:0 8px 26px #4733710a;
+ min-width:0;
+ max-width:100%;
+ box-sizing:border-box;
+}
+#bser-results *{box-sizing:border-box}
+#bser-results [hidden]{display:none!important}
+
+#bser-results .bser-header{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:16px;
+ margin-bottom:22px;
+}
+#bser-results .bser-heading{
+ display:flex;
+ align-items:center;
+ gap:12px;
+ min-width:0;
+}
+#bser-results .bser-heading-icon{
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ width:46px;
+ height:46px;
+ flex:0 0 46px;
+ border-radius:14px;
+ background:#eae4fc;
+ color:#7050aa;
+ font-size:27px;
+}
+#bser-results h3{
+ font-size:20px;
+ line-height:1.7;
+ font-weight:800;
+ color:var(--br-text);
+ margin:0 0 3px;
+}
+#bser-results .bser-heading p{
+ font-size:12px;
+ color:var(--br-muted);
+ margin:0;
+ line-height:1.8;
+}
+#bser-results .bser-total{
+ display:inline-flex;
+ padding:6px 12px;
+ background:#fff;
+ border:1px solid #e1d9f4;
+ color:#7b639d;
+ border-radius:99px;
+ font-size:12px;
+ white-space:nowrap;
+}
+#bser-results .bser-toolbar{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:12px;
+ margin-bottom:18px;
+}
+#bser-results .bser-search{
+ display:block;
+ position:relative;
+ width:310px;
+ max-width:100%;
+ margin:0;
+}
+#bser-results .bser-search input{
+ display:block;
+ width:100%;
+ height:44px;
+ padding:0 13px 0 40px;
+ border:1px solid #e1d9ef!important;
+ border-radius:12px;
+ background:#fff!important;
+ color:var(--br-text)!important;
+ font-family:inherit;
+ font-size:13px;
+ box-shadow:none;
+ outline:none;
+}
+#bser-results .bser-search input:focus{
+ border-color:#aa8ed2!important;
+ box-shadow:0 0 0 3px #764ba214;
+}
+#bser-results .bser-search-icon{
+ position:absolute;
+ left:14px;
+ top:3px;
+ font-size:27px;
+ color:#8b7ba7;
+ pointer-events:none;
+}
+#bser-results .bser-search-status{
+ font-size:12px;
+ color:var(--br-muted);
+}
+
+/* شبکه کارت‌ها */
+#bser-results .bser-cards{
+ display:grid;
+ grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:18px;
+ min-width:0;
+}
+#bser-results .bser-card{
+ display:flex;
+ flex-direction:column;
+ min-width:0;
+ padding:22px;
+ border:1px solid #e3dcf1;
+ border-radius:20px;
+ background:#fff;
+ box-shadow:0 5px 18px #5b3b7b07;
+}
+#bser-results .bser-card-top{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:16px;
+ margin-bottom:20px;
+}
+#bser-results .bser-card-heading{
+ display:grid;
+ grid-template-columns:42px minmax(0,1fr);
+ align-items:center;
+ gap:7px 10px;
+ min-width:0;
+ flex:1;
+}
+#bser-results .bser-exam-icon{
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ width:42px;
+ height:44px;
+ border-radius:12px;
+ background:#f0ebfc;
+ color:#8c6bb9;
+ font-size:27px;
+ grid-column:1;
+ grid-row:1;
+}
+#bser-results .bser-card h4{
+ font-family:inherit;
+ font-size:16px;
+ font-weight:800;
+ line-height:1.9;
+ color:#302443;
+ margin:0;
+ overflow-wrap:anywhere;
+ grid-column:2;
+ grid-row:1;
+}
+#bser-results .bser-date{
+ display:flex;
+ flex-wrap:wrap;
+ gap:2px 7px;
+ grid-column:1/-1;
+ color:#8c7e99;
+ font-size:11px;
+ line-height:1.9;
+}
+#bser-results .bser-date>span:first-child{
+ color:#9a8ca6;
+}
+
+/* درصد دایره‌ای */
+#bser-results .bser-ring{
+ display:grid;
+ place-items:center;
+ flex:0 0 94px;
+ width:94px;
+ height:94px;
+ border-radius:50%;
+ position:relative;
+ background:conic-gradient(
+  from -90deg,
+  #8368de var(--bser-progress),
+  #eeebf7 0
+ );
+}
+#bser-results .bser-ring::before{
+ content:"";
+ position:absolute;
+ inset:9px;
+ border-radius:50%;
+ background:#fff;
+}
+#bser-results .bser-ring>div{
+ position:relative;
+ display:flex;
+ align-items:center;
+ flex-direction:column;
+ gap:1px;
+ padding:12px;
+}
+#bser-results .bser-ring bdi{
+ font-size:22px;
+ font-weight:800;
+ line-height:1.4;
+ color:#4f3a75;
+ white-space:nowrap;
+}
+#bser-results .bser-ring.is-long bdi{
+ font-size:16px;
+}
+#bser-results .bser-ring span{
+ font-size:11px;
+ color:#9686a6;
+}
+
+/* صحیح، غلط و نزده */
+#bser-results .bser-counts{
+ display:grid;
+ grid-template-columns:repeat(3,minmax(0,1fr));
+ gap:9px;
+ padding-top:18px;
+ margin-bottom:16px;
+ border-top:1px solid var(--br-line);
+}
+#bser-results .bser-count{
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ flex-direction:column;
+ gap:3px;
+ padding:12px 7px;
+ border-radius:12px;
+ min-width:0;
+}
+#bser-results .bser-count b{
+ font-size:20px;
+ line-height:1.4;
+ font-weight:800;
+}
+#bser-results .bser-count span{
+ font-size:12px;
+}
+#bser-results .is-correct{
+ background:#eaf7f0;
+ color:#2c8a60;
+}
+#bser-results .is-wrong{
+ background:#fff0f2;
+ color:#c5556b;
+}
+#bser-results .is-blank{
+ background:#f0f1f7;
+ color:#7f879d;
+}
+
+/* زمان و رتبه */
+#bser-results .bser-metrics{
+ display:grid;
+ grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:10px;
+ margin-bottom:20px;
+}
+#bser-results .bser-metrics>div{
+ display:flex;
+ align-items:center;
+ gap:9px;
+ padding:11px 12px;
+ border-radius:12px;
+ background:#f7f5fc;
+ min-width:0;
+}
+#bser-results .bser-metric-icon{
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ flex:0 0 28px;
+ color:#9d83c2;
+ font-size:25px;
+}
+#bser-results .bser-metric-copy{
+ display:flex;
+ flex-direction:column;
+ gap:3px;
+ min-width:0;
+}
+#bser-results .bser-metric-copy small{
+ font-size:11px;
+ color:#8b7c9b;
+}
+#bser-results .bser-metric-copy b,
+#bser-results .bser-metric-copy bdi{
+ font-size:14px;
+ font-weight:700;
+ color:#6e528e;
+ overflow-wrap:anywhere;
+}
+
+/* دکمه‌های پایین کارت */
+#bser-results .bser-actions{
+ display:grid;
+ grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:10px;
+ margin-top:auto;
+}
+#bser-results .bser-actions.bser-single{
+ grid-template-columns:minmax(0,1fr);
+}
+#bser-results a.bser-button{
+ display:inline-flex;
+ align-items:center;
+ justify-content:center;
+ min-height:44px;
+ padding:10px 12px;
+ border-radius:11px;
+ font-size:13px;
+ font-weight:600;
+ line-height:1.7;
+ text-decoration:none!important;
+ border:1px solid transparent;
+ transition:background .15s,box-shadow .15s;
+ text-align:center;
+}
+#bser-results a.bser-primary{
+ background:linear-gradient(135deg,#667eea,#764ba2);
+ color:#fff!important;
+ box-shadow:0 3px 8px #764ba218;
+}
+#bser-results a.bser-primary:hover{
+ background:linear-gradient(135deg,#586dcc,#65408d);
+}
+#bser-results a.bser-secondary{
+ background:#fff;
+ color:#8160b2!important;
+ border-color:#d7c6ee;
+}
+#bser-results a.bser-secondary:hover{
+ background:#f7f3ff;
+ border-color:#bba1dd;
+}
+#bser-results a.bser-button:focus-visible{
+ outline:2px solid #9c7dcb;
+ outline-offset:3px;
+}
+
+/* نتیجه منتشرنشده */
+#bser-results .bser-pending-label{
+ display:inline-flex;
+ flex-shrink:0;
+ white-space:nowrap;
+ padding:5px 10px;
+ background:#fff5e5;
+ color:#966a2c;
+ border:1px solid #f3e3c8;
+ border-radius:99px;
+ font-size:11px;
+}
+#bser-results .bser-pending{
+ display:flex;
+ flex-direction:column;
+ justify-content:center;
+ gap:9px;
+ padding:22px 16px;
+ background:#fffcf6;
+ border:1px dashed #eadfc9;
+ border-radius:13px;
+ flex:1;
+ margin-bottom:20px;
+}
+#bser-results .bser-pending strong{
+ font-size:14px;
+ color:#987944;
+}
+#bser-results .bser-pending p{
+ margin:0;
+ font-size:12px;
+ color:#958774;
+ line-height:2;
+}
+
+/* حالت خالی و جستجو */
+#bser-results .bser-empty{
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ flex-direction:column;
+ text-align:center;
+ background:#fff;
+ border:1px solid var(--br-line);
+ border-radius:16px;
+ padding:42px 20px;
+ gap:12px;
+}
+#bser-results .bser-empty>span{
+ font-size:44px;
+ color:#b1a0cf;
+}
+#bser-results .bser-empty h4{
+ margin:0;
+ color:#655475;
+ font-size:16px;
+}
+#bser-results .bser-empty p{
+ margin:0 0 8px;
+ color:#8b7d97;
+ font-size:13px;
+ line-height:1.9;
+}
+#bser-results .bser-no-results{
+ padding:30px 16px;
+ text-align:center;
+ border:1px dashed #dcd1ed;
+ border-radius:12px;
+ background:#fff;
+ margin-top:12px;
+ font-size:13px;
+ color:#8a769d;
+}
+#bser-results .bser-sr{
+ position:absolute;
+ width:1px;
+ height:1px;
+ padding:0;
+ margin:-1px;
+ overflow:hidden;
+ clip:rect(0,0,0,0);
+ white-space:nowrap;
+ border:0;
+}
+
+/* تبلت و موبایل */
+@media(max-width:850px){
+ #bser-results .bser-cards{
+  grid-template-columns:minmax(0,1fr);
+ }
+}
+
+@media(max-width:600px){
+ #bser-results{
+  padding:14px;
+  border-radius:18px;
+ }
+ #bser-results .bser-header{
+  align-items:flex-start;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-bottom:18px;
+ }
+ #bser-results h3{
+  font-size:17px;
+ }
+ #bser-results .bser-heading-icon{
+  width:40px;
+  height:40px;
+  flex-basis:40px;
+ }
+ #bser-results .bser-heading p{
+  font-size:11px;
+ }
+ #bser-results .bser-toolbar{
+  flex-direction:column;
+  align-items:stretch;
+  gap:8px;
+ }
+ #bser-results .bser-search{
+  width:100%;
+ }
+ #bser-results .bser-total{
+  font-size:11px;
+ }
+ #bser-results .bser-card{
+  padding:17px 14px;
+  border-radius:17px;
+ }
+ #bser-results .bser-card-top{
+  gap:10px;
+  margin-bottom:16px;
+  flex-wrap:wrap;
+ }
+ #bser-results .bser-card-heading{
+  grid-template-columns:32px minmax(0,1fr);
+  gap:6px 7px;
+  flex-basis:130px;
+ }
+ #bser-results .bser-exam-icon{
+  width:32px;
+  height:36px;
+  border-radius:9px;
+  font-size:23px;
+ }
+ #bser-results .bser-card h4{
+  font-size:14px;
+ }
+ #bser-results .bser-ring{
+  flex-basis:80px;
+  width:80px;
+  height:80px;
+ }
+ #bser-results .bser-ring::before{
+  inset:8px;
+ }
+ #bser-results .bser-ring bdi{
+  font-size:19px;
+ }
+ #bser-results .bser-ring.is-long bdi{
+  font-size:14px;
+ }
+ #bser-results .bser-counts{
+  gap:7px;
+  padding-top:15px;
+  margin-bottom:12px;
+ }
+ #bser-results .bser-count{
+  padding:10px 5px;
+ }
+ #bser-results .bser-count b{
+  font-size:18px;
+ }
+ #bser-results .bser-count span{
+  font-size:11px;
+ }
+ #bser-results .bser-metrics{
+  gap:7px;
+  margin-bottom:16px;
+ }
+ #bser-results .bser-metrics>div{
+  padding:10px 7px;
+  gap:5px;
+ }
+ #bser-results .bser-metric-icon{
+  flex-basis:22px;
+  font-size:22px;
+ }
+ #bser-results .bser-metric-copy small{
+  font-size:10px;
+ }
+ #bser-results .bser-metric-copy b,
+ #bser-results .bser-metric-copy bdi{
+  font-size:13px;
+ }
+ #bser-results a.bser-button{
+  font-size:12px;
+  padding:10px 7px;
+ }
+ #bser-results .bser-actions{
+  gap:8px;
+ }
+}
+</style>
+
+<script>
+(function () {
+    'use strict';
+
+    var root = document.getElementById('bser-results');
+    if (!root) return;
+
+    var serverNow = +(root.getAttribute('data-now') || 0), loadedAt = Date.now();
+    var releases = Array.prototype.map.call(root.querySelectorAll('[data-release]'), function (el) { return +el.getAttribute('data-release'); }).filter(function (n) { return n > 0; });
+    if (releases.length && serverNow) {
+        var next = Math.min.apply(Math, releases), refreshing = false;
+        var refreshTimer = setInterval(function () {
+            if (!refreshing && serverNow + (Date.now() - loadedAt) / 1000 >= next + 1) {
+                refreshing = true; clearInterval(refreshTimer); location.reload();
+            }
+        }, 1000);
+    }
+    var input = root.querySelector('#bser-search');
+    if (!input) return;
+
+    var rows = Array.prototype.slice.call(
+        root.querySelectorAll('.bser-result-row')
+    );
+
+    var status = root.querySelector(
+        '.bser-search-status'
+    );
+
+    var empty = root.querySelector(
+        '.bser-no-results'
+    );
+
+    function normalize(value) {
+        return String(value || '')
+            .replace(/[يى]/g, 'ی')
+            .replace(/ك/g, 'ک')
+            .replace(/[۰-۹]/g, function (digit) {
+                return '۰۱۲۳۴۵۶۷۸۹'.indexOf(digit);
+            })
+            .replace(/[٠-٩]/g, function (digit) {
+                return '٠١٢٣٤٥٦٧٨٩'.indexOf(digit);
+            })
+            .replace(
+                /[\s\u200c\u200e\u200f\u202a-\u202e\u2066-\u2069-]+/g,
+                ''
+            )
+            .toLowerCase();
+    }
+
+    function fa(value) {
+        return String(value).replace(
+            /\d/g,
+            function (digit) {
+                return '۰۱۲۳۴۵۶۷۸۹'.charAt(+digit);
+            }
+        );
+    }
+
+    function filter() {
+        var query = normalize(input.value);
+        var count = 0;
+
+        rows.forEach(function (row) {
+            var match = normalize(
+                row.getAttribute('data-search')
+            ).indexOf(query) !== -1;
+
+            row.hidden = !match;
+
+            if (match) count++;
+        });
+
+        status.textContent = query
+            ? fa(count) + ' از '
+                + fa(rows.length) + ' آزمون'
+            : '';
+
+        empty.hidden = count !== 0;
+    }
+
+    root.querySelector('.bser-toolbar').hidden = false;
+    input.addEventListener('input', filter);
+
+    filter();
+})();
+</script>
+BSERUI;
+}
+
+/* ---------- منوی مدیریت وردپرس ---------- */
+
+add_action( 'admin_menu', function () {
+    if ( ! bse_ok() ) {
+        return;
+    }
+
+    $capability = bse_cap();
+
+    add_menu_page(
+        'آزمون‌ها',
+        'آزمون‌ها',
+        $capability,
+        'bse-exams',
+        'bse_page_app',
+        'dashicons-welcome-learn-more',
+        56
+    );
+
+    add_submenu_page(
+        'bse-exams',
+        'آزمون‌ها',
+        'آزمون‌ها',
+        $capability,
+        'bse-exams',
+        'bse_page_app'
+    );
+
+    add_submenu_page(
+        'bse-exams',
+        'نتایج آزمون‌ها',
+        'نتایج آزمون‌ها',
+        $capability,
+        'bse-attempts',
+        'bse_page_attempts'
+    );
+
+    add_submenu_page(
+        'bse-exams',
+        'اتصال آزمون به محصول',
+        'اتصال به محصول',
+        $capability,
+        'bse-access',
+        'bse_page_access'
+    );
+} );
+
+/* ---------- محیط مدیریت آزمون‌ساز ---------- */
+
+add_action(
+    'admin_enqueue_scripts',
+    function ( $hook ) {
+        if ( 'toplevel_page_bse-exams' !== $hook ) {
+            return;
+        }
+
+        $uploads = wp_upload_dir();
+
+        wp_enqueue_style(
+            'bse',
+            $uploads['baseurl'] . '/bs-exam.css',
+            array(),
+            '2.6-personal-results-20261031'
+        );
+
+        wp_add_inline_style(
+            'bse',
+            '#bse-adminbox{padding:18px 20px 0 0;max-width:1100px}'
+        );
+
+        wp_enqueue_script(
+            'bse',
+            $uploads['baseurl'] . '/bs-exam.js',
+            array(),
+            '2.6-personal-results-20261031',
+            true
+        );
+
+        wp_localize_script(
+            'bse',
+            'BSE',
+            array(
+                'ajax' => admin_url( 'admin-ajax.php' ),
+                'login' => wp_login_url(),
+                'results_url' => wc_get_account_endpoint_url( 'bse-results' ),
+                'timezone' => wp_timezone_string(),
+                'base' => function_exists(
+                    'wc_get_account_endpoint_url'
+                )
+                    ? wc_get_account_endpoint_url(
+                        'bse-exams'
+                    )
+                    : home_url( '/' ),
+                'admin' => 1,
+            )
+        );
+
+        wp_add_inline_script(
+            'bse',
+            "if(!location.hash){location.hash='#/m';}",
+            'before'
+        );
+    },
+    20
+);
+
+function bse_page_app() {
+    echo '<div id="bse-adminbox">';
+    echo '<div id="bse-app" class="bse" dir="rtl"></div>';
+    echo '</div>';
+}
+
+/* ---------- نتایج مدیریت ---------- */
+
+function bse_att_query( $exam, $search, $limit, $offset ) {
+    global $wpdb;
+
+    $table = bse_tbl();
+    $where = 'a.submitted>0';
+    $args = array();
+
+    if ( $exam ) {
+        $where .= ' AND a.exam_id=%d';
+        $args[] = $exam;
+    }
+
+    if ( '' !== $search ) {
+        $like = '%' . $wpdb->esc_like( $search ) . '%';
+
+        $where .= " AND (
+            u.display_name LIKE %s
+            OR u.user_login LIKE %s
+            OR u.user_email LIKE %s
+            OR EXISTS(
+                SELECT 1
+                FROM {$wpdb->usermeta} m
+                WHERE m.user_id=a.user_id
+                AND m.meta_key IN (
+                    'first_name',
+                    'last_name',
+                    'billing_phone'
+                )
+                AND m.meta_value LIKE %s
+            )
+        )";
+
+        array_push(
+            $args,
+            $like,
+            $like,
+            $like,
+            $like
+        );
+    }
+
+    $from = "FROM $table a
+        LEFT JOIN {$wpdb->users} u ON u.ID=a.user_id
+        JOIN {$wpdb->posts} p ON p.ID=a.exam_id";
+
+    $order = $exam
+        ? 'a.pct DESC, a.secs ASC'
+        : 'a.submitted DESC';
+
+    $summary_query = "SELECT COUNT(*) c, AVG(a.pct) v
+        $from WHERE $where";
+
+    $summary = $wpdb->get_row(
+        $args
+            ? $wpdb->prepare( $summary_query, $args )
+            : $summary_query
+    );
+
+    $row_args = $args;
+    $row_args[] = (int) $limit;
+    $row_args[] = (int) $offset;
+
+    $rows = $wpdb->get_results(
+        $wpdb->prepare(
+            "SELECT a.*, p.post_title
+            $from WHERE $where
+            ORDER BY $order
+            LIMIT %d OFFSET %d",
+            $row_args
+        )
+    );
+
+    return array(
+        $rows,
+        (int) $summary->c,
+        (float) $summary->v,
+    );
+}
+
+function bse_mobile( $uid ) {
+    $mobile = get_user_meta(
+        $uid,
+        'billing_phone',
+        true
+    );
+
+    if ( $mobile ) {
+        return $mobile;
+    }
+
+    $user = get_userdata( $uid );
+
+    return $user ? $user->user_login : '';
+}
+
+function bse_page_attempts() {
+    if ( ! bse_ok() ) {
+        return;
+    }
+
+    if(false===bse_sweep())wp_die('نتایج در حال نهایی‌سازی است؛ چند ثانیه بعد صفحه را تازه کنید.');
+
+    $exam = isset( $_GET['exam'] )
+        ? (int) $_GET['exam']
+        : 0;
+
+    $search = isset( $_GET['s'] )
+        ? sanitize_text_field(
+            wp_unslash( $_GET['s'] )
+        )
+        : '';
+
+    $per_page = 30;
+
+    $page = max(
+        1,
+        isset( $_GET['paged'] )
+            ? (int) $_GET['paged']
+            : 1
+    );
+
+    $offset = ( $page - 1 ) * $per_page;
+
+    list( $rows, $total, $average ) = bse_att_query(
+        $exam,
+        $search,
+        $per_page,
+        $offset
+    );
+
+    $exams = get_posts(
+        array(
+            'post_type' => 'bs_exam',
+            'numberposts' => 200,
+            'orderby' => 'date',
+            'order' => 'DESC',
+        )
+    );
+
+    $csv = wp_nonce_url(
+        admin_url(
+            'admin-post.php?action=bse_csv&exam='
+            . $exam . '&s=' . rawurlencode( $search )
+        ),
+        'bse_csv'
+    );
+
+    echo '<div class="wrap" dir="rtl">';
+    echo '<h1 class="wp-heading-inline">نتایج آزمون‌ها</h1> ';
+    echo '<a class="page-title-action" href="'
+        . esc_url( $csv )
+        . '">خروجی Excel (CSV)</a>';
+    echo '<hr class="wp-header-end">';
+
+    echo '<form method="get" style="margin:14px 0">';
+    echo '<input type="hidden" name="page" value="bse-attempts">';
+    echo '<select name="exam">';
+    echo '<option value="0">همه‌ی آزمون‌ها</option>';
+
+    foreach ( $exams as $post ) {
+        echo '<option value="' . (int) $post->ID . '"'
+            . selected( $exam, $post->ID, false )
+            . '>'
+            . esc_html( $post->post_title )
+            . '</option>';
+    }
+
+    echo '</select> ';
+    echo '<input type="search" name="s" value="'
+        . esc_attr( $search )
+        . '" placeholder="نام، موبایل یا ایمیل"> ';
+    echo '<button class="button">فیلتر</button>';
+    echo '</form>';
+
+    echo '<p><b>'
+        . esc_html( bse_fa( $total ) )
+        . '</b> آزمون گرفته‌شده';
+
+    if ( $total ) {
+        echo ' — میانگین درصد: <b>'
+            . esc_html( bse_pct( $average ) )
+            . '</b>';
+    }
+
+    echo '</p>';
+    echo '<table class="widefat striped"><thead><tr>';
+
+    foreach (
+        array(
+            'رتبه', 'نام شرکت‌کننده', 'موبایل',
+            'آزمون', 'تاریخ شرکت', 'درصد',
+            'صحیح', 'غلط', 'نزده', 'زمان',
+        ) as $heading
+    ) {
+        echo '<th>' . esc_html( $heading ) . '</th>';
+    }
+
+    echo '</tr></thead><tbody>';
+
+    if ( ! $rows ) {
+        echo '<tr><td colspan="10">هنوز آزمونی گرفته نشده است.</td></tr>';
+    }
+
+    foreach ( $rows as $index => $row ) {
+        $uid = (int) $row->user_id;
+        $edit = get_edit_user_link( $uid );
+
+        echo '<tr><td>'
+            . (
+                $exam
+                    ? esc_html(
+                        bse_fa( $offset + $index + 1 )
+                    )
+                    : '—'
+            )
+            . '</td>';
+
+        echo '<td>'
+            . (
+                $edit
+                    ? '<a href="' . esc_url( $edit ) . '">'
+                        . esc_html( bse_name( $uid ) )
+                        . '</a>'
+                    : esc_html( bse_name( $uid ) )
+            )
+            . '</td>';
+
+        echo '<td style="direction:ltr;text-align:right">'
+            . esc_html( bse_mobile( $uid ) )
+            . '</td>';
+
+        echo '<td>'
+            . esc_html( $row->post_title )
+            . '</td>';
+
+        echo '<td>'
+            . esc_html( bse_dt( $row->submitted ) )
+            . '</td>';
+
+        echo '<td><b>'
+            . esc_html( bse_pct( $row->pct ) )
+            . '</b></td>';
+
+        echo '<td>'
+            . esc_html( bse_fa( $row->correct ) )
+            . '</td>';
+
+        echo '<td>'
+            . esc_html( bse_fa( $row->wrong ) )
+            . '</td>';
+
+        echo '<td>'
+            . esc_html( bse_fa( $row->blank ) )
+            . '</td>';
+
+        echo '<td>'
+            . esc_html( bse_mm( $row->secs ) )
+            . '</td></tr>';
+    }
+
+    echo '</tbody></table>';
+
+    $pages = max(
+        1,
+        (int) ceil( $total / $per_page )
+    );
+
+    if ( $pages > 1 ) {
+        echo '<div class="tablenav">';
+        echo '<div class="tablenav-pages">';
+
+        echo paginate_links(
+            array(
+                'base' => add_query_arg( 'paged', '%#%' ),
+                'format' => '',
+                'current' => $page,
+                'total' => $pages,
+            )
+        );
+
+        echo '</div></div>';
+    }
+
+    echo '</div>';
+}
+
+/* ---------- خروجی CSV ---------- */
+
+add_action( 'admin_post_bse_csv', function () {
+    if ( ! bse_ok() ) {
+        wp_die( 'دسترسی ندارید' );
+    }
+
+    check_admin_referer( 'bse_csv' );
+    if(false===bse_sweep())wp_die('نتایج در حال نهایی‌سازی است؛ چند ثانیه بعد صفحه را تازه کنید.');
+
+    $exam = isset( $_GET['exam'] )
+        ? (int) $_GET['exam']
+        : 0;
+
+    $search = isset( $_GET['s'] )
+        ? sanitize_text_field(
+            wp_unslash( $_GET['s'] )
+        )
+        : '';
+
+    list( $rows ) = bse_att_query(
+        $exam,
+        $search,
+        100000,
+        0
+    );
+
+    $lines = array(
+        array(
+            'رتبه', 'نام', 'موبایل', 'آزمون',
+            'درصد', 'صحیح', 'غلط', 'بدون پاسخ',
+            'زمان (ثانیه)', 'تاریخ شرکت',
+        ),
+    );
+
+    foreach ( $rows as $index => $row ) {
+        $lines[] = array(
+            $exam ? $index + 1 : '',
+            bse_name( $row->user_id ),
+            '="' . bse_mobile( $row->user_id ) . '"',
+            $row->post_title,
+            $row->pct,
+            $row->correct,
+            $row->wrong,
+            $row->blank,
+            $row->secs,
+            wp_date(
+                'Y-m-d H:i',
+                (int) $row->submitted
+            ),
+        );
+    }
+
+    nocache_headers();
+
+    header( 'Content-Type: text/csv; charset=utf-8' );
+
+    header(
+        'Content-Disposition: attachment; filename=exam-results-'
+        . wp_date( 'Ymd' )
+        . '.csv'
+    );
+
+    echo "\xEF\xBB\xBF";
+
+    foreach ( $lines as $line ) {
+        echo implode(
+            ',',
+            array_map(
+                function ( $cell ) {
+                    $cell = (string) $cell;
+
+                    return (
+                        preg_match( '/[",\n]/', $cell )
+                        && $cell[0] !== '='
+                    )
+                        ? '"'
+                            . str_replace(
+                                '"',
+                                '""',
+                                $cell
+                            )
+                            . '"'
+                        : $cell;
+                },
+                $line
+            )
+        ) . "\r\n";
+    }
+
+    exit;
+} );
+
+/* ---------- اتصال آزمون به محصول ---------- */
+
+function bse_page_access() {
+    if ( ! bse_ok() ) {
+        return;
+    }
+
+    $exams = get_posts(
+        array(
+            'post_type' => 'bs_exam',
+            'numberposts' => 200,
+            'orderby' => 'date',
+            'order' => 'DESC',
+        )
+    );
+
+    $products = function_exists( 'wc_get_products' )
+        ? wc_get_products(
+            array(
+                'status' => 'publish',
+                'limit' => 400,
+                'orderby' => 'title',
+                'order' => 'ASC',
+            )
+        )
+        : array();
+
+    $list = array();
+
+    foreach ( $products as $product ) {
+        $list[ $product->get_id() ] = $product->get_name();
+    }
+
+    echo '<div class="wrap" dir="rtl">';
+    echo '<h1>اتصال آزمون به محصول</h1>';
+
+    if ( isset( $_GET['saved'] ) ) {
+        echo '<div class="notice notice-success is-dismissible"><p>ذخیره شد.</p></div>';
+    }
+
+    echo '<p>هر آزمون را به یک یا چند محصول وصل کنید. دانش‌آموزی که یکی از این محصول‌ها را بخرد (سفارش «در حال انجام» یا «تکمیل‌شده»)، آزمون در بخش «آزمون‌ها» در پیشخوان خودش فعال می‌شود. دسترسی فقط تا «مدت دسترسی» بعد از خرید باز است؛ بعد از آن باید دوباره محصول را بخرد. نتیجه‌ی آزمون‌هایی که داده برای همیشه باقی می‌ماند. آزمونِ بدون محصول فقط برای مدیر دیده می‌شود.</p>';
+
+    if ( ! $exams ) {
+        echo '<p>هنوز آزمونی نساخته‌اید.</p></div>';
+        return;
+    }
+
+    echo '<form method="post" action="'
+        . esc_url( admin_url( 'admin-post.php' ) )
+        . '">';
+
+    echo '<input type="hidden" name="action" value="bse_access">';
+
+    wp_nonce_field( 'bse_access' );
+
+    foreach ( $exams as $post ) {
+        $selected = bse_prods( $post->ID );
+        $extra = array_diff(
+            $selected,
+            array_keys( $list )
+        );
+
+        echo '<div style="background:#fff;border:1px solid #dcdcde;border-radius:8px;padding:14px 16px;margin:0 0 14px;max-width:760px">';
+
+        echo '<input type="hidden" name="bse_e[]" value="'
+            . (int) $post->ID . '">';
+
+        echo '<h2 style="margin:0 0 4px">'
+            . esc_html( $post->post_title )
+            . '</h2>';
+
+        echo '<p style="margin:0 0 10px;color:#646970">از '
+            . esc_html(
+                bse_dt(
+                    get_post_meta( $post->ID, 'st', true )
+                )
+            )
+            . ' تا '
+            . esc_html(
+                bse_dt(
+                    get_post_meta( $post->ID, 'en', true )
+                )
+            )
+            . (
+                $selected
+                    ? ''
+                    : ' — <b style="color:#b32d2e">بدون محصول (فقط مدیر)</b>'
+            )
+            . '</p>';
+
+        echo '<div style="max-height:190px;overflow:auto;border:1px solid #e2e4e7;border-radius:6px;padding:8px 12px">';
+
+        foreach ( $extra as $product_id ) {
+            echo '<label style="display:block;padding:2px 0">';
+            echo '<input type="checkbox" name="bse_p['
+                . (int) $post->ID
+                . '][]" value="'
+                . (int) $product_id
+                . '" checked> '
+                . esc_html( get_the_title( $product_id ) )
+                . ' <small>(#'
+                . (int) $product_id
+                . ')</small></label>';
+        }
+
+        foreach ( $list as $product_id => $name ) {
+            echo '<label style="display:block;padding:2px 0">';
+            echo '<input type="checkbox" name="bse_p['
+                . (int) $post->ID
+                . '][]" value="'
+                . (int) $product_id
+                . '"'
+                . checked(
+                    in_array(
+                        $product_id,
+                        $selected,
+                        true
+                    ),
+                    true,
+                    false
+                )
+                . '> '
+                . esc_html( $name )
+                . '</label>';
+        }
+
+        if ( ! $list && ! $extra ) {
+            echo 'محصولی پیدا نشد (ووکامرس فعال است؟).';
+        }
+
+        echo '</div>';
+
+        echo '<p style="margin:12px 0 0">';
+        echo '<label><b>مدت دسترسی بعد از خرید:</b> ';
+        echo '<input type="number" min="0" max="3650" name="bse_d['
+            . (int) $post->ID
+            . ']" value="'
+            . esc_attr( bse_days( $post->ID ) )
+            . '" style="width:80px"> روز ';
+        echo '<small style="color:#646970">(۰ یعنی نامحدود)</small>';
+        echo '</label></p></div>';
+    }
+
+    submit_button( 'ذخیره‌ی اتصال‌ها' );
+
+    echo '</form></div>';
+}
+
+add_action( 'admin_post_bse_access', function () {
+    if ( ! bse_ok() ) {
+        wp_die( 'دسترسی ندارید' );
+    }
+
+    check_admin_referer( 'bse_access' );
+
+    $ids = isset( $_POST['bse_e'] )
+        ? array_map( 'intval', (array) $_POST['bse_e'] )
+        : array();
+
+    foreach ( $ids as $exam_id ) {
+        if ( ! bse_exam( $exam_id ) ) {
+            continue;
+        }
+
+        $selected = isset( $_POST['bse_p'][ $exam_id ] )
+            ? array_values(
+                array_unique(
+                    array_filter(
+                        array_map(
+                            'intval',
+                            (array) $_POST['bse_p'][ $exam_id ]
+                        )
+                    )
+                )
+            )
+            : array();
+
+        update_post_meta(
+            $exam_id,
+            'bse_products',
+            $selected
+        );
+
+        if ( isset( $_POST['bse_d'][ $exam_id ] ) ) {
+            update_post_meta(
+                $exam_id,
+                'bse_days',
+                max(
+                    0,
+                    min(
+                        3650,
+                        (int) $_POST['bse_d'][ $exam_id ]
+                    )
+                )
+            );
+        }
+    }
+
+    wp_safe_redirect(
+        add_query_arg(
+            array(
+                'page' => 'bse-access',
+                'saved' => 1,
+            ),
+            admin_url( 'admin.php' )
+        )
+    );
+
+    exit;
+} );
+
+/* ---------- اتصال محصول از پنل آزمون‌ها ---------- */
+
+add_action(
+    'wp_ajax_bse',
+    function () {
+        $operation = isset( $_POST['op'] )
+            ? sanitize_key( $_POST['op'] )
+            : '';
+
+        if (
+            ! in_array(
+                $operation,
+                array(
+                    'access_get',
+                    'access_save',
+                    'access_search',
+                ),
+                true
+            )
+        ) {
+            return;
+        }
+
+        check_ajax_referer( 'bse', 'n' );
+
+        if (
+            ! bse_ok()
+            || ! function_exists( 'wc_get_products' )
+        ) {
+            wp_send_json_error(
+                'دسترسی ندارید یا ووکامرس فعال نیست.'
+            );
+        }
+
+        $id = isset( $_POST['id'] )
+            ? absint( $_POST['id'] )
+            : 0;
+
+        if ( ! bse_exam( $id ) ) {
+            wp_send_json_error( 'آزمون پیدا نشد.' );
+        }
+
+        $selected = bse_prods( $id );
+
+        if ( 'access_save' === $operation ) {
+            $raw = isset( $_POST['products'] )
+                ? json_decode(
+                    wp_unslash( $_POST['products'] ),
+                    true
+                )
+                : null;
+
+            $days = isset( $_POST['days'] )
+                ? filter_var(
+                    $_POST['days'],
+                    FILTER_VALIDATE_INT
+                )
+                : false;
+
+            if (
+                ! is_array( $raw )
+                || count( $raw ) > 1000
+                || false === $days
+                || $days < 0
+                || $days > 3650
+            ) {
+                wp_send_json_error(
+                    'محصول‌ها یا مدت دسترسی معتبر نیست.'
+                );
+            }
+
+            $ids = array();
+
+            foreach ( $raw as $product_id ) {
+                if (
+                    ! is_numeric( $product_id )
+                    || (int) $product_id <= 0
+                    || (float) $product_id
+                        != (int) $product_id
+                ) {
+                    wp_send_json_error(
+                        'شناسه محصول معتبر نیست.'
+                    );
+                }
+
+                $product = wc_get_product(
+                    (int) $product_id
+                );
+
+                if (
+                    ! $product
+                    || (
+                        'publish' !== $product->get_status()
+                        && ! in_array(
+                            (int) $product_id,
+                            $selected,
+                            true
+                        )
+                    )
+                ) {
+                    wp_send_json_error(
+                        'یکی از محصول‌ها قابل انتخاب نیست.'
+                    );
+                }
+
+                $ids[] = (int) $product_id;
+            }
+
+            update_post_meta(
+                $id,
+                'bse_products',
+                array_values( array_unique( $ids ) )
+            );
+
+            update_post_meta(
+                $id,
+                'bse_days',
+                $days
+            );
+
+            wp_send_json_success(
+                array( 'saved' => 1 )
+            );
+        }
+
+        $term = isset( $_POST['q'] )
+            ? sanitize_text_field(
+                wp_unslash( $_POST['q'] )
+            )
+            : '';
+
+        $page = max(
+            1,
+            isset( $_POST['page'] )
+                ? absint( $_POST['page'] )
+                : 1
+        );
+
+        $args = array(
+            'status' => 'publish',
+            'limit' => 30,
+            'page' => $page,
+            'paginate' => true,
+            'orderby' => 'title',
+            'order' => 'ASC',
+        );
+
+        if ( '' !== $term ) {
+            $args['s'] = $term;
+        }
+
+        $found = wc_get_products( $args );
+        $items = array();
+
+        foreach ( $found->products as $product ) {
+            $items[] = array(
+                'id' => $product->get_id(),
+                'name' => $product->get_name(),
+            );
+        }
+
+        $chosen = array();
+
+        foreach ( $selected as $product_id ) {
+            $chosen[] = array(
+                'id' => (int) $product_id,
+                'name' => get_the_title( $product_id )
+                    ?: 'محصول حذف‌شده #' . $product_id,
+            );
+        }
+
+        wp_send_json_success(
+            array(
+                'title' => get_the_title( $id ),
+                'selected' => $chosen,
+                'days' => bse_days( $id ),
+                'items' => $items,
+                'more' => $page < $found->max_num_pages,
+            )
+        );
+    },
+    0
+);

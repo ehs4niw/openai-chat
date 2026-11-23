@@ -1,0 +1,522 @@
+{
+    "version": "0.4",
+    "title": "صفحه اصلی — ورود به پنل‌ها",
+    "type": "section",
+    "content": [
+        {
+            "id": "5638982",
+            "elType": "section",
+            "settings": {
+                "content_width": {
+                    "unit": "px",
+                    "size": 1200
+                },
+                "layout": "full_width",
+                "gap": "no",
+                "column_position": "middle",
+                "css_classes": "dse-section det-section det-login",
+                "margin": {
+                    "unit": "px",
+                    "top": "0",
+                    "right": "0",
+                    "bottom": "12",
+                    "left": "0",
+                    "isLinked": false
+                },
+                "padding": {
+                    "unit": "px",
+                    "top": "14",
+                    "right": "14",
+                    "bottom": "14",
+                    "left": "14",
+                    "isLinked": true
+                },
+                "background_background": "gradient",
+                "background_color": "#ffffff",
+                "background_color_b": "#f6efff",
+                "background_gradient_angle": {
+                    "unit": "deg",
+                    "size": 125
+                },
+                "border_border": "solid",
+                "border_width": {
+                    "unit": "px",
+                    "top": "1",
+                    "right": "1",
+                    "bottom": "1",
+                    "left": "1",
+                    "isLinked": true
+                },
+                "border_color": "#dac0ee",
+                "border_radius": {
+                    "unit": "px",
+                    "top": "15",
+                    "right": "15",
+                    "bottom": "15",
+                    "left": "15",
+                    "isLinked": true
+                },
+                "custom_css": "selector{direction:rtl;box-sizing:border-box;overflow:hidden;color:#45215e;font-family:DgsPortal,Estedad,Tahoma,sans-serif;min-width:0}\nselector>.elementor-container{display:grid!important;grid-template-columns:minmax(190px,1fr) repeat(3,minmax(0,1.1fr));gap:14px;align-items:center;max-width:none!important}\nselector>.elementor-container>.elementor-column{width:auto!important;min-width:0}\nselector .elementor-widget-wrap{min-width:0;align-content:center;box-sizing:border-box}\nselector .elementor-widget:not(:last-child){margin-bottom:8px}\nselector p{margin:0;line-height:1.9}\nselector h1,selector h2,selector h3{margin:0;line-height:1.65;overflow-wrap:normal!important}\nselector a{text-decoration:none}\nselector svg{flex-shrink:0}\nselector .elementor-button{line-height:1.7;min-height:0;box-shadow:none}\nselector .elementor-widget-text-editor{font-size:13px;line-height:1.9}\nselector .dse-live,selector .dsh-carousel,selector .dsh-featured-main{min-width:0}\nselector .dg-empty-inline{font-size:12px;padding:16px;border-radius:10px}\n@media(max-width:767px){selector>.elementor-container{grid-template-columns:1fr!important;gap:14px}selector{padding:14px!important}selector .elementor-heading-title{overflow-wrap:normal!important}}\nselector>.elementor-container{align-items:stretch;gap:12px}\nselector>.elementor-container>.det-role-card>.elementor-widget-wrap{padding:12px 9px;border:1px solid #dbc1ed;border-radius:14px;background:#fbf7ff;display:flex;flex-direction:column;justify-content:center;gap:5px;align-items:stretch}\nselector .det-role-card .elementor-widget{width:100%;margin:0!important}\nselector .det-role-card .elementor-widget-text-editor{min-height:36px}\nselector .det-role-card .elementor-heading-title{font-size:16px!important;line-height:1.65!important;white-space:normal}\nselector .det-role-intro .elementor-widget-wrap{padding:8px 0 8px 8px}\nselector .det-role-intro h2{font-size:18px!important;white-space:normal}\nselector .det-role-card .elementor-button-text:before{content:'←';margin-left:8px}\n@media(max-width:1024px){selector>.elementor-container{grid-template-columns:repeat(3,minmax(0,1fr))!important}selector>.elementor-container>.det-role-intro{grid-column:1/-1}selector .det-role-intro .elementor-widget-wrap{padding:0}}\n@media(max-width:600px){selector>.elementor-container{grid-template-columns:1fr!important}selector .det-role-card .elementor-widget-text-editor{min-height:0}}"
+            },
+            "elements": [
+                {
+                    "id": "29da2d7",
+                    "elType": "column",
+                    "settings": {
+                        "_column_size": 25,
+                        "padding": {
+                            "unit": "px",
+                            "top": "0",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": true
+                        },
+                        "_inline_size": 25,
+                        "css_classes": "det-role-intro"
+                    },
+                    "elements": [
+                        {
+                            "id": "43ce0be",
+                            "elType": "widget",
+                            "widgetType": "dgs_icon",
+                            "settings": {
+                                "icon_name": "login",
+                                "align": "right",
+                                "size": {
+                                    "size": 25,
+                                    "unit": "px"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "3f4b4ae",
+                            "elType": "widget",
+                            "widgetType": "heading",
+                            "settings": {
+                                "title": "ورود به سامانه مدرسه",
+                                "header_size": "h2",
+                                "title_color": "#511c72",
+                                "align": "right",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 18,
+                                    "unit": "px"
+                                },
+                                "typography_font_size_mobile": {
+                                    "size": 19,
+                                    "unit": "px"
+                                },
+                                "typography_font_weight": "800",
+                                "typography_line_height": {
+                                    "size": 1.6,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "c414491",
+                            "elType": "widget",
+                            "widgetType": "text-editor",
+                            "settings": {
+                                "editor": "<p>دسترسی به پنل اختصاصی بر اساس نقش شما در مدرسه دانشگران</p>\n",
+                                "align": "right",
+                                "text_color": "#654879",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 12,
+                                    "unit": "px"
+                                },
+                                "typography_line_height": {
+                                    "size": 1.9,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        }
+                    ]
+                },
+                {
+                    "id": "970c4c1",
+                    "elType": "column",
+                    "settings": {
+                        "_column_size": 25,
+                        "padding": {
+                            "unit": "px",
+                            "top": "0",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": true
+                        },
+                        "_inline_size": 25,
+                        "css_classes": "det-role-card"
+                    },
+                    "elements": [
+                        {
+                            "id": "ed2d968",
+                            "elType": "widget",
+                            "widgetType": "dgs_icon",
+                            "settings": {
+                                "icon_name": "education",
+                                "align": "center",
+                                "size": {
+                                    "size": 25,
+                                    "unit": "px"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "65dd83b",
+                            "elType": "widget",
+                            "widgetType": "heading",
+                            "settings": {
+                                "title": "ورود دانش‌آموز",
+                                "header_size": "h3",
+                                "title_color": "#511c72",
+                                "align": "center",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 16,
+                                    "unit": "px"
+                                },
+                                "typography_font_size_mobile": {
+                                    "size": 19,
+                                    "unit": "px"
+                                },
+                                "typography_font_weight": "800",
+                                "typography_line_height": {
+                                    "size": 1.6,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "20e4cb5",
+                            "elType": "widget",
+                            "widgetType": "text-editor",
+                            "settings": {
+                                "editor": "<p>مشاهده کلاس‌ها، نمرات و اطلاعیه‌ها</p>\n",
+                                "align": "center",
+                                "text_color": "#654879",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 11,
+                                    "unit": "px"
+                                },
+                                "typography_line_height": {
+                                    "size": 1.9,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "b2a704c",
+                            "elType": "widget",
+                            "widgetType": "button",
+                            "settings": {
+                                "text": "ورود به پنل",
+                                "link": {
+                                    "url": "https://daneshgaranedu.ir/index.php/school-portal/?login_role=student"
+                                },
+                                "align": "center",
+                                "background_color": "#ffcd35",
+                                "button_text_color": "#4e255c",
+                                "border_radius": {
+                                    "unit": "px",
+                                    "top": "20",
+                                    "right": "20",
+                                    "bottom": "20",
+                                    "left": "20",
+                                    "isLinked": true
+                                },
+                                "button_padding": {
+                                    "unit": "px",
+                                    "top": "9",
+                                    "right": "20",
+                                    "bottom": "9",
+                                    "left": "20",
+                                    "isLinked": false
+                                },
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 12,
+                                    "unit": "px"
+                                },
+                                "typography_font_weight": "700",
+                                "text_padding": {
+                                    "unit": "px",
+                                    "top": "5",
+                                    "right": "19",
+                                    "bottom": "5",
+                                    "left": "19",
+                                    "isLinked": false
+                                },
+                                "css_classes": "det-login-button"
+                            },
+                            "elements": []
+                        }
+                    ]
+                },
+                {
+                    "id": "6618686",
+                    "elType": "column",
+                    "settings": {
+                        "_column_size": 25,
+                        "padding": {
+                            "unit": "px",
+                            "top": "0",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": true
+                        },
+                        "_inline_size": 25,
+                        "css_classes": "det-role-card"
+                    },
+                    "elements": [
+                        {
+                            "id": "eaca43b",
+                            "elType": "widget",
+                            "widgetType": "dgs_icon",
+                            "settings": {
+                                "icon_name": "teacher",
+                                "align": "center",
+                                "size": {
+                                    "size": 25,
+                                    "unit": "px"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "17a73fe",
+                            "elType": "widget",
+                            "widgetType": "heading",
+                            "settings": {
+                                "title": "ورود معلم",
+                                "header_size": "h3",
+                                "title_color": "#511c72",
+                                "align": "center",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 16,
+                                    "unit": "px"
+                                },
+                                "typography_font_size_mobile": {
+                                    "size": 19,
+                                    "unit": "px"
+                                },
+                                "typography_font_weight": "800",
+                                "typography_line_height": {
+                                    "size": 1.6,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "f9f47e2",
+                            "elType": "widget",
+                            "widgetType": "text-editor",
+                            "settings": {
+                                "editor": "<p>ثبت نمرات، برنامه کلاسی و مدیریت کلاس</p>\n",
+                                "align": "center",
+                                "text_color": "#654879",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 11,
+                                    "unit": "px"
+                                },
+                                "typography_line_height": {
+                                    "size": 1.9,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "b22860f",
+                            "elType": "widget",
+                            "widgetType": "button",
+                            "settings": {
+                                "text": "ورود به پنل",
+                                "link": {
+                                    "url": "https://daneshgaranedu.ir/index.php/school-portal/?login_role=teacher"
+                                },
+                                "align": "center",
+                                "background_color": "#ffcd35",
+                                "button_text_color": "#4e255c",
+                                "border_radius": {
+                                    "unit": "px",
+                                    "top": "20",
+                                    "right": "20",
+                                    "bottom": "20",
+                                    "left": "20",
+                                    "isLinked": true
+                                },
+                                "button_padding": {
+                                    "unit": "px",
+                                    "top": "9",
+                                    "right": "20",
+                                    "bottom": "9",
+                                    "left": "20",
+                                    "isLinked": false
+                                },
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 12,
+                                    "unit": "px"
+                                },
+                                "typography_font_weight": "700",
+                                "text_padding": {
+                                    "unit": "px",
+                                    "top": "5",
+                                    "right": "19",
+                                    "bottom": "5",
+                                    "left": "19",
+                                    "isLinked": false
+                                },
+                                "css_classes": "det-login-button"
+                            },
+                            "elements": []
+                        }
+                    ]
+                },
+                {
+                    "id": "0aad6d9",
+                    "elType": "column",
+                    "settings": {
+                        "_column_size": 25,
+                        "padding": {
+                            "unit": "px",
+                            "top": "0",
+                            "right": "0",
+                            "bottom": "0",
+                            "left": "0",
+                            "isLinked": true
+                        },
+                        "_inline_size": 25,
+                        "css_classes": "det-role-card"
+                    },
+                    "elements": [
+                        {
+                            "id": "bd796f8",
+                            "elType": "widget",
+                            "widgetType": "dgs_icon",
+                            "settings": {
+                                "icon_name": "users",
+                                "align": "center",
+                                "size": {
+                                    "size": 25,
+                                    "unit": "px"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "433a448",
+                            "elType": "widget",
+                            "widgetType": "heading",
+                            "settings": {
+                                "title": "ورود مدیر / مشاور",
+                                "header_size": "h3",
+                                "title_color": "#511c72",
+                                "align": "center",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 16,
+                                    "unit": "px"
+                                },
+                                "typography_font_size_mobile": {
+                                    "size": 19,
+                                    "unit": "px"
+                                },
+                                "typography_font_weight": "800",
+                                "typography_line_height": {
+                                    "size": 1.6,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "f634bd1",
+                            "elType": "widget",
+                            "widgetType": "text-editor",
+                            "settings": {
+                                "editor": "<p>مدیریت مدرسه، برنامه‌ریزی و مشاوره</p>\n",
+                                "align": "center",
+                                "text_color": "#654879",
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 11,
+                                    "unit": "px"
+                                },
+                                "typography_line_height": {
+                                    "size": 1.9,
+                                    "unit": "em"
+                                }
+                            },
+                            "elements": []
+                        },
+                        {
+                            "id": "c983a48",
+                            "elType": "widget",
+                            "widgetType": "button",
+                            "settings": {
+                                "text": "ورود به پنل",
+                                "link": {
+                                    "url": "https://daneshgaranedu.ir/index.php/school-portal/?login_role=manager"
+                                },
+                                "align": "center",
+                                "background_color": "#ffcd35",
+                                "button_text_color": "#4e255c",
+                                "border_radius": {
+                                    "unit": "px",
+                                    "top": "20",
+                                    "right": "20",
+                                    "bottom": "20",
+                                    "left": "20",
+                                    "isLinked": true
+                                },
+                                "button_padding": {
+                                    "unit": "px",
+                                    "top": "9",
+                                    "right": "20",
+                                    "bottom": "9",
+                                    "left": "20",
+                                    "isLinked": false
+                                },
+                                "typography_typography": "custom",
+                                "typography_font_size": {
+                                    "size": 12,
+                                    "unit": "px"
+                                },
+                                "typography_font_weight": "700",
+                                "text_padding": {
+                                    "unit": "px",
+                                    "top": "5",
+                                    "right": "19",
+                                    "bottom": "5",
+                                    "left": "19",
+                                    "isLinked": false
+                                },
+                                "css_classes": "det-login-button"
+                            },
+                            "elements": []
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "page_settings": {
+        "hide_title": "yes"
+    }
+}

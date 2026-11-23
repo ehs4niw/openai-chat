@@ -1,0 +1,2 @@
+<?php
+if(getenv('DGS_TEST_ALLOW_FIXTURES')!=='1'||empty($argv[1]))exit(2);require $argv[1];$n=0;foreach(['birth','father_birth','mother_birth'] as $k){foreach(['1389','۱۳۸۹','1389/08/02',''] as $v){$r=dgs_record_validate([$k=>$v]);if(is_wp_error($r)||!isset($r[$k])||($v==='1389'&&$r[$k]!=='1389'))throw new RuntimeException($k.' valid case');$n++;}foreach(['1389/13/01','15','1499'] as $v){if(!is_wp_error(dgs_record_validate([$k=>$v])))throw new RuntimeException('invalid accepted');$n++;}}echo "PASS $n partial/full/empty birth checks\n";
