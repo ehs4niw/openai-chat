@@ -1,8 +1,14 @@
-/* The approved exterior photos are used only in hero and introduction widgets. */
-body.dg-site .dgs-real-school-photo img,body.dg-site .dhr-hero .dse-picture-frame img,body.dg-site .abr-hero .dse-picture-frame img{width:100%;height:100%;object-fit:cover;object-position:center 58%}
-body.dg-site .dhr-intro .dse-picture-frame img{object-position:center 40%}
-/* Preserve the entire uploaded image in gallery slots, including portrait photos. */
-html body.dg-site .dgg-preview .dgg-open img,html body.dg-site .dgg-grid .dgg-open img{display:block!important;width:100%!important;height:100%!important;max-width:100%!important;max-height:100%!important;object-fit:contain!important;object-position:center!important}
+/* Explicitly size the real photos; inherited Elementor height:auto/contain
+   rules must not turn a portrait source into a sky crop or a narrow strip. */
+html body.dg-site [data-school-photo]{position:relative!important;display:block!important;width:100%!important;min-width:0!important;overflow:hidden!important;border-radius:12px;mask-image:none!important;-webkit-mask-image:none!important;background:#e7e0ec}
+html body.dg-site [data-school-photo] img{position:absolute!important;inset:0!important;display:block!important;box-sizing:border-box!important;width:100%!important;height:100%!important;min-width:100%!important;min-height:100%!important;max-width:none!important;max-height:none!important;aspect-ratio:auto!important;object-fit:cover!important;margin:0!important;padding:0!important;transform:none!important}
+html body.dg-site [data-school-photo="entrance"]{height:320px!important}
+html body.dg-site [data-school-photo="entrance"] img{object-position:50% 54%!important}
+html body.dg-site [data-school-photo="sign"]{height:220px!important}
+html body.dg-site [data-school-photo="sign"] img{object-position:50% 42%!important}
+@media(max-width:560px){html body.dg-site [data-school-photo="entrance"]{height:250px!important}html body.dg-site [data-school-photo="entrance"] img{object-position:50% 56%!important}html body.dg-site [data-school-photo="sign"]{height:220px!important}}
+/* Thumbnail cards fill their frames; the lightbox retains the full photograph. */
+html body.dg-site .dgg-preview .dgg-open img,html body.dg-site .dgg-grid .dgg-open img{display:block!important;width:100%!important;height:100%!important;max-width:100%!important;max-height:100%!important;object-fit:cover!important;object-position:center 60%!important}
 html body.dg-site .dgg-open{background:#eee8f4}
 html body.dg-site dialog.dgg-lightbox{box-sizing:border-box!important;width:min(1100px,calc(100vw - 24px))!important;height:calc(100dvh - 32px)!important;max-height:900px!important;padding:36px 14px 14px!important;overflow:hidden!important}
 html body.dg-site dialog.dgg-lightbox[open]{display:grid!important;grid-template-rows:minmax(0,1fr) auto auto;gap:8px}
@@ -11,3 +17,8 @@ html body.dg-site dialog.dgg-lightbox>p{margin:0!important;line-height:1.8;font-
 html body.dg-site dialog.dgg-lightbox>div{min-height:36px;align-items:center}
 .dgs-gallery-delete{display:inline-block;margin:5px 8px!important}.dgs-gallery-delete button{color:#a92c50;background:#fff0f4;border-color:#e8b7c4;min-height:36px}
 @media(max-width:560px){html body.dg-site dialog.dgg-lightbox{height:calc(100dvh - 20px)!important;padding:36px 10px 12px!important}.dgs-gallery-delete{display:block;margin:6px 0!important}}
+/* Override older section-specific Elementor rules as well as widget styles. */
+html body.dg-site:is(.dgs-home-refined,.dgs-about-refined) :is(.dse-document,.dsh-page) [data-school-photo] img{object-fit:cover!important;max-width:none!important;max-height:none!important}
+html body.dg-site.dgs-home-refined .dse-document [data-school-photo="sign"]{height:220px!important}
+html body.dg-site.dgs-about-refined .dse-document [data-school-photo="entrance"]{height:320px!important}
+@media(max-width:560px){html body.dg-site:is(.dgs-home-refined,.dgs-about-refined) .dse-document [data-school-photo="entrance"]{height:250px!important}}

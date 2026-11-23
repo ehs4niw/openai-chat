@@ -1,12 +1,12 @@
 <?php
 if(!defined('ABSPATH'))exit;
 function dgs_approved_photo_url($kind){return DGS_URL.'assets/school-photos/'.($kind==='sign'?'sign':'entrance').'.webp';}
-function dgs_approved_photo_markup($kind,$class,$alt,$priority=false){return '<div class="dsh-picture dgs-real-school-photo '.esc_attr($class).'"><img src="'.esc_url(dgs_approved_photo_url($kind)).'" width="941" height="1672" alt="'.esc_attr($alt).'" loading="'.($priority?'eager':'lazy').'" decoding="async"'.($priority?' fetchpriority="high"':'').'></div>';}
+function dgs_approved_photo_markup($kind,$class,$alt,$priority=false){return '<div data-school-photo="'.esc_attr($kind).'" class="dsh-picture dgs-real-school-photo '.esc_attr($class).'"><img src="'.esc_url(dgs_approved_photo_url($kind)).'" width="941" height="1672" alt="'.esc_attr($alt).'" loading="'.($priority?'eager':'lazy').'" decoding="async"'.($priority?' fetchpriority="high"':'').'></div>';}
 function dgs_school_photos_purge(){
  $pages=get_option('dgs_pages',array());foreach(array('home','about','gallery') as $key)if(!empty($pages[$key])){$id=(int)$pages[$key];clean_post_cache($id);delete_post_meta($id,'_elementor_element_cache');delete_post_meta($id,'_elementor_css');do_action('litespeed_purge_post',$id);if(function_exists('rocket_clean_post'))rocket_clean_post($id);}
  do_action('litespeed_purge_url',home_url('/'));
 }
-add_action('admin_init',function(){if(!current_user_can('manage_options')||get_option('dgs_school_photos_041')==='1')return;dgs_school_photos_purge();if(class_exists('\\Elementor\\Plugin')&&isset(\Elementor\Plugin::$instance->files_manager))\Elementor\Plugin::$instance->files_manager->clear_cache();update_option('dgs_school_photos_041','1',false);},60);
+add_action('admin_init',function(){if(!current_user_can('manage_options')||get_option('dgs_school_photos_layout')==='042')return;dgs_school_photos_purge();if(class_exists('\\Elementor\\Plugin')&&isset(\Elementor\Plugin::$instance->files_manager))\Elementor\Plugin::$instance->files_manager->clear_cache();update_option('dgs_school_photos_layout','042',false);},60);
 // Convert legacy static gallery rows at render time without changing saved layouts.
 function dgs_school_gallery_data($data,$post_id){
  $pages=get_option('dgs_pages',array());if(!in_array((int)$post_id,array((int)($pages['home']??0),(int)($pages['about']??0)),true)||!is_array($data))return $data;
