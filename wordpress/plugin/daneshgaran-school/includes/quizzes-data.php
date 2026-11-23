@@ -146,6 +146,7 @@ function dgs_quiz_save($data,$files=array()){
  foreach($data as $v)if(!is_scalar($v))return dgs_edu_error('input','اطلاعات معتبر نیست.');
  $id=absint($data['id']??0);$old=$id?dgs_quiz_row($id):null;if($id&&(!dgs_quiz_manage($old)))return dgs_edu_error('access','این کوییز قابل ویرایش نیست.');
  $class=dgs_edu_class($data['class_id']??0);$subject=absint($data['subject_id']??0);$year=dgs_edu_year((string)($data['year']??''));if(!$class||$class->school_year!==$year||!dgs_grade_can_edit($class,$subject))return dgs_edu_error('access','کلاس و درس تخصیص‌یافته معتبر انتخاب کنید.');
+ if($old&&((int)$old->class_id!==(int)$class->id||(int)$old->subject_id!==$subject)){global $wpdb;$qt=dgs_quiz_tables();if($wpdb->get_var($wpdb->prepare("SELECT id FROM {$qt['attempts']} WHERE quiz_id=%d LIMIT 1",$id)))return dgs_edu_error('attempts','آزمون شرکت‌کننده دارد؛ تغییر کلاس و درس مجاز نیست.');}
  $rev=(string)($data['revision']??'');if(!ctype_digit($rev)||(int)$rev!==($old?(int)$old->revision:0))return dgs_edu_error('stale','نسخه کوییز تغییر کرده؛ صفحه را تازه کنید.');
  $title=sanitize_text_field((string)($data['title']??''));$open=dgs_quiz_date((string)($data['open_date']??''),(string)($data['open_time']??''),$year);$close=dgs_quiz_date((string)($data['close_date']??''),(string)($data['close_time']??''),$year);$duration=dgs_edu_digits((string)($data['duration']??''));$publish=($old&&$old->status==='published')||($data['publish']??'')==='1';
  if($title===''||dgs_edu_length($title)>150||!$open||$close<=$open||!ctype_digit($duration)||(int)$duration<1||(int)$duration>180||($publish&&!$old&&$close<=time()))return dgs_edu_error('schedule','عنوان، زمان شروع و پایان و مدت ۱ تا ۱۸۰ دقیقه را درست وارد کنید.');
@@ -165,7 +166,7 @@ function dgs_quiz_save($data,$files=array()){
  $exam_file=isset($stored['exam'])?$stored['exam']['file']:($remove_exam?'':$old_exam);$exam_name=isset($stored['exam'])?$stored['exam']['name']:($remove_exam?'':(string)($old->exam_name??''));
  $answer_file=isset($stored['answer'])?$stored['answer']['file']:($remove_answer?'':$old_answer);$answer_name=isset($stored['answer'])?$stored['answer']['name']:($remove_answer?'':(string)($old->answer_name??''));
  global $wpdb;$t=dgs_quiz_tables();$existing=$old?array_values(dgs_quiz_questions($id,true)):array();
- $wpdb->query('START TRANSACTION');$quiz=array('class_id'=>$class->id,'subject_id'=>$subject,'school_year'=>$year,'title'=>$title,'opens_at'=>$open,'closes_at'=>$close,'duration'=>(int)$duration,'status'=>$publish?'published':'draft','revision'=>(int)$rev+1,'updated_at'=>current_time('mysql'),'exam_file'=>$exam_file,'exam_name'=>$exam_name,'answer_file'=>$answer_file,'answer_name'=>$answer_name);
+ $wpdb->query('START TRANSACTION');$quiz=array('class_id'=>$class->id,'subject_id'=>$subject,'school_year'=>$year,'title'=>$title,'opens_at'=>$open,'closes_at'=>$close,'duration'=>(int)$duration,'status'=>$publish?'published':'draft','revision'=>(int)$rev+1,'updated_at'=>current_time('mysql'),'exam_file'=>$exam_file,'exam_name'=>$exam_name,'answer_file'=>$answer_file,'answer_name'=>$answer_name,'sync_marks'=>isset($data['sync_marks'])?((string)$data['sync_marks']==='1'?1:0):($old?(int)($old->sync_marks??0):0));
  if($old){$ok=$wpdb->update($t['quizzes'],$quiz,array('id'=>$id,'revision'=>(int)$rev));}else{$quiz['teacher_id']=get_current_user_id();$ok=$wpdb->insert($t['quizzes'],$quiz);$id=(int)$wpdb->insert_id;}
  if(!$ok){$wpdb->query('ROLLBACK');$cleanup();return dgs_edu_error('write','ذخیره نشد یا کوییز هم‌زمان تغییر کرده است.');}
  /* هر سؤال یک ردیف استاندارد است: متن «سؤال n»، گزینه‌های ۱ تا ۴، پاسخ صحیح از کلید و وزن برابر؛ منطق نمره‌دهی تغییری نکرده است. */
@@ -179,7 +180,7 @@ function dgs_quiz_save($data,$files=array()){
  $updated_questions=dgs_quiz_questions($id,true);$attempts=$wpdb->get_results($wpdb->prepare("SELECT * FROM {$t['attempts']} WHERE quiz_id=%d",$id));
  foreach($attempts as $a){$change=array('revision'=>(int)$a->revision+1);if($a->submitted_at)$change['result']=wp_json_encode(dgs_quiz_score($updated_questions,json_decode($a->answers,true)?:array()));else $change['deadline']=min((int)$a->started_at+(int)$duration*60,$close);
   if(!$wpdb->update($t['attempts'],$change,array('id'=>$a->id,'revision'=>$a->revision))){$wpdb->query('ROLLBACK');$cleanup();return dgs_edu_error('stale','پاسخ‌ها هم‌زمان تغییر کردند؛ ذخیره را دوباره انجام دهید.');}}
- $wpdb->query('COMMIT');
+ $wpdb->query('COMMIT');dgs_qm_schedule($id);
  if($old_exam!==''&&$old_exam!==$exam_file)dgs_quiz_pdf_delete($old_exam);if($old_answer!==''&&$old_answer!==$answer_file)dgs_quiz_pdf_delete($old_answer);
  dgs_edu_audit($publish?'quiz_publish':'quiz_draft',$id);return array('id'=>$id,'published'=>$publish,'revision'=>(int)$rev+1);
 }
@@ -232,7 +233,7 @@ function dgs_quiz_student_action($op,$data){
  if(!isset($data['id'])||!is_scalar($data['id']))return dgs_edu_error('input','شناسه آزمون معتبر نیست.');
  global $wpdb;$t=dgs_quiz_tables();$wpdb->query('START TRANSACTION');
  if($wpdb->query($wpdb->prepare("UPDATE {$t['quizzes']} SET id=id WHERE id=%d",absint($data['id'])))===false){$wpdb->query('ROLLBACK');return dgs_edu_error('write','درخواست کامل نشد.');}
- $result=dgs_quiz_student_action_locked($op,$data);$wpdb->query(is_wp_error($result)?'ROLLBACK':'COMMIT');return $result;
+ $result=dgs_quiz_student_action_locked($op,$data);$wpdb->query(is_wp_error($result)?'ROLLBACK':'COMMIT');if(!is_wp_error($result))dgs_qm_schedule(absint($data['id']));return $result;
 }
 function dgs_quiz_delete($data){
  foreach($data as $v)if(!is_scalar($v))return dgs_edu_error('input','درخواست معتبر نیست.');

@@ -1,6 +1,6 @@
 <?php
 if(!defined('ABSPATH'))exit;
-function dgs_portal_icon($name){$paths=array(
+function dgs_portal_icon($name){if(in_array($name,array('videos','teacher_attendance'),true)&&function_exists('dgs_distinct_icon')&&($icon=dgs_distinct_icon($name)))return $icon;$paths=array(
  'overview'=>'M3 11l9-8 9 8M5 10v11h5v-7h4v7h5V10',
  'education'=>'M2 8l10-5 10 5-10 5zM6 11v6c4 3 8 3 12 0v-6M22 9v9',
  'users'=>'M4 21v-3c0-5 10-5 10 0v3M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8M17 4a4 4 0 0 1 0 8M17 15c4 0 5 2 5 6',
