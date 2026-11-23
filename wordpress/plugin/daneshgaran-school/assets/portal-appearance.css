@@ -8,3 +8,8 @@ body.dg-site,body.dg-site .dg-shell,body.dg-site:not(.dse-editable) .dg-shell *,
 
 /* Shared transparent main mark, also used by the sidebar template replacement. */
 body.dg-site .dg-sidebar-brand .dgs-main-logo{display:block;width:118px;height:118px;max-width:100%;max-height:none;object-fit:contain;margin:0 auto 6px;background:transparent;border:0;border-radius:0;filter:none}
+
+/* v0.25.39: larger original mark on the school homepage and navigation. */
+body.dg-site .dg-sidebar-brand .dgs-main-logo{width:146px!important;height:146px!important;max-width:100%!important;object-fit:contain!important;margin:0 auto 8px!important}
+body.dg-site.dgs-role-portal .dg-sidebar-brand .dgs-main-logo{width:132px!important;height:132px!important}
+@media(max-width:700px){body.dg-site .dg-sidebar-brand .dgs-main-logo{width:118px!important;height:118px!important}body.dg-site.dgs-role-portal .dg-sidebar-brand .dgs-main-logo{width:112px!important;height:112px!important}}

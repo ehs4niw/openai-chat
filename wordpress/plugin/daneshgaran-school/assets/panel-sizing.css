@@ -32,3 +32,7 @@ body.dg-site.dgs-role-portal .dsp-education-tabs a{min-width:0;white-space:norma
 body.dg-site.dgs-role-portal .dsp-education .dge-filter{display:grid;grid-template-columns:minmax(0,1fr);gap:10px}
 body.dg-site.dgs-role-portal .dsp-education .dge-filter>*{width:100%;min-width:0;max-width:100%;box-sizing:border-box}
 }
+
+/* v0.25.39: supersede the earlier 96px role portal logo cap. */
+body.dg-site.dgs-role-portal .dg-sidebar-brand .dgs-main-logo{width:132px!important;height:132px!important;max-width:100%!important;object-fit:contain!important}
+@media(max-width:700px){body.dg-site.dgs-role-portal .dg-sidebar-brand .dgs-main-logo{width:112px!important;height:112px!important}}

@@ -30,26 +30,20 @@ function dgs_portal_icon($name){$paths=array(
 // Main brand is independent of the browser site icon. Custom Logo remains editable
 // through WordPress Site Identity; the bundled transparent emblem is the default.
 function dgs_main_logo_url(){
- $id=absint(get_theme_mod('custom_logo'));if($id&&wp_attachment_is_image($id)){
-  $url=wp_get_attachment_image_url($id,'medium')?:wp_get_attachment_url($id);
-  if($url)return esc_url_raw($url,array('http','https'));
- }
+ // The school's approved emblem is the active default logo on all school pages.
  static $uri=null;if($uri===null){$file=DGS_PATH.'assets/school-brand-256.png';$data=is_readable($file)?file_get_contents($file):false;$uri=$data!==false?'data:image/png;base64,'.base64_encode($data):'';}return $uri;
 }
 // Sidebar color variant is independent of the main/footer logo.
 function dgs_sidebar_logo_url(){
- $id=absint(get_theme_mod('dgs_sidebar_logo'));if($id&&wp_attachment_is_image($id)){
-  $url=wp_get_attachment_image_url($id,'medium')?:wp_get_attachment_url($id);
-  if($url)return esc_url_raw($url,array('http','https'));
- }
+ // The sidebar uses the same approved emblem as the footer.
  static $uri=null;if($uri===null){$file=DGS_PATH.'assets/sidebar-logo-option3-256.png';$data=is_readable($file)?file_get_contents($file):false;$uri=$data!==false?'data:image/png;base64,'.base64_encode($data):dgs_main_logo_url();}return $uri;
 }
 add_action('customize_register',function($customizer){
  if(!class_exists('WP_Customize_Media_Control'))return;
  $customizer->add_setting('dgs_sidebar_logo',array('sanitize_callback'=>'absint','capability'=>'edit_theme_options'));
- $customizer->add_control(new WP_Customize_Media_Control($customizer,'dgs_sidebar_logo',array('section'=>'dg_school','label'=>'لوگوی سایدبار (پیش‌فرض: طرح ۳)','mime_type'=>'image')));
+ $customizer->add_control(new WP_Customize_Media_Control($customizer,'dgs_sidebar_logo',array('section'=>'dg_school','label'=>'لوگوی سایدبار (پیش‌فرض: لوگوی اصلی بنفش و طلایی)','mime_type'=>'image')));
 },20);
-function dgs_brand_markup(){return '<a class="dg-brand dgs-school-brand" href="'.esc_url(home_url('/')).'" aria-label="صفحه اصلی موسسه آموزشی دانشگران"><img class="dgs-main-logo" src="'.esc_attr(dgs_sidebar_logo_url()).'" alt="نشان موسسه آموزشی دانشگران" width="118" height="118" decoding="async"><strong>'.esc_html(dgs_setting('school_name','موسسه آموزشی دانشگران')).'</strong><small>دبیرستان دوره دوم</small><span class="dgs-brand-grades">پایه‌های دهم، یازدهم و دوازدهم</span></a>';}
+function dgs_brand_markup(){return '<a class="dg-brand dgs-school-brand" href="'.esc_url(home_url('/')).'" aria-label="صفحه اصلی موسسه آموزشی دانشگران"><img class="dgs-main-logo" src="'.esc_attr(dgs_sidebar_logo_url()).'" alt="نشان موسسه آموزشی دانشگران" width="146" height="146" decoding="async"><strong>'.esc_html(dgs_setting('school_name','موسسه آموزشی دانشگران')).'</strong><small>دبیرستان دوره دوم</small><span class="dgs-brand-grades">پایه‌های دهم، یازدهم و دوازدهم</span></a>';}
 add_action('wp_footer',function(){if(get_template()!=='daneshgaran'&&!dgs_is_role_portal())return;echo '<template id="dgs-portal-brand">'.dgs_brand_markup().'</template>';if(!dgs_is_role_portal())return;$u=wp_get_current_user();$class=dgs_edu_role($u,'dgs_student')?dgs_hw_student_class(dgs_edu_request_year()):null;$role=current_user_can('dgs_manage_education')?(dgs_um_root()?'مدیر کل':'مدیر و معاون'):(dgs_edu_role($u,'dgs_counselor')?'مشاور':(dgs_edu_role($u,'dgs_teacher')?'مدرس':($class?'دانش‌آموز پایه '.dgs_edu_grade_label($class->grade):'دانش‌آموز')));echo '<template id="dgs-portal-profile"><span class="dgs-profile-avatar">'.dgs_portal_icon('users').'</span><span class="dgs-profile-label"><strong>'.esc_html($u->display_name).'</strong><small>'.esc_html($role).'</small></span></template>';},10);
 add_action('wp_enqueue_scripts',function(){if(get_template()!=='daneshgaran'&&!dgs_is_role_portal())return;$css=str_replace("url('portal-Estedad.ttf')","url('".esc_url_raw(DGS_URL.'assets/portal-Estedad.ttf')."')",file_get_contents(DGS_PATH.'assets/portal-appearance.css'));wp_register_style('dgs-portal-appearance',false,array(),DGS_VERSION);wp_enqueue_style('dgs-portal-appearance');wp_add_inline_style('dgs-portal-appearance',$css);wp_register_script('dgs-portal-appearance',false,array(),DGS_VERSION,true);wp_enqueue_script('dgs-portal-appearance');wp_add_inline_script('dgs-portal-appearance',file_get_contents(DGS_PATH.'assets/portal-appearance.js'));},50);
 
@@ -87,3 +81,42 @@ add_action('admin_init',function(){
     if(function_exists('rocket_clean_domain'))rocket_clean_domain();
     update_option('dgs_footer_cache_version',DGS_VERSION,false);
 });
+
+// Synchronize the public theme footer with the school data saved in the plugin setup.
+// The theme's footer has separate options, so editing dgs_settings alone did not
+// update its phone/address on the front page. Preserve the existing footer layout.
+add_action('wp_footer', function () {
+    if (get_template() !== 'daneshgaran' || dgs_is_role_portal()) return;
+    $info = array('phone' => dgs_setting('phone'), 'address' => dgs_setting('address'));
+    if ($info['phone'] === '' && $info['address'] === '') return;
+    ?>
+    <script id="dgs-footer-school-contact-sync">
+    (function () {
+      var data = <?php echo wp_json_encode($info, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
+      function updateFooter() {
+        var root = document.querySelector('.dg-footer-lilac .dg-footer-contact');
+        if (!root) return;
+        var lines = root.querySelectorAll('.dg-contact-line');
+        if (lines.length < 2) return;
+        function updateLine(el, value, isPhone) {
+          if (!value) return;
+          var icons = Array.prototype.map.call(el.querySelectorAll('svg'), function (svg) { return svg.cloneNode(true); });
+          var text = document.createTextNode(' ');
+          var nodes = icons.concat([text]);
+          if (isPhone) {
+            var link = document.createElement('a');
+            link.href = 'tel:' + value.replace(/[^\d+]/g, '');
+            link.textContent = value;
+            nodes.push(link);
+          } else nodes.push(document.createTextNode(value));
+          el.replaceChildren.apply(el, nodes);
+        }
+        updateLine(lines[0], data.phone, true);
+        updateLine(lines[1], data.address, false);
+      }
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', updateFooter);
+      else updateFooter();
+    })();
+    </script>
+    <?php
+}, 100);

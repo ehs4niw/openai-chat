@@ -1,0 +1,13 @@
+/* The approved exterior photos are used only in hero and introduction widgets. */
+body.dg-site .dgs-real-school-photo img,body.dg-site .dhr-hero .dse-picture-frame img,body.dg-site .abr-hero .dse-picture-frame img{width:100%;height:100%;object-fit:cover;object-position:center 58%}
+body.dg-site .dhr-intro .dse-picture-frame img{object-position:center 40%}
+/* Preserve the entire uploaded image in gallery slots, including portrait photos. */
+html body.dg-site .dgg-preview .dgg-open img,html body.dg-site .dgg-grid .dgg-open img{display:block!important;width:100%!important;height:100%!important;max-width:100%!important;max-height:100%!important;object-fit:contain!important;object-position:center!important}
+html body.dg-site .dgg-open{background:#eee8f4}
+html body.dg-site dialog.dgg-lightbox{box-sizing:border-box!important;width:min(1100px,calc(100vw - 24px))!important;height:calc(100dvh - 32px)!important;max-height:900px!important;padding:36px 14px 14px!important;overflow:hidden!important}
+html body.dg-site dialog.dgg-lightbox[open]{display:grid!important;grid-template-rows:minmax(0,1fr) auto auto;gap:8px}
+html body.dg-site dialog.dgg-lightbox>img{display:block!important;min-height:0!important;min-width:0!important;width:100%!important;height:100%!important;max-width:100%!important;max-height:100%!important;object-fit:contain!important;object-position:center!important;margin:0!important;align-self:stretch}
+html body.dg-site dialog.dgg-lightbox>p{margin:0!important;line-height:1.8;font-size:12px}
+html body.dg-site dialog.dgg-lightbox>div{min-height:36px;align-items:center}
+.dgs-gallery-delete{display:inline-block;margin:5px 8px!important}.dgs-gallery-delete button{color:#a92c50;background:#fff0f4;border-color:#e8b7c4;min-height:36px}
+@media(max-width:560px){html body.dg-site dialog.dgg-lightbox{height:calc(100dvh - 20px)!important;padding:36px 10px 12px!important}.dgs-gallery-delete{display:block;margin:6px 0!important}}
